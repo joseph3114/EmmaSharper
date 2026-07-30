@@ -128,6 +128,7 @@ namespace EmmaSharper
 
         /// <summary>Syntactic sugar for <see cref="string.Join(char, string[])"/>.</summary>
         internal static string JoinWith(this IEnumerable<string> items, char seperator)
-            => string.Join(seperator, items);
+            // string.Join(char, ...) is netstandard2.1+; the string overload exists everywhere.
+            => string.Join(seperator.ToString(), items);
     }
 }

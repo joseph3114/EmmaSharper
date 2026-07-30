@@ -17,6 +17,11 @@ namespace EmmaSharper.Unit.Tests
         private const string BaseUrl = "https://api.example.test";
         private const string AccountId = "account-id";
 
+        // HttpStatusCode.TooManyRequests does not exist on .NET Framework, which the net472
+        // test leg runs on. A cast of a constant is still a constant, so this is usable in
+        // an InlineData attribute.
+        private const HttpStatusCode TooManyRequests = (HttpStatusCode)429;
+
         private static EmmaApiAdapter CreateAdapter(StubHttpMessageHandler handler, string? accountId = AccountId)
         {
             HttpClient client = new(handler) { BaseAddress = new Uri(BaseUrl) };
@@ -108,7 +113,7 @@ namespace EmmaSharper.Unit.Tests
         }
 
         [Theory]
-        [InlineData(HttpStatusCode.TooManyRequests)]
+        [InlineData(TooManyRequests)]
         [InlineData(HttpStatusCode.Forbidden)]
         public async Task MakeRequest_Throttled_ThrowsRateLimitException(HttpStatusCode status)
         {
@@ -126,7 +131,7 @@ namespace EmmaSharper.Unit.Tests
         public async Task MakeRequest_Throttled_SurfacesRetryAfter()
         {
             StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(
-                HttpStatusCode.TooManyRequests,
+                TooManyRequests,
                 retryAfter: TimeSpan.FromSeconds(30));
 
             EmmaApiAdapter adapter = CreateAdapter(handler);

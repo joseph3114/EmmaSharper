@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- net472 exercises the netstandard2.0 leg of the library on a real .NET Framework
+         runtime. Without it, that target is only ever compile-checked. -->
+    <TargetFrameworks>net472;net8.0;net10.0</TargetFrameworks>
+    <LangVersion Condition="'$(TargetFramework)' == 'net472'">12</LangVersion>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
@@ -24,6 +28,17 @@
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="[7.0.0,8.0.0)" />
     <PackageReference Include="Moq" Version="4.20.72" />
+  </ItemGroup>
+
+  <!-- ConfigurationBuilder / AddInMemoryCollection. These arrive transitively on the modern
+       targets but not on net472, and a test project should declare what it uses regardless.
+       Pinned per-TFM to match the library and avoid an NU1605 downgrade on net10.0. -->
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>

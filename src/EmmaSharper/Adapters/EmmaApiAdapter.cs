@@ -67,7 +67,13 @@ namespace EmmaSharper.Adapters
                 .SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                 .ConfigureAwait(false);
 
+            // The CancellationToken overload is .NET 5+. On netstandard2.0 the body read is not
+            // separately cancellable; SendAsync above still honours the token.
+#if NETSTANDARD2_0
+            string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+#else
             string body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+#endif
 
             logger.LogDebug(
                 "Emma request {Method} {Resource} for account {AccountId} completed with {StatusCode}",
@@ -172,7 +178,11 @@ namespace EmmaSharper.Adapters
             HttpMethod method,
             string resource)
         {
-            bool throttled = response.StatusCode == HttpStatusCode.TooManyRequests
+            // HttpStatusCode.TooManyRequests does not exist on netstandard2.0; the cast is
+            // equivalent and avoids an #if.
+            const HttpStatusCode tooManyRequests = (HttpStatusCode)429;
+
+            bool throttled = response.StatusCode == tooManyRequests
                           || response.StatusCode == HttpStatusCode.Forbidden;
 
             if (!throttled)
