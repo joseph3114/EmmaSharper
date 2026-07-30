@@ -22,7 +22,8 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ for
         /// standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
-        Task<IEnumerable<ResponseClicks>> GetMailingClicks(string mailingId, string memberId = null, string linkId = null, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
+        Task<IEnumerable<ResponseClicks>> GetMailingClicks(string mailingId, string? memberId = null, string? linkId = null, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get the count of the list of clicks for this mailing</summary>
         /// <param name="mailingId">Mailing Identifier</param>
@@ -31,6 +32,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ for 
         /// standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<int> GetMailingClicksCount(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the customer share associated with the share id.</summary>
@@ -41,6 +43,7 @@ namespace EmmaSharper
         /// mailing type - ‘m’ for standard mailings, ‘t’ for test mailings and ‘r’ for
         /// trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<ResponseCustomerShare> GetMailingCustomerShare(string shareId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of customer share clicks for this mailing.</summary>
@@ -51,6 +54,7 @@ namespace EmmaSharper
         /// mailing type - ‘m’ for standard mailings, ‘t’ for test mailings and ‘r’ for
         /// trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseCustomerShareClicks>> GetMailingCustomerShareClicks(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of customer shares for this mailing.</summary>
@@ -60,6 +64,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing 
         /// type - ‘m’ for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseCustomerShare>> GetMailingCustomerShares(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -75,6 +80,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing 
         /// type - ‘m’ for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseDeliveries>> GetMailingDelieveries(string mailingId, DeliveryType result = DeliveryType.All, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -88,6 +94,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ 
         /// for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<int> GetMailingDelieveriesCount(string mailingId, DeliveryType result = DeliveryType.All, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of forwards for this mailing</summary>
@@ -97,6 +104,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’
         /// for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseForwards>> GetMailingForwards(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of messages that are in the queue, possibly sent, but not yet delivered.</summary>
@@ -108,6 +116,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ 
         /// for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseGeneric>> GetMailingInProgress(string mailingId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get the count of the list of messages that are in the queue, possibly sent, but not yet delivered.</summary>
@@ -117,6 +126,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ for
         /// standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<int> GetMailingInProgressCount(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of links for this mailing</summary>
@@ -126,6 +136,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ for standard
         /// mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<Link>> GetMailingLinks(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the count of the list of opened messages for this campaign</summary>
@@ -137,6 +148,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ for standard
         /// mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseGeneric>> GetMailingOpens(string mailingId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of opened messages for this campaign.</summary>
@@ -146,6 +158,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’
         /// for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<int> GetMailingOpensCount(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of optouts for this mailing.</summary>
@@ -157,6 +170,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ 
         /// for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseGeneric>> GetMailingOptouts(string mailingId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get the count of the list of optouts for this mailing.</summary>
@@ -166,6 +180,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ 
         /// for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<int> GetMailingOptoutsCount(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -178,6 +193,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ 
         /// for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<Response> GetMailingResponse(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of messages that have been sent to an MTA (Message Transfer Agent) for delivery.</summary>
@@ -189,6 +205,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ 
         /// for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseGeneric>> GetMailingSends(string mailingId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get the count of the list of messages that have been sent to an MTA (Message Transfer Agent) for delivery.</summary>
@@ -197,6 +214,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ 
         /// for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<int> GetMailingSendsCount(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of shares for this mailing.</summary>
@@ -207,12 +225,14 @@ namespace EmmaSharper
         /// mailing type - ‘m’ for standard mailings, ‘t’ for test mailings and ‘r’ for
         /// trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseShares>> GetMailingShares(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get overview of shares pertaining to this mailing_id.</summary>
         /// <param name="mailingId">Mailing Identifier</param>
         /// <returns>An array of share summary objects for the mailing, by network.</returns>
         /// <remarks>Http404 if the mailing does not exist. Http404 if the mailing is not valid.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseSharesOverview>> GetMailingSharesOverview(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of signups for this mailing.</summary>
@@ -222,6 +242,7 @@ namespace EmmaSharper
         /// Http404 if the mailing does not exist. Http404 if the mailing is not valid mailing type - ‘m’ for 
         /// standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseSignups>> GetMailingSignups(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -231,6 +252,7 @@ namespace EmmaSharper
         /// <param name="includeArchived">Optional flag to include archived mailings in the list.</param>
         /// <param name="range">Optional DateRange object to build the range parameter.</param>
         /// <returns>A list of objects with each object representing one month.</returns>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseSummary>> GetResponseSummary(DateRange? range = null, bool includeArchived = false, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -240,6 +262,7 @@ namespace EmmaSharper
         /// <param name="includeArchived">Optional flag to include archived mailings in the list.</param>
         /// <param name="date">Optional date to build the range parameter.</param>
         /// <returns>A list of objects with each object representing one month.</returns>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ResponseSummary>> GetResponseSummary(DateTime? date, bool includeArchived = false, CancellationToken cancellationToken = default);
     }
 }

@@ -397,7 +397,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<bool> UpdateStatusOfGroupMembersBasedOnCurrentStatus(MemberStatusShort statusFrom, MemberStatusShort statusTo, string groupId = null, CancellationToken cancellationToken = default)
+        public async Task<bool> UpdateStatusOfGroupMembersBasedOnCurrentStatus(MemberStatusShort statusFrom, MemberStatusShort statusTo, string? groupId = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.PUT)
             {

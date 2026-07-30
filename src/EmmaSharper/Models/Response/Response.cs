@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -53,7 +53,7 @@ namespace EmmaSharper
     public class Response : ResponseBase
     {
         [JsonPropertyName("subject")]
-        public string Subject { get; set; }
+        public string? Subject { get; set; }
 
         [JsonPropertyName("in_progress")]
         public int? InProgress { get; set; }
@@ -62,7 +62,7 @@ namespace EmmaSharper
         public int? RecipientCount { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         //[JsonPropertyName("purchase_metrics")]
         //public List<T> PurchaseMetrics { get; set; }

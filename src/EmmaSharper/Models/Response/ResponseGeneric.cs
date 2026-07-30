@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
@@ -8,7 +8,7 @@ namespace EmmaSharper
     public class ResponseGeneric
     {
         [JsonPropertyName("fields")]
-        public Dictionary<string, object> Fields { get; set; }
+        public Dictionary<string, object>? Fields { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
         [JsonPropertyName("timestamp")]
@@ -22,13 +22,13 @@ namespace EmmaSharper
         public DateTime? MemberSince { get; set; }
 
         [JsonPropertyName("email_domain")]
-        public string EmailDomain { get; set; }
+        public string? EmailDomain { get; set; }
 
         [JsonPropertyName("email_user")]
-        public string EmailUser { get; set; }
+        public string? EmailUser { get; set; }
 
         [JsonPropertyName("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [JsonPropertyName("member_status_id")]
         public MemberStatusShort MemberStatusId { get; set; }
@@ -50,7 +50,7 @@ namespace EmmaSharper
         public long? MailingId { get; set; }
 
         [JsonPropertyName("mailing_name")]
-        public string MailingName { get; set; }
+        public string? MailingName { get; set; }
     }
 
     public class ResponseForwards : ResponseGeneric

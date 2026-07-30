@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace EmmaSharper
@@ -12,7 +12,7 @@ namespace EmmaSharper
         /// A new email address for the member.
         /// </summary>
         [JsonPropertyName("email")]
-        public string MemberEmail { get; set; }
+        public string? MemberEmail { get; set; }
 
         /// <summary>
         /// A new status for the member. Accepts one of ‘a’ (active), ‘e’ (error), ‘o’ (opt-out).
@@ -24,7 +24,7 @@ namespace EmmaSharper
         /// An array of fields with associated values for this member
         /// </summary>
         [JsonPropertyName("fields")]
-        public Dictionary<string, object> Fields { get; set; }
+        public Dictionary<string, object>? Fields { get; set; }
 
         /// <summary>
         /// Optional. Fires related field change autoresponders when set to true.

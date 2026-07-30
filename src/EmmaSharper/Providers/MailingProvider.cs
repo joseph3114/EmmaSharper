@@ -17,7 +17,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<int> ListMailingsCount(IEnumerable<MailingType> mailingTypes = null, IEnumerable<MailingStatus> mailingStatuses = null, bool includeArchived = false, bool includeScheduled = false, bool includeHtmlBody = false, bool includePlaintext = false, CancellationToken cancellationToken = default)
+        public async Task<int> ListMailingsCount(IEnumerable<MailingType>? mailingTypes = null, IEnumerable<MailingStatus>? mailingStatuses = null, bool includeArchived = false, bool includeScheduled = false, bool includeHtmlBody = false, bool includePlaintext = false, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -61,7 +61,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<MailingInfo>> ListMailings(IEnumerable<MailingType> mailingTypes = null, IEnumerable<MailingStatus> mailingStatuses = null, bool includeArchived = false, bool includeScheduled = false, bool includeHtmlBody = false, bool includePlaintext = false, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<MailingInfo>> ListMailings(IEnumerable<MailingType>? mailingTypes = null, IEnumerable<MailingStatus>? mailingStatuses = null, bool includeArchived = false, bool includeScheduled = false, bool includeHtmlBody = false, bool includePlaintext = false, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {

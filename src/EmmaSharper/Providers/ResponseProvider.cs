@@ -201,7 +201,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseClicks>> GetMailingClicks(string mailingId, string memberId = null, string linkId = null, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<ResponseClicks>> GetMailingClicks(string mailingId, string? memberId = null, string? linkId = null, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {

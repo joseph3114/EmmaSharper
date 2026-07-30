@@ -1,11 +1,11 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class CreateField : BaseField
     {
         [JsonPropertyName("shortcut_name")]
-        public string ShortcutName { get; set; }
+        public string? ShortcutName { get; set; }
 
         public CreateField()
         {

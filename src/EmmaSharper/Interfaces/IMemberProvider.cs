@@ -20,6 +20,7 @@ namespace EmmaSharper
         /// <param name="groupIds">Group ids to which to add this member.</param>
         /// <returns>An array of ids of the affected groups.</returns>
         /// <remarks>Http404 if no member is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<long>> AddMemberToGroups(string memberId, IEnumerable<long> groupIds, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -28,6 +29,7 @@ namespace EmmaSharper
         /// <param name="members">An array of members to update. A member is a dictionary of member emails and field values to import. The only required field is “email”. All other fields are treated as the name of a member field.</param>
         /// <returns>An import id.</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<MembersAdd> AddNewMembers(AddMembers members, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -36,6 +38,7 @@ namespace EmmaSharper
         /// <param name="member">Fields related to adding or updating a Member.</param>
         /// <returns>The member_id of the new or updated member, whether the member was added or an existing member was updated, and the status of the member. The status will be reported as ‘a’ (active), ‘e’ (error), or ‘o’ (optout).</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<MemberAdd> AddOrUpdateSingleMember(AddMember member, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -44,6 +47,7 @@ namespace EmmaSharper
         /// <param name="status">Class representing members and their new status.</param>
         /// <returns>True if the members are successfully updated, otherwise False.</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> ChangeMemberStatus(ChangeStatus status, CancellationToken cancellationToken = default);
 
         /// <summary>Copy all account members of one or more statuses into a group.</summary>
@@ -51,12 +55,14 @@ namespace EmmaSharper
         /// <param name="status">Class representing a list of Member statuses: ‘a’ (active), ‘o’ (optout), and/or ‘e’ (error).</param>
         /// <returns>True</returns>
         /// <remarks>Http404 if the group does not exist.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> CopyMembersIntoStatusGroup(string groupId, CopyStatus status, CancellationToken cancellationToken = default);
 
         /// <summary>Delete all members.</summary>
         /// <param name="memberStatusId">This is ‘a’ (active), ‘o’ (optout), or ‘e’ (error).</param>
         /// <returns>Returns true.</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> DeleteAllMembers(MemberStatusShort memberStatusId, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -65,6 +71,7 @@ namespace EmmaSharper
         /// <param name="memberId">Member identifier.</param>
         /// <returns>True if the member is deleted.</returns>
         /// <remarks>Http404 if no member is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> DeleteMember(string memberId, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -73,6 +80,7 @@ namespace EmmaSharper
         /// <param name="members">Class representing an array of member ids to delete.</param>
         /// <returns>True if all members are successfully deleted, otherwise False.</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> DeleteMembers(DeleteMembers members, CancellationToken cancellationToken = default);
 
         /// <summary>Get information about all imports for this account.</summary>
@@ -80,6 +88,7 @@ namespace EmmaSharper
         /// <param name="end">Pagination: end page. Defaults to first page (e.g. 500).</param>
         /// <returns>An array of import details.</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<Import>> GetAllImports(uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get a count of all imports for this account.</summary>
@@ -91,6 +100,7 @@ namespace EmmaSharper
         /// <param name="importId">Import identifier.</param>
         /// <returns>Import details for the given import_id.</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<Import> GetImportInformation(string importId, CancellationToken cancellationToken = default);
 
         /// <summary>Get detailed information on a particular member, including all custom fields.</summary>
@@ -98,6 +108,7 @@ namespace EmmaSharper
         /// <param name="memberId">Member identifier.</param>
         /// <param name="includeDeleted">Accepts True. Optional flag to include deleted members.</param>
         /// <remarks>Http404 if no member is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<Member> GetMember(string memberId, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
         /// <summary>Get detailed information on a particular member, including all custom fields, by email address instead of ID.</summary>
@@ -105,6 +116,7 @@ namespace EmmaSharper
         /// <param name="memberEmail">Member email.</param>
         /// <param name="includeDeleted">Accepts True. Optional flag to include deleted members.</param>
         /// <remarks>Http404 if no member is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<Member> GetMemberByEmail(string memberEmail, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
         /// <summary>Get a count of members in an account.</summary>
@@ -130,6 +142,7 @@ namespace EmmaSharper
         /// <param name="memberId">Member identifier.</param>
         /// <returns>An array of groups.</returns>
         /// <remarks>Http404 if no member is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<Group>> GetMemberGroups(string memberId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the entire mailing history for a member.</summary>
@@ -138,18 +151,21 @@ namespace EmmaSharper
         /// <param name="end">Pagination: end page. Defaults to first page (e.g. 500).</param>
         /// <returns>Message history details for the specified member.</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<MailingHistory>> GetMemberMailingHistory(string memberId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get the number of mailing history entries for a member.</summary>
         /// <param name="memberId">Member identifier.</param>
         /// <returns>Message history details for the specified member.</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<int> GetMemberMailingHistoryCount(string memberId, CancellationToken cancellationToken = default);
 
         /// <summary>If a member has been opted out, returns the details of their optout, specifically date and mailing_id.</summary>
         /// <param name="memberId">Member identifier.</param>
         /// <returns>Member opt out date and mailing if member is opted out.</returns>
         /// <remarks>Http404 if no member is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<MemberOptout>> GetMemberOptout(string memberId, CancellationToken cancellationToken = default);
 
         /// <summary>Get a list of members affected by this import.</summary>
@@ -158,12 +174,14 @@ namespace EmmaSharper
         /// <param name="end">Pagination: end page. Defaults to first page (e.g. 500).</param>
         /// <returns>A list of members in the given account and import.</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<ImportMembers>> GetMembersAffectedByImport(string importId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get a count of members affected by this import.</summary>
         /// <param name="importId">Import identifier.</param>
         /// <returns>A list of members in the given account and import.</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<int> GetMembersAffectedByImportCount(string importId, CancellationToken cancellationToken = default);
 
         /// <summary>Get a basic listing of members in an account.</summary>
@@ -203,12 +221,14 @@ namespace EmmaSharper
         /// <param name="member">Fields related to signing up a member.</param>
         /// <returns>The member_id of the member, and their status. The status will be reported as ‘a’ (active), ‘e’ (error), or ‘o’ (optout).</returns>
         /// <remarks></remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<MemberSignup> MemberSignup(SignupMember member, CancellationToken cancellationToken = default);
 
         /// <summary>Remove the specified member from all groups.</summary>
         /// <param name="memberId">Member identifier.</param>
         /// <returns>True if the member is removed from all groups.</returns>
         /// <remarks>Http404 if no member is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> RemoveMemberFromAllGroups(string memberId, CancellationToken cancellationToken = default);
 
         /// <summary>Remove a single member from one or more groups.</summary>
@@ -216,18 +236,21 @@ namespace EmmaSharper
         /// <param name="groupIds">Group ids from which to remove this member</param>
         /// <returns>An array of references to the affected groups.</returns>
         /// <remarks>Http404 if no member is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<long>> RemoveMemberFromGroups(string memberId, List<long> groupIds, CancellationToken cancellationToken = default);
 
         /// <summary>Remove multiple members from groups.</summary>
         /// <param name="groups">Class representing members and the groups to remove them from.</param>
         /// <returns>True if the members are deleted, otherwise False.</returns>
         /// <remarks>Http404 if any of the members or groups do not exist</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> RemoveMembersFromGroups(RemoveMemberGroups groups, CancellationToken cancellationToken = default);
 
         /// <summary>Update a member’s status to optout keyed on email address instead of an ID.</summary>
         /// <param name="memberEmail">Member email address for optout.</param>
         /// <returns>True if member status change was successful or member was already opted out.</returns>
         /// <remarks>Http404 if no member is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> UpdateMemberToOptoutByEmail(string memberEmail, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -237,6 +260,7 @@ namespace EmmaSharper
         /// <param name="member">Class representing fields to update member information.</param>
         /// <returns>True if the member was updated successfully</returns>
         /// <remarks>Http404 if no member is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> UpdateSingleMemberInformation(string memberId, UpdateMember member, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -248,6 +272,7 @@ namespace EmmaSharper
         /// <param name="groupId">Optional. Limit the update to members of the specified group</param>
         /// <returns>True</returns>
         /// <remarks>Http400 if the specified status is invalid</remarks>
-        Task<bool> UpdateStatusOfGroupMembersBasedOnCurrentStatus(MemberStatusShort statusFrom, MemberStatusShort statusTo, string groupId = null, CancellationToken cancellationToken = default);
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
+        Task<bool> UpdateStatusOfGroupMembersBasedOnCurrentStatus(MemberStatusShort statusFrom, MemberStatusShort statusTo, string? groupId = null, CancellationToken cancellationToken = default);
     }
 }

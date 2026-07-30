@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
@@ -8,28 +8,28 @@ namespace EmmaSharper
     public class Trigger
     {
         [JsonPropertyName("parent_mailing")]
-        public MailingTrigger ParentMailing { get; set; }
+        public MailingTrigger? ParentMailing { get; set; }
 
         [JsonPropertyName("surveys")]
-        public string Surveys { get; set; }
+        public string? Surveys { get; set; }
 
         [JsonPropertyName("event_type")]
-        public string EventType { get; set; }
+        public string? EventType { get; set; }
 
         // Need more info from Emma
         [JsonPropertyName("links")]
-        public string Links { get; set; }
+        public string? Links { get; set; }
 
         [JsonPropertyName("field_id")]
         public long? FieldId { get; set; }
 
         // Need more info from Emma
         [JsonPropertyName("signup_integrations")]
-        public string SignupIntegrations { get; set; }
+        public string? SignupIntegrations { get; set; }
 
         // Need more info from Emma
         [JsonPropertyName("push_offest_units")]
-        public string PushOffsetUnits { get; set; }
+        public string? PushOffsetUnits { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
         [JsonPropertyName("start_timestamp")]
@@ -39,19 +39,19 @@ namespace EmmaSharper
         public long? TriggerId { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         // Need more info from Emma
         [JsonPropertyName("signups")]
-        public int?[] Signups { get; set; }
+        public int?[]? Signups { get; set; }
 
         // Need more info from Emma
         [JsonPropertyName("push_offset")]
-        public string PushOffset { get; set; }
+        public string? PushOffset { get; set; }
 
         // Need more info from Emma
         [JsonPropertyName("groups")]
-        public List<Group> Groups { get; set; }
+        public List<Group>? Groups { get; set; }
 
         [JsonPropertyName("parent_mailing_id")]
         public long? ParentMailingId { get; set; }

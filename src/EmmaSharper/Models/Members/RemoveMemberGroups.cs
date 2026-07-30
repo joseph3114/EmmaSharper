@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace EmmaSharper
@@ -12,12 +12,12 @@ namespace EmmaSharper
         /// Member ids to remove from the given groups.
         /// </summary>
         [JsonPropertyName("member_ids")]
-        public List<long> MemberIds { get; set; }
+        public List<long>? MemberIds { get; set; }
 
         /// <summary>
         /// Group ids from which to remove the given members.
         /// </summary>
         [JsonPropertyName("group_ids")]
-        public List<long> GroupIds { get; set; }
+        public List<long>? GroupIds { get; set; }
     }
 }

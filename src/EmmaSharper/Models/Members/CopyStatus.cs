@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace EmmaSharper
@@ -8,6 +8,6 @@ namespace EmmaSharper
     {
         /// <summary>‘a’ (active), ‘o’ (optout), and/or ‘e’ (error)</summary>
         [JsonPropertyName("member_status_id")]
-        public List<MemberStatusShort> MemberStatusId { get; set; }
+        public List<MemberStatusShort>? MemberStatusId { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<int> ListGroupCount(IEnumerable<GroupType> groupType = null, CancellationToken cancellationToken = default)
+        public async Task<int> ListGroupCount(IEnumerable<GroupType>? groupType = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -35,7 +35,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Group>> ListGroups(IEnumerable<GroupType> groupType = null, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Group>> ListGroups(IEnumerable<GroupType>? groupType = null, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {

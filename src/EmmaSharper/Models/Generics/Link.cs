@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -8,7 +8,7 @@ namespace EmmaSharper
         public int? LinkOrder { get; set; }
 
         [JsonPropertyName("Link_name")]
-        public string LinkName { get; set; }
+        public string? LinkName { get; set; }
 
         [JsonPropertyName("unique_clicks")]
         public int? UniqueClicks { get; set; }
@@ -17,7 +17,7 @@ namespace EmmaSharper
         public bool Plaintext { get; set; }
 
         [JsonPropertyName("link_target")]
-        public string LinkTarget { get; set; }
+        public string? LinkTarget { get; set; }
 
         [JsonPropertyName("total_clicks")]
         public int? TotalClicks { get; set; }

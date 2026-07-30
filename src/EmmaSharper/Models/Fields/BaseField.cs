@@ -1,11 +1,11 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class BaseField
     {
         [JsonPropertyName("display_name")]
-        public string DisplayName { get; set; }
+        public string? DisplayName { get; set; }
 
         [JsonPropertyName("field_type")]
         public FieldType FieldType { get; set; }

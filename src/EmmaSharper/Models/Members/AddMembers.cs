@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace EmmaSharper
@@ -23,7 +23,7 @@ namespace EmmaSharper
         /// Names and values of user-defined fields to update
         /// </summary>
         [JsonPropertyName("source_filename")]
-        public string SourceFileName { get; set; }
+        public string? SourceFileName { get; set; }
 
         /// <summary>
         /// Optional. Add imported members to this list of groups.

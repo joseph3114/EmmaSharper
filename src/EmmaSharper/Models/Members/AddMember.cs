@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace EmmaSharper
@@ -16,13 +16,13 @@ namespace EmmaSharper
         /// Email address of member to add or update
         /// </summary>
         [JsonPropertyName("email")]
-        public string MemberEmail { get; set; }
+        public string? MemberEmail { get; set; }
 
         /// <summary>
         /// Names and values of user-defined fields to update
         /// </summary>
         [JsonPropertyName("fields")]
-        public Dictionary<string, object> Fields { get; set; }
+        public Dictionary<string, object>? Fields { get; set; }
 
         /// <summary>
         /// Optional. Add imported members to this list of groups.

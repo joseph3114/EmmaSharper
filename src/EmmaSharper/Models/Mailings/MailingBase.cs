@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
 
@@ -32,10 +32,10 @@ namespace EmmaSharper
         public MailingStatus MailingStatus { get; set; }
 
         [JsonPropertyName("sender")]
-        public string Sender { get; set; }
+        public string? Sender { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
         [JsonPropertyName("send_finished")]
@@ -46,7 +46,7 @@ namespace EmmaSharper
         public DateTime? SendAt { get; set; }
 
         [JsonPropertyName("subject")]
-        public string Subject { get; set; }
+        public string? Subject { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
         [JsonPropertyName("archived_ts")]

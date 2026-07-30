@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
 
@@ -20,7 +20,7 @@ namespace EmmaSharper
         /// Email address the heads up email was sent
         /// </summary>
         [JsonPropertyName("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         /// <summary>
         /// Mailing associated with these heads up mailings.

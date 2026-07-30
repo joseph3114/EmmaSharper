@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace EmmaSharper
@@ -12,12 +12,12 @@ namespace EmmaSharper
         /// An array of email addresses to which to forward the specified message.
         /// </summary>
         [JsonPropertyName("recipient_emails")]
-        public List<string> RecipientEmails { get; set; }
+        public List<string>? RecipientEmails { get; set; }
 
         /// <summary>
         /// A note to include in the forward. This note will be HTML encoded and is limited to 500 characters.
         /// </summary>
         [JsonPropertyName("note")]
-        public string Note { get; set; }
+        public string? Note { get; set; }
     }
 }

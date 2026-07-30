@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -11,13 +11,13 @@ namespace EmmaSharper
         /// The name of an event to register this webhook for
         /// </summary>
         [JsonPropertyName("event")]
-        public string Event { get; set; }
+        public string? Event { get; set; }
 
         /// <summary>
         /// The URL to call when the event happens
         /// </summary>
         [JsonPropertyName("url")]
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
         /// <summary>
         /// The method to use when calling the webhook. Can be GET or POST. Defaults to POST.

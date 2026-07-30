@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
 
@@ -25,7 +25,7 @@ namespace EmmaSharper
         public DateTime? FailureTimestamp { get; set; }
 
         [JsonPropertyName("reply_to")]
-        public string ReplyTo { get; set; }
+        public string? ReplyTo { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
         [JsonPropertyName("start_or_finished")]
@@ -42,10 +42,10 @@ namespace EmmaSharper
         public bool PlaintextOnly { get; set; }
 
         [JsonPropertyName("failure_message")]
-        public string FailureMessage { get; set; }
+        public string? FailureMessage { get; set; }
 
         [JsonPropertyName("datacenter")]
-        public string Datacenter { get; set; }
+        public string? Datacenter { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
         [JsonPropertyName("purged_at")]
