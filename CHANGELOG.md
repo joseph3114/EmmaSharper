@@ -7,7 +7,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [8.0.0] - unreleased
+## [8.0.0] - 2026-07-30
 
 First release since 2023. Removes both third-party dependencies and drops every out-of-support
 target framework. See [Upstream issues fixed in this fork](docs/upstream-fixes.md) for the bugs
