@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using EmmaSharper.Adapters;
+using EmmaSharper.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -94,6 +95,10 @@ namespace EmmaSharper
         /// <remarks>Providers are stateless, so transient is intentional here.</remarks>
         internal static void AddEmmaProviders(this IServiceCollection services)
         {
+            // Transient, not singleton: it captures the typed HttpClient-backed adapter, which the
+            // factory registers as transient. A singleton here would be a captive dependency.
+            services.AddTransient<IEmmaAccountScopeFactory, EmmaAccountScopeFactory>();
+
             services.AddTransient<IEmmaAutomationProvider, AutomationProvider>();
             services.AddTransient<IEmmaFieldsProvider, FieldsProvider>();
             services.AddTransient<IEmmaGroupProvider, GroupProvider>();
