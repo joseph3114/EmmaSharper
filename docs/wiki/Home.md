@@ -5,6 +5,10 @@ A .NET client for the [Emma (Marigold) API](https://api.myemma.com/).
 **Targets** `netstandard2.0`, `net8.0`, `net10.0` — so .NET Framework 4.6.2+ works too.
 **Dependencies** two on the modern targets, both `Microsoft.Extensions.*`.
 
+> **The version is not a .NET version.** `8.0.0` is the next major after `7.0.1` under
+> [SemVer](https://semver.org/) — it is not "the .NET 8 build". One package supports every target
+> above. Check the target frameworks, not the major.
+
 ```cmd
 dotnet add package EmmaSharper
 ```

@@ -5,6 +5,11 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+> **Version numbers do not track .NET versions.** The 7.0.0 release coincided with adding a
+> `net7.0` target, which makes it easy to read the major as a framework marker — it is not.
+> `8.0.0` is simply the next major after `7.0.1`, because the changes are breaking. It targets
+> `netstandard2.0`, `net8.0` **and** `net10.0`. Check the target frameworks, not the version.
+
 ---
 
 ## [8.0.0] - unreleased
