@@ -1,83 +1,163 @@
 # EmmaSharper
 
-A .NET wrapper for the [Emma API](http://api.myemma.com/).
+[![CI](https://github.com/joseph3114/EmmaSharper/actions/workflows/test.yml/badge.svg)](https://github.com/joseph3114/EmmaSharper/actions/workflows/test.yml)
+[![NuGet](https://img.shields.io/nuget/v/EmmaSharper.svg)](https://www.nuget.org/packages/EmmaSharper/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
 
-Targeting Frameworks
+A .NET client for the [Emma (Marigold) API](https://api.myemma.com/).
 
-- `netcoreapp3.1`
-- `net5.0`
-- `net6.0`
-- `net7.0`
+> **This is the maintained continuation of [`kylegregory/EmmaSharp`](https://github.com/kylegregory/EmmaSharp)**,
+> which last shipped in 2019, by way of [`BinaryPatrick/EmmaSharper`](https://github.com/BinaryPatrick/EmmaSharper).
+> Several bugs still shown as open on those repositories are fixed here —
+> see **[Upstream issues fixed in this fork](docs/upstream-fixes.md)**.
 
-## Sample Usage
+**Targets:** `netstandard2.0`, `net8.0`, `net10.0` — so .NET Framework 4.6.2+ works too.
+**Dependencies:** two on the modern targets, both `Microsoft.Extensions.*`.
 
-The examples below shows how to register the Emma providers with Microsoft DI.
+---
 
-```C#
-    using EmmaSharper;
-
-    ServiceCollection.AddEmmaApiProviders(options => {
-        AccountId = "Your Account ID";
-        PublicKey = "Your Public Key";
-        SecretKey = "Your Secret Key";
-        BaseUrl = "API URL"; // This is optional and defaults to https://api.e2ma.net
-    });
-```
-
-The following providers are available:
-
-### `IAutomationProvider`
-
-Provides access to automation APIs
-
-### `IFieldsProvider`
-
-Provides access to custom fields in your account. Of particular interest is the ClearField method which lets you clear out all the data in a single field for all members in your account. This makes it easy to re-initialize a dataset if you’re looking to correct an import error or syncing issue
-
-### `IGroupProvider`
-
-Provides access to manage all aspects of the groups in your account. In addition to various CRUD methods, you can also use these endpoints to manage the members of your groups. You’ll want to use these methods if you’re managing group membership for more than one member at a time. For dealing with single members, there are better methods in the members endpoints.
-
-### `IMailingProvider`
-
-Provides a way to retrieve information about your mailings including their HTML contents. You can retrieve the members to whom the mailing was sent. You can also pause mailings and cancel mailings that are pending or paused.
-
-### `IMemberProvider`
-
-| In addition to the various CRUD endpoints here related to members, you can also change the status of members, including opting them out. You’ll notice that there are calls related to individual members, but we also provide quite a few calls to deal with bulk updates of members. Please try to use these whenever possible as opposed to looping through a list of members and calling the individual member calls. Where this is especially important is when adding new members. To do a bulk import, you’ll POST to the `AddNewMembers` method. In return, you’ll receive an import ID. You can use this ID to check the status and results of your import. Imports are generally pretty fast, but the time to completion can vary with greater system usage.
-
-### `IResponseProvider`
-
-Provides access to response data. You can get overview numbers for all of your mailings and also drill down into finding out the actual members who opened a particular mailing.
-
-### `ISearchProvider`
-
-Provides access to create, edit, and delete searches. You can also retrieve the members matching any search created in your account.
-
-### `ISignupFormProvider`
-
-Provides a list of all of your sign-up forms
-
-### `ISubscriptionProvider`
-
-Provides access to subscriptions and subscription members
-
-### `IWebhookProvider`
-
-Provides access to webhooks
-
-## Getting Started
-
-This version of EmmaSharper is available on NuGet under [EmmaSharper](https://www.nuget.org/packages/EmmaSharper/latest)
+## Install
 
 ```cmd
-Install-Package EmmaSharper
+dotnet add package EmmaSharper
 ```
 
-## Status of the Project
+## Quick start
 
-The original project, EmmaSharp, created by [kylegregory](https://github.com/kylegregory/EmmaSharp) appears to be abandoned. This new project is a living fork from the original work. Feel free to contribute. Most API endpoints have methods in the library. If you have any questions, feel free to submit an issue for a particular entity or endpoint. Emma API documentation can be found at https://api.myemma.com.
+```csharp
+using EmmaSharper;
 
-### Making contributions
+services.AddEmmaApiProviders(options =>
+{
+    options.AccountId = "your account id";
+    options.PublicKey = "your public key";
+    options.SecretKey = "your secret key";
+    // options.BaseUrl defaults to https://api.e2ma.net
+});
+```
 
-This project is not affiliated with [Emma](http://myemma.com/meet-us). All contributors to this project are unpaid average folks (just like you!) who choose to volunteer their time. If you like Emma and want to contribute, we would appreciate your help! To get started, just [fork the repo](https://help.github.com/articles/fork-a-repo), make your changes and submit a pull request.
+Or bind from configuration — this reads the `"Emma"` section:
+
+```csharp
+services.AddEmmaApiProviders(builder.Configuration);
+```
+
+```json
+{
+  "Emma": {
+    "AccountId": "your account id",
+    "PublicKey": "your public key",
+    "SecretKey": "your secret key"
+  }
+}
+```
+
+> Pass `sectionName: null` to bind the configuration root instead, which is how 7.x behaved.
+
+Then inject any provider:
+
+```csharp
+public sealed class MemberSync(IEmmaMemberProvider members)
+{
+    public async Task<int> CountActiveAsync(CancellationToken ct)
+        => await members.GetMemberCount(cancellationToken: ct);
+}
+```
+
+## Working with multiple accounts
+
+Emma enterprise accounts authenticate once and then address many subaccounts. Use
+`IEmmaAccountScopeFactory` rather than registering a container per account — a scope reuses the same
+credentials and the same pooled `HttpClient`, changing only the account segment of the request path.
+
+```csharp
+public sealed class QuotaSweep(IEmmaAccountScopeFactory scopeFactory)
+{
+    public async Task RunAsync(IEnumerable<string> subaccountIds, CancellationToken ct)
+    {
+        foreach (string accountId in subaccountIds)
+        {
+            IEmmaAccountScope scope = scopeFactory.ForAccount(accountId);
+            int active = await scope.Members.GetMemberCount(cancellationToken: ct);
+        }
+    }
+}
+```
+
+## Rate limiting
+
+**Emma signals throttling with `403 Forbidden` as well as the conventional `429`.** This is the
+least obvious behaviour in the API — a naive client reads the 403 as an auth failure and gives up
+instead of backing off.
+
+Both map to `EmmaRateLimitException`, which carries `RetryAfter` when Emma supplies it:
+
+```csharp
+try
+{
+    await members.GetMemberCount(cancellationToken: ct);
+}
+catch (EmmaRateLimitException ex)
+{
+    await Task.Delay(ex.RetryAfter ?? TimeSpan.FromSeconds(5), ct);
+}
+```
+
+`AddEmmaApiProviders` returns the `IHttpClientBuilder`, so you can attach a resilience handler
+instead of catching:
+
+```csharp
+services.AddEmmaApiProviders(configuration)
+        .AddStandardResilienceHandler();
+```
+
+> If you do, raise the per-attempt timeout. The standard handler defaults to 10 seconds, which is
+> not enough to fetch a 500-record member page.
+
+## Errors
+
+Every non-success response raises `EmmaException` with typed detail — no string matching required:
+
+```csharp
+catch (EmmaException ex)
+{
+    logger.LogError("Emma {Status} on {Method} {Resource}: {Body}",
+        ex.StatusCode, ex.Method, ex.Resource, ex.ResponseBody);
+}
+```
+
+## Providers
+
+| Interface | Covers |
+|---|---|
+| `IEmmaAutomationProvider` | Automation workflows |
+| `IEmmaFieldsProvider` | Custom member fields, including `ClearField` to reset a single field across every member |
+| `IEmmaGroupProvider` | Groups and bulk group membership |
+| `IEmmaMailingProvider` | Mailings, their HTML, recipients; pausing and cancelling |
+| `IEmmaMemberProvider` | Members, statuses, and bulk imports — prefer the bulk calls over looping |
+| `IEmmaResponseProvider` | Mailing response data, down to who opened what |
+| `IEmmaSearchProvider` | Saved searches and their matching members |
+| `IEmmaSignupFormProvider` | Sign-up forms |
+| `IEmmaSubscriptionProvider` | Subscriptions and subscription members |
+| `IEmmaWebhookProvider` | Webhooks |
+
+All methods are asynchronous and accept a trailing `CancellationToken`.
+
+### Paging
+
+Endpoints that page take `start` and `end`. Emma's range is **inclusive**, so a 500-record page is
+`end = start + 499`. Omit both and you get the first page.
+
+## Versioning
+
+`8.0.0` is a breaking release — see the [changelog](CHANGELOG.md). The short version: RestSharp and
+Newtonsoft.Json removed, `EmmaException` no longer exposes a RestSharp type, ids widened from `int`
+to `long`, and every method gained a `CancellationToken`.
+
+## Contributing
+
+This project is not affiliated with [Emma](http://myemma.com/meet-us). Everyone working on it is a
+volunteer. [Fork the repo](https://help.github.com/articles/fork-a-repo), make your changes, and
+open a pull request — CI runs build, tests on both target frameworks, and CodeQL.
+
+Emma's own API documentation is at <https://api.myemma.com/>.
