@@ -14,6 +14,8 @@ namespace EmmaSharper.Services
 
             // Providers are stateless wrappers over the adapter, so constructing the set eagerly
             // costs ten field assignments. Nothing here opens a connection.
+            Account = new AccountProvider(adapter);
+            Enterprise = new EnterpriseProvider(adapter);
             Automation = new AutomationProvider(adapter);
             Fields = new FieldsProvider(adapter);
             Groups = new GroupProvider(adapter);
@@ -27,6 +29,10 @@ namespace EmmaSharper.Services
         }
 
         public string AccountId { get; }
+
+        public IEmmaAccountProvider Account { get; }
+
+        public IEmmaEnterpriseProvider Enterprise { get; }
 
         public IEmmaAutomationProvider Automation { get; }
 
