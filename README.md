@@ -14,6 +14,9 @@ A .NET client for the [Emma (Marigold) API](https://api.myemma.com/).
 📖 **[Documentation wiki](https://github.com/joseph3114/EmmaSharper/wiki)** — getting started, enterprise multi-account use, paging, rate limiting, recipes, and notes on the
 Emma API's own quirks.
 
+🧪 **[Runnable samples](samples/)** — `dotnet run --project samples/EmmaSharper.Samples -- --help`.
+Built by CI, so the documented patterns are guaranteed to compile.
+
 **Targets:** `netstandard2.0`, `net8.0`, `net10.0` — so .NET Framework 4.6.2+ works too.
 **Dependencies:** two on the modern targets, both `Microsoft.Extensions.*`.
 

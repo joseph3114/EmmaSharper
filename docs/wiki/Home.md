@@ -23,6 +23,7 @@ dotnet add package EmmaSharper
 | **[Recipes](Recipes)** | Whole tasks, taken from a production sync |
 | **[API Reference](API-Reference)** | Every public type and member, generated from the assembly |
 | **[Emma API Notes](Emma-API-Notes)** | Behaviour of the API itself that the docs don't mention |
+| **[Samples](https://github.com/joseph3114/EmmaSharper/tree/master/samples)** | The same patterns as a runnable console app |
 
 Upgrading from 7.x? See the migration table in the
 [changelog](https://github.com/joseph3114/EmmaSharper/blob/master/CHANGELOG.md).

@@ -56,6 +56,12 @@ jobs:
       - name: Verify netstandard2.0 compiles
         run: dotnet build src/EmmaSharper/EmmaSharper.csproj -f netstandard2.0 --configuration Release
 
+      # The samples are the documented usage patterns in compilable form. Building them here is
+      # what stops the examples rotting: a rename in the library fails this step instead of
+      # quietly leaving the wiki wrong.
+      - name: Build samples
+        run: dotnet build samples/EmmaSharper.Samples/EmmaSharper.Samples.csproj --configuration Release
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
