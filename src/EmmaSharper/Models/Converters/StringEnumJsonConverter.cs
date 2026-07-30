@@ -112,13 +112,13 @@ namespace EmmaSharper.Internals
             }
             else if (reader.TokenType == JsonTokenType.Number && reader.TryGetInt64(out long numeric))
             {
-                foreach (TEnum candidate in Enum.GetValues<TEnum>())
+                // Enum.IsDefined rather than scanning Enum.GetValues: no array allocation per
+                // call, and it drops the implicit-filter loop CodeQL flags as cs/linq/missed-where.
+                TEnum candidate = (TEnum)Enum.ToObject(typeof(TEnum), numeric);
+                if (Enum.IsDefined(candidate))
                 {
-                    if (Convert.ToInt64(candidate) == numeric)
-                    {
-                        result = candidate;
-                        return true;
-                    }
+                    result = candidate;
+                    return true;
                 }
             }
 
