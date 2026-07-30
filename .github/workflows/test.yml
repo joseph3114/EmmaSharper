@@ -62,12 +62,43 @@ jobs:
       - name: Build samples
         run: dotnet build samples/EmmaSharper.Samples/EmmaSharper.Samples.csproj --configuration Release
 
+      # Both test steps emit a Cobertura file; ReportGenerator merges them so the figure
+      # reflects the union of the net8.0 and net10.0 runs rather than whichever ran last.
+      # `MarkdownSummaryGithub` writes straight to the job summary, so coverage is visible
+      # on the run page instead of buried in a downloadable artifact nobody opens.
+      - name: Coverage summary
+        if: always()
+        uses: danielpalme/ReportGenerator-GitHub-Action@d3ebf1f760f7d8ab92cc44d9bcfee7ad73722a31 # 5.5.11
+        with:
+          reports: "**/TestResults/**/coverage.cobertura.xml"
+          targetdir: coveragereport
+          reporttypes: MarkdownSummaryGithub;Cobertura
+          title: EmmaSharper
+
+      - name: Publish coverage to the job summary
+        if: always()
+        run: cat coveragereport/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+
+      # Codecov adds the two things a job summary cannot: a trend over time, and a comment
+      # on each pull request scoped to the lines that PR actually changed.
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          files: coveragereport/Cobertura.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          # A coverage upload failing must never fail the build - it reports on the tests,
+          # it is not one of them.
+          fail_ci_if_error: false
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: test-results
-          path: '**/TestResults/**'
+          path: |
+            **/TestResults/**
+            coveragereport/**
           if-no-files-found: ignore
 
   # Runs the netstandard2.0 build of the library on a real .NET Framework runtime.

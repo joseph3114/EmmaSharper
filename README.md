@@ -3,6 +3,7 @@
 [![CI](https://github.com/joseph3114/EmmaSharper/actions/workflows/test.yml/badge.svg)](https://github.com/joseph3114/EmmaSharper/actions/workflows/test.yml)
 [![NuGet](https://img.shields.io/nuget/v/EmmaSharper.svg)](https://www.nuget.org/packages/EmmaSharper/)
 [![Downloads](https://img.shields.io/nuget/dt/EmmaSharper.svg)](https://www.nuget.org/packages/EmmaSharper/)
+[![Coverage](https://codecov.io/gh/joseph3114/EmmaSharper/branch/master/graph/badge.svg)](https://codecov.io/gh/joseph3114/EmmaSharper)
 [![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/joseph3114/EmmaSharper?label=openssf%20scorecard)](https://scorecard.dev/viewer/?uri=github.com/joseph3114/EmmaSharper)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/joseph3114/EmmaSharper/blob/master/LICENSE.txt)
 
