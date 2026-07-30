@@ -1,0 +1,37 @@
+<Project>
+
+  <!-- Shared across src/ and tests/. Project-specific settings stay in the .csproj. -->
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- LangVersion is deliberately unset: the SDK's default for each TFM is the
+         reproducible choice. Pin the SDK in global.json instead. -->
+  </PropertyGroup>
+
+  <!-- Deterministic, debuggable, source-linked builds.
+       SourceLink for GitHub is built into the SDK since .NET 8 - no package needed. -->
+  <PropertyGroup>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <DebugType>portable</DebugType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <!-- Package identity shared by anything packable here.
+       TODO: confirm RepositoryUrl with BinaryPatrick - the NuGet trusted-publishing
+       policy binds to one specific repo, so this needs to match the canonical publisher. -->
+  <PropertyGroup>
+    <Authors>kylegregory, joseph3114, BinaryPatrick</Authors>
+    <Product>EmmaSharper</Product>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/joseph3114/EmmaSharper</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/joseph3114/EmmaSharper</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+</Project>

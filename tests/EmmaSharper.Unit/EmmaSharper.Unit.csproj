@@ -1,53 +1,29 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net5.0;net6.0;net7.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
-    <PackageReference Include="FluentAssertions" Version="6.11.0" />
-    <PackageReference Include="Moq" Version="4.18.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="xunit" Version="2.4.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 
+  <!-- FluentAssertions is capped below 8.0.0 on purpose: 8.x moved to a paid
+       commercial licence, which is not appropriate for a public MIT repo that
+       outside contributors need to be able to build. -->
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="6.0.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="[3.1,4)" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="[3.1,4)" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="[3.1,4)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'=='net5.0'">
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="[5.0,6)" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="[5.0,6)" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="[5.0,6)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="[6.0,7)" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="[6.0,7)" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="[6.0,7)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'=='net7.0'">
-	<PackageReference Include="Microsoft.Extensions.Configuration" Version="[7.0, 8)" />
-	<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="[7.0, 8)" />
-	<PackageReference Include="Microsoft.Extensions.Logging" Version="[7.0, 8)" />
+    <PackageReference Include="FluentAssertions" Version="[7.0.0,8.0.0)" />
+    <PackageReference Include="Moq" Version="4.20.72" />
   </ItemGroup>
 
   <ItemGroup>
