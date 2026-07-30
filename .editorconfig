@@ -1,0 +1,65 @@
+﻿# EmmaSharper coding conventions.
+# Keeps formatting consistent for outside contributors without needing a review round-trip.
+root = true
+
+[*]
+charset = utf-8-bom
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{yml,yaml,json,md}]
+indent_size = 2
+
+[*.md]
+# Two trailing spaces are a hard line break in Markdown.
+trim_trailing_whitespace = false
+
+[*.{csproj,props,targets}]
+indent_size = 2
+
+[*.cs]
+# --- usings -------------------------------------------------------------
+# System.* first, then the rest. An earlier automated sweep left these out of
+# order, which is what prompted writing this file down.
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = false
+csharp_using_directive_placement = outside_namespace:warning
+
+# --- style the codebase already follows ---------------------------------
+csharp_new_line_before_open_brace = all
+csharp_prefer_braces = true:warning
+csharp_style_namespace_declarations = block_scoped:silent
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = false:suggestion
+csharp_style_var_elsewhere = false:suggestion
+
+# --- naming --------------------------------------------------------------
+dotnet_naming_rule.interfaces_start_with_i.severity = warning
+dotnet_naming_rule.interfaces_start_with_i.symbols = interface_symbols
+dotnet_naming_rule.interfaces_start_with_i.style = prefixed_with_i
+dotnet_naming_symbols.interface_symbols.applicable_kinds = interface
+dotnet_naming_style.prefixed_with_i.required_prefix = I
+dotnet_naming_style.prefixed_with_i.capitalization = pascal_case
+
+dotnet_naming_rule.public_members_pascal.severity = warning
+dotnet_naming_rule.public_members_pascal.symbols = public_symbols
+dotnet_naming_rule.public_members_pascal.style = pascal
+dotnet_naming_symbols.public_symbols.applicable_kinds = property,method,event,class,struct,enum
+dotnet_naming_symbols.public_symbols.applicable_accessibilities = public
+dotnet_naming_style.pascal.capitalization = pascal_case
+
+# --- correctness ---------------------------------------------------------
+# Nullable warnings are errors repo-wide (see Directory.Build.props); these
+# catch the adjacent mistakes that are easy to make in an async client.
+dotnet_diagnostic.CA2016.severity = warning   # forward the CancellationToken
+dotnet_diagnostic.CA2007.severity = none      # ConfigureAwait - applied deliberately, not everywhere
+dotnet_diagnostic.CS1591.severity = none      # missing XML docs, tracked separately
+
+[tests/**/*.cs]
+# Test names read as sentences, and asserting on a literal is the point.
+dotnet_diagnostic.CA1707.severity = none
