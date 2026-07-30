@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -18,7 +18,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<Workflow>> GetWorkflows()
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/automation/workflows"
             };
@@ -29,7 +29,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<Workflow> GetWorkflowById(string workflowId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/automation/workflows/{workflowId}"
             };
@@ -41,7 +41,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<WorkflowCount> GetWorkflowCounts()
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/automation/counts"
             };

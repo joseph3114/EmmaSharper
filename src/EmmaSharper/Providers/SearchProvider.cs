@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -17,7 +17,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetSearchesCount(bool includeDeleted = false)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/searches"
             };
@@ -34,7 +34,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<List<Search>> GetSearches(bool includeDeleted = false, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/searches"
             };
@@ -50,7 +50,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<Search> GetSearchDetails(string searchId, bool includeDeleted = false)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/searches/{searchId}"
             };
@@ -67,7 +67,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> CreateSavedSearch(CreateSearch search)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/searches",
             };
@@ -79,7 +79,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> UpdateSavedSearch(string searchId, CreateSearch search)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/searches/{searchId}"
             };
@@ -92,7 +92,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> DeleteSavedSearch(string searchId)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/searches/{searchId}"
             };
@@ -104,7 +104,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMembersMatchingSearchCount(string searchId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/searches/{searchId}/members"
             };
@@ -117,7 +117,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<Member>> GetMembersMatchingSearch(string searchId, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/searches/{searchId}/members"
             };

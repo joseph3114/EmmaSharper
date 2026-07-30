@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -18,7 +18,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> ListMailingsCount(IEnumerable<MailingType> mailingTypes = null, IEnumerable<MailingStatus> mailingStatuses = null, bool includeArchived = false, bool includeScheduled = false, bool includeHtmlBody = false, bool includePlaintext = false)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/mailings"
             };
@@ -62,7 +62,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<MailingInfo>> ListMailings(IEnumerable<MailingType> mailingTypes = null, IEnumerable<MailingStatus> mailingStatuses = null, bool includeArchived = false, bool includeScheduled = false, bool includeHtmlBody = false, bool includePlaintext = false, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/mailings"
             };
@@ -105,7 +105,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<Mailing> GetMailing(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/mailings/{mailingId}"
             };
@@ -117,7 +117,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMailingMembersCount(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/mailings/{mailingId}/members"
             };
@@ -130,7 +130,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<Member>> GetMailingMembers(string mailingId, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/mailings/{mailingId}/members"
             };
@@ -142,7 +142,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<MailingPersonalization> GetMailingMembersPersonalization(string mailingId, string memberId, PersonalizationType? type = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/mailings/{mailingId}/messages/{memberId}"
             };
@@ -160,7 +160,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMailingGroupsCount(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/mailings/{mailingId}/groups"
             };
@@ -173,7 +173,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<Group>> GetMailingGroups(string mailingId, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/mailings/{mailingId}/groups"
             };
@@ -185,7 +185,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<Search>> GetMailingSearches(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/mailings/{mailingId}/searches"
             };
@@ -197,7 +197,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<UpdateMailing> UpdateMailingStatus(string mailingId, UpdateMailingStatus status)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/mailings/{mailingId}"
             };
@@ -210,7 +210,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> ArchiveMailing(string mailingId)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/mailings/{mailingId}"
             };
@@ -222,7 +222,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> CancelMailing(string mailingId)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/mailings/cancel/{mailingId}"
             };
@@ -234,7 +234,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<MailingIdentifier> ForwardMailing(string mailingId, string memberId, ForwardMailing mailing)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/forwards/{mailingId}/{memberId}"
             };
@@ -248,7 +248,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<MailingIdentifier> ResendMailing(string mailingId, ResendMailing mailing)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/mailings/{mailingId}"
             };
@@ -261,7 +261,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<MailingHeadsUp>> GetHeadsUpEmailsForMailing(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/mailings/{mailingId}/headsup"
             };
@@ -273,7 +273,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> VaildatePersonalizationSyntax(MailingPersonalization personalization)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/mailings/validate",
             };
@@ -285,7 +285,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> DeclareWinner(string mailingId, string winnerId)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/mailings/{mailingId}/winner/{winnerId}"
             };

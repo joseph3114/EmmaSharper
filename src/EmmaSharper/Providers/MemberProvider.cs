@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -18,7 +18,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMemberCount(bool includeDeleted = false)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members"
             };
@@ -35,7 +35,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<Member>> ListMembers(bool includeDeleted = false, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members"
             };
@@ -51,7 +51,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<Member> GetMember(string memberId, bool includeDeleted = false)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members/{memberId}"
             };
@@ -68,7 +68,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<Member> GetMemberByEmail(string memberEmail, bool includeDeleted = false)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members/email/{memberEmail}"
             };
@@ -85,7 +85,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<MemberOptout>> GetMemberOptout(string memberId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members/{memberId}/optout"
             };
@@ -97,7 +97,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> UpdateMemberToOptoutByEmail(string memberEmail)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/members/email/optout/{memberEmail}"
             };
@@ -109,7 +109,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<MembersAdd> AddNewMembers(AddMembers members)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/members",
             };
@@ -121,7 +121,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<MemberAdd> AddOrUpdateSingleMember(AddMember member)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/members/add",
             };
@@ -133,7 +133,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<MemberSignup> MemberSignup(SignupMember member)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/members/signup",
             };
@@ -145,7 +145,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> DeleteMembers(DeleteMembers members)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/members/delete",
             };
@@ -157,7 +157,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> ChangeMemberStatus(ChangeStatus status)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/members/status",
             };
@@ -169,7 +169,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> UpdateSingleMemberInformation(string memberId, UpdateMember member)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/members/{memberId}"
             };
@@ -182,7 +182,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> DeleteMember(string memberId)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/members/{memberId}"
             };
@@ -194,7 +194,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<Group>> GetMemberGroups(string memberId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members/{memberId}/groups"
             };
@@ -206,7 +206,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<int>> AddMemberToGroups(string memberId, IEnumerable<int> groupIds)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/members/{memberId}/groups"
             };
@@ -219,7 +219,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<int>> RemoveMemberFromGroups(string memberId, List<int> groupIds)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/members/{memberId}/groups/remove"
             };
@@ -232,7 +232,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> DeleteAllMembers(MemberStatusShort memberStatusId)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/members"
             };
@@ -244,7 +244,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> RemoveMemberFromAllGroups(string memberId)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/members/{memberId}/groups"
             };
@@ -256,7 +256,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> RemoveMembersFromGroups(RemoveMemberGroups groups)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/members/groups/remove",
             };
@@ -268,7 +268,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMemberMailingHistoryCount(string memberId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members/{memberId}/mailings"
             };
@@ -282,7 +282,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<MailingHistory>> GetMemberMailingHistory(string memberId, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members/{memberId}/mailings"
             };
@@ -294,7 +294,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMembersAffectedByImportCount(string importId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members/imports/{importId}/members"
             };
@@ -308,7 +308,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ImportMembers>> GetMembersAffectedByImport(string importId, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members/imports/{importId}/members"
             };
@@ -320,7 +320,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<Import> GetImportInformation(string importId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members/imports/{importId}"
             };
@@ -332,7 +332,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetAllImportsCount()
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members/imports"
             };
@@ -345,7 +345,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<Import>> GetAllImports(uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/members/imports"
             };
@@ -356,7 +356,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> CopyMembersIntoStatusGroup(string groupId, CopyStatus status)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/members/{groupId}/copy"
             };
@@ -369,7 +369,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> UpdateStatusOfGroupMembersBasedOnCurrentStatus(MemberStatusShort statusFrom, MemberStatusShort statusTo, string groupId = null)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/members/status/{statusFrom}/to/{statusTo}"
             };

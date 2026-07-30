@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -19,7 +19,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseSummary>> GetResponseSummary(DateRange? range = null, bool includeArchived = false)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response"
             };
@@ -40,7 +40,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseSummary>> GetResponseSummary(DateTime? date, bool includeArchived = false)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response"
             };
@@ -61,7 +61,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<Response> GetMailingResponse(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}"
             };
@@ -73,7 +73,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMailingSendsCount(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/sends"
             };
@@ -86,7 +86,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseGeneric>> GetMailingSends(string mailingId, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/sends"
             };
@@ -98,7 +98,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMailingInProgressCount(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/in_progress"
             };
@@ -111,7 +111,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseGeneric>> GetMailingInProgress(string mailingId, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/in_progress"
             };
@@ -123,7 +123,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMailingDelieveriesCount(string mailingId, DeliveryType result = DeliveryType.All)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/deliveries"
             };
@@ -138,7 +138,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseDeliveries>> GetMailingDelieveries(string mailingId, DeliveryType result = DeliveryType.All, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/deliveries"
             };
@@ -152,7 +152,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMailingOpensCount(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/opens"
             };
@@ -165,7 +165,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseGeneric>> GetMailingOpens(string mailingId, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/opens"
             };
@@ -177,7 +177,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<Link>> GetMailingLinks(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/links"
             };
@@ -189,7 +189,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMailingClicksCount(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/clicks"
             };
@@ -202,7 +202,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseClicks>> GetMailingClicks(string mailingId, string memberId = null, string linkId = null, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/clicks"
             };
@@ -224,7 +224,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseForwards>> GetMailingForwards(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/forwards"
             };
@@ -236,7 +236,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> GetMailingOptoutsCount(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/optouts"
             };
@@ -249,7 +249,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseGeneric>> GetMailingOptouts(string mailingId, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/optouts"
             };
@@ -261,7 +261,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseSignups>> GetMailingSignups(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/signups"
             };
@@ -273,7 +273,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseShares>> GetMailingShares(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/shares"
             };
@@ -285,7 +285,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseCustomerShare>> GetMailingCustomerShares(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/customer_shares"
             };
@@ -297,7 +297,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseCustomerShareClicks>> GetMailingCustomerShareClicks(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/customer_share_clicks"
             };
@@ -309,7 +309,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<ResponseCustomerShare> GetMailingCustomerShare(string shareId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{shareId}/customer_share"
             };
@@ -321,7 +321,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<ResponseSharesOverview>> GetMailingSharesOverview(string mailingId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/response/{mailingId}/shares/overview"
             };

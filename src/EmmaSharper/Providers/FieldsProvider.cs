@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -18,7 +18,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> ListFieldsCount(bool includeDeleted = false)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/fields"
             };
@@ -35,7 +35,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<Field>> ListFields(bool includeDeleted = false, uint? start = null, uint? end = null)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/fields"
             };
@@ -51,7 +51,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<Field> GetField(string fieldId, bool includeDeleted = false)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/fields/{fieldId}"
             };
@@ -68,7 +68,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> CreateField(CreateField field)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/fields",
             };
@@ -80,7 +80,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> DeleteField(string fieldId)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/fields/{fieldId}"
             };
@@ -92,7 +92,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> ClearField(string fieldId)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/fields/{fieldId}/clear"
             };
@@ -104,7 +104,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> UpdateField(string fieldId, UpdateField field)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/fields/{fieldId}"
             };

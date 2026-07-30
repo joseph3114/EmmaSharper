@@ -1,101 +1,182 @@
-﻿using System.Net;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using EmmaSharper.Internals;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Serializers;
+using Microsoft.Extensions.Options;
 
 namespace EmmaSharper.Adapters
 {
-    internal class EmmaApiAdapter : IEmmaApiAdapter
+    /// <inheritdoc cref="IEmmaApiAdapter"/>
+    internal sealed class EmmaApiAdapter : IEmmaApiAdapter
     {
-        private const int MAX_PAGE_SIZE = 500;
+        /// <summary>Emma caps a single page at 500 records.</summary>
+        private const int MaxPageSize = 500;
 
-        private readonly IEmmaRestClientFactory clientFactory;
+        private readonly HttpClient httpClient;
         private readonly EmmaOptions options;
-        private readonly ILogger logger;
+        private readonly ILogger<EmmaApiAdapter> logger;
 
-        /// <summary>Emma API request adapter static configuration</summary>
-        static EmmaApiAdapter()
+        public EmmaApiAdapter(HttpClient httpClient, IOptions<EmmaOptions> options, ILogger<EmmaApiAdapter> logger)
         {
-            SecurityProtocolType acceptedProtocolTypes = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
-            SetAcceptedProtocolTypes(acceptedProtocolTypes);
-        }
-
-        public EmmaApiAdapter(ILogger<EmmaApiAdapter> logger, IEmmaRestClientFactory clientFactory, EmmaOptions options)
-        {
-            this.clientFactory = clientFactory;
-            this.options = options;
+            this.httpClient = httpClient;
+            this.options = options.Value;
             this.logger = logger;
         }
 
-        /// <summary>Execute the Call to the Emma API. All methods return this base method</summary>
-        /// <typeparam name="T">The model or type to bind the return response.</typeparam>
-        /// <param name="request">The RestRequest request.</param>
-        /// <param name="start">If more than 500 results, use these parameters to start/end pages.</param>
-        /// <param name="end">If more than 500 results, use these parameters to start/end pages.</param>
-        /// <returns>Response data from the API call.</returns>
-        public async Task<T> MakeRequest<T>(RestRequest request, uint? start = null, uint? end = null)
+        // The 7.x adapter set ServicePointManager.SecurityProtocol from a static constructor. That
+        // mutated TLS settings for the entire host process from inside a library, and has been a
+        // no-op on .NET Core since 3.0 - its removal here is deliberate.
+
+        public async Task<T?> MakeRequest<T>(
+            EmmaRequest request,
+            uint? start = null,
+            uint? end = null,
+            string? accountId = null,
+            CancellationToken cancellationToken = default)
         {
-            if (start >= 0 || end >= 0)
+            string resource = ResolveResource(request, accountId);
+            string uri = resource + BuildQuery(request, start, end);
+
+            using HttpRequestMessage message = new(request.Method, uri);
+
+            if (request.Body is not null)
             {
-                start = ValidateStartPage(start, end);
-                end = ValidateEndPage(start, end);
-                request.AddQueryParameter("start", start.ToString());
-                request.AddQueryParameter("end", end.ToString());
+                string json = JsonSerializer.Serialize(request.Body, request.Body.GetType(), EmmaJson.Options);
+                message.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
-            request.AddParameter("accountId", options.AccountId, ParameterType.UrlSegment);
+            logger.LogDebug("Emma request {Method} {Resource} starting", request.Method.Method, resource);
 
-            logger.LogDebug($"Request for {request.Resource} starting");
-            IRestClient client = clientFactory.GetRestClient();
-            IRestResponse response = await client.ExecuteAsync(request);
-            logger.LogDebug($"Request for {request.Resource} complete with {response.StatusCode}");
+            using HttpResponseMessage response = await httpClient
+                .SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+                .ConfigureAwait(false);
 
-            if (response.StatusCode >= HttpStatusCode.BadRequest)
+            string body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+
+            logger.LogDebug(
+                "Emma request {Method} {Resource} completed with {StatusCode}",
+                request.Method.Method,
+                resource,
+                (int)response.StatusCode);
+
+            if (!response.IsSuccessStatusCode)
             {
-                throw new EmmaException(response);
+                throw CreateException(response, body, request.Method, resource);
             }
 
-            T content = JsonConvert.DeserializeObject<T>(response.Content);
-            return content;
+            if (string.IsNullOrWhiteSpace(body))
+            {
+                return default;
+            }
+
+            return JsonSerializer.Deserialize<T>(body, EmmaJson.Options);
         }
 
-        private static uint ValidateStartPage(uint? start, uint? end)
+        /// <summary>Substitutes <c>{accountId}</c> and any other placeholders into the path.</summary>
+        private string ResolveResource(EmmaRequest request, string? accountId)
         {
-            if (start > 0)
+            string account = accountId ?? options.AccountId
+                ?? throw new InvalidOperationException(
+                    $"No account id supplied. Set {nameof(EmmaOptions)}.{nameof(EmmaOptions.AccountId)} " +
+                    "or pass an explicit account id for this call.");
+
+            string resource = request.Resource.Replace("{accountId}", Uri.EscapeDataString(account));
+
+            foreach (KeyValuePair<string, string> segment in request.Segments)
             {
-                return start.Value;
+                resource = resource.Replace("{" + segment.Key + "}", Uri.EscapeDataString(segment.Value));
             }
 
-            if (end > 0 || end - MAX_PAGE_SIZE > 0)
-            {
-                return end.Value - MAX_PAGE_SIZE;
-            }
-
-            return 0;
+            return resource;
         }
 
-        private static uint ValidateEndPage(uint? start, uint? end)
+        private static string BuildQuery(EmmaRequest request, uint? start, uint? end)
         {
-            if (end > 0)
+            List<KeyValuePair<string, string>> query = new(request.Query);
+
+            if (start.HasValue || end.HasValue)
             {
-                return end.Value;
+                (uint from, uint to) = ResolvePage(start, end);
+                query.Add(new KeyValuePair<string, string>("start", from.ToString(CultureInfo.InvariantCulture)));
+                query.Add(new KeyValuePair<string, string>("end", to.ToString(CultureInfo.InvariantCulture)));
             }
 
-            if (start > 0)
+            if (query.Count == 0)
             {
-                return start.Value + MAX_PAGE_SIZE;
+                return string.Empty;
             }
 
-            return MAX_PAGE_SIZE;
+            StringBuilder builder = new("?");
+            for (int i = 0; i < query.Count; i++)
+            {
+                if (i > 0)
+                {
+                    builder.Append('&');
+                }
+
+                builder.Append(Uri.EscapeDataString(query[i].Key))
+                       .Append('=')
+                       .Append(Uri.EscapeDataString(query[i].Value));
+            }
+
+            return builder.ToString();
         }
 
-        /// <summary>Sets accepted security type for Emma API requests</summary>
-        /// <param name="acceptedProtocolTypes">Accepted types</param>
-        private static void SetAcceptedProtocolTypes(SecurityProtocolType acceptedProtocolTypes)
-            => ServicePointManager.SecurityProtocol = acceptedProtocolTypes;
+        /// <summary>
+        /// Resolves a page window. Emma's range is <b>inclusive</b>, so a 500-record page is
+        /// <c>end = start + 499</c>.
+        /// </summary>
+        /// <remarks>
+        /// Fixes two defects in the 7.x helpers: <c>ValidateEndPage</c> returned <c>start + 500</c>,
+        /// requesting 501 records, and <c>ValidateStartPage</c> computed <c>end - 500</c> on a
+        /// <see cref="uint"/>, which wrapped to roughly 4.29 billion whenever <c>end</c> was below
+        /// 500 and no start was supplied.
+        /// </remarks>
+        private static (uint Start, uint End) ResolvePage(uint? start, uint? end)
+        {
+            uint from = start ?? (end.HasValue && end.Value >= MaxPageSize
+                ? end.Value - MaxPageSize + 1
+                : 0u);
+
+            uint to = end ?? from + MaxPageSize - 1;
+
+            return to < from ? (from, from) : (from, to);
+        }
+
+        /// <summary>
+        /// Emma throttles with <b>403</b> as well as 429, so both map to
+        /// <see cref="EmmaRateLimitException"/>.
+        /// </summary>
+        private static EmmaException CreateException(
+            HttpResponseMessage response,
+            string body,
+            HttpMethod method,
+            string resource)
+        {
+            bool throttled = response.StatusCode == HttpStatusCode.TooManyRequests
+                          || response.StatusCode == HttpStatusCode.Forbidden;
+
+            if (!throttled)
+            {
+                return new EmmaException(response.StatusCode, body, method, resource);
+            }
+
+            TimeSpan? retryAfter = response.Headers.RetryAfter?.Delta;
+
+            if (retryAfter is null && response.Headers.RetryAfter?.Date is DateTimeOffset when)
+            {
+                TimeSpan delta = when - DateTimeOffset.UtcNow;
+                retryAfter = delta > TimeSpan.Zero ? delta : TimeSpan.Zero;
+            }
+
+            return new EmmaRateLimitException(response.StatusCode, retryAfter, body, method, resource);
+        }
     }
 }

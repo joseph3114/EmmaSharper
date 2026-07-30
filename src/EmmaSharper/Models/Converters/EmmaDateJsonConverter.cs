@@ -1,45 +1,83 @@
-﻿using System;
-using Newtonsoft.Json;
+using System;
+using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper.Internals
 {
-    /// <summary>Custom date parser to handle Emma's unique date format</summary>
-    /// <remarks>Date formate is "@D:2014-11-26T11:40:55"</remarks>
-    internal class EmmaDateJsonConverter : JsonConverter
+    /// <summary>Handles Emma's prefixed date format, e.g. "@D:2014-11-26T11:40:55".</summary>
+    /// <remarks>
+    /// This is a factory rather than a plain converter because the attribute is applied to both
+    /// <see cref="DateTime"/> and <see cref="Nullable{T}"/> properties. Newtonsoft's non-generic
+    /// JsonConverter covered both from one class; System.Text.Json matches on the exact type, so a
+    /// JsonConverter&lt;DateTime?&gt; alone would silently skip the five non-nullable sites.
+    /// </remarks>
+    internal sealed class EmmaDateJsonConverter : JsonConverterFactory
     {
-        /// <summary>Writes the JSON representation of the object. Writes a DateTime value that Emma expects.</summary>
-        /// <param name="writer">Instance of the JsonWriter class.</param>
-        /// <param name="value">The value of the Date to be serialized.</param>
-        /// <param name="serializer">Instance of the JsonSearlizer class.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            DateTime date = (DateTime)value;
-            writer.WriteValue($"@D:{date:s}"); // Deal with this, ugh: "@D:2014-11-26T11:40:55"
-        }
+        internal const string Prefix = "@D:";
 
-        /// <summary>Reads the JSON representation of the object. In this case a DateTime that C# can parse.</summary>
-        /// <param name="reader">Instance of the JsonReader class.</param>
-        /// <param name="objectType">The type of object to read.</param>
-        /// <param name="existingValue">The existing object value.</param>
-        /// <param name="serializer">Instance of the JsonSearlizer class.</param>
-        /// <returns>The object value.</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override bool CanConvert(Type typeToConvert)
+            => typeToConvert == typeof(DateTime) || typeToConvert == typeof(DateTime?);
+
+        public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+            => typeToConvert == typeof(DateTime?)
+                ? new NullableConverter()
+                : new NonNullableConverter();
+
+        /// <summary>Strips the "@D:" prefix and parses. Returns null when absent or unparseable.</summary>
+        private static DateTime? ReadCore(ref Utf8JsonReader reader)
         {
-            if (reader.Value is null)
+            if (reader.TokenType == JsonTokenType.Null)
             {
                 return null;
             }
 
-            string date = reader.Value.ToString().Replace("@D:", "");
-            DateTime? result = DateTime.TryParse(date, out DateTime parsed) ? (DateTime?)parsed : default;
+            string? raw = reader.TokenType == JsonTokenType.String ? reader.GetString() : null;
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                return null;
+            }
 
-            return result;
+            if (raw!.StartsWith(Prefix, StringComparison.Ordinal))
+            {
+                raw = raw.Substring(Prefix.Length);
+            }
+
+            // InvariantCulture is deliberate: this is a wire format, not user-facing text.
+            // The Newtonsoft version used the ambient culture, which could vary by host.
+            return DateTime.TryParse(raw, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsed)
+                ? parsed
+                : null;
         }
 
-        /// <summary>Determines whether this instance can convert the specified object type.</summary>
-        /// <param name="objectType">Type of the object.</param>
-        /// <returns>True if this instance can convert the specified object type; otherwise, false.</returns>
-        public override bool CanConvert(Type objectType)
-            => false;
+        private static void WriteCore(Utf8JsonWriter writer, DateTime value)
+            => writer.WriteStringValue(string.Concat(Prefix, value.ToString("s", CultureInfo.InvariantCulture)));
+
+        private sealed class NullableConverter : JsonConverter<DateTime?>
+        {
+            public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+                => ReadCore(ref reader);
+
+            public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
+            {
+                if (value is null)
+                {
+                    writer.WriteNullValue();
+                }
+                else
+                {
+                    WriteCore(writer, value.Value);
+                }
+            }
+        }
+
+        private sealed class NonNullableConverter : JsonConverter<DateTime>
+        {
+            public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+                => ReadCore(ref reader) ?? default;
+
+            public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+                => WriteCore(writer, value);
+        }
     }
 }

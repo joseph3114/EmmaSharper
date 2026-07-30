@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -19,7 +19,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<SignupForm>> GetSignupForms()
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/signup_forms"
             };

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -18,7 +18,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<Webhook>> GetWebhooks()
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/webhooks"
             };
@@ -29,7 +29,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<Webhook> GetWebhookById(string webhookId)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/webhooks/{webhookId}"
             };
@@ -41,7 +41,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<IEnumerable<WebhookEvents>> GetWebhookEvents()
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/webhooks/events"
             };
@@ -52,7 +52,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> CreateWebhook(CreateWebhook webhook)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/webhooks",
             };
@@ -64,7 +64,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<int> UpdateWebhook(string webhookId, UpdateWebhook webhook)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/webhooks/{webhookId}"
             };
@@ -77,7 +77,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> DeleteWebhookById(string webhookId)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/webhooks/{webhookId}"
             };
@@ -89,7 +89,7 @@ namespace EmmaSharper
         /// <inheritdoc/>
         public async Task<bool> DeleteAllWebhooks()
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/webhooks"
             };
