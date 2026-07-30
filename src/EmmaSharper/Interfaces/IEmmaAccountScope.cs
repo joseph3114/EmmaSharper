@@ -13,6 +13,15 @@ namespace EmmaSharper
         /// <summary>The account id every call made through this scope targets.</summary>
         string AccountId { get; }
 
+        /// <summary>Account-level endpoints, such as the account's users.</summary>
+        IEmmaAccountProvider Account { get; }
+
+        /// <summary>
+        /// Enterprise endpoints. Only meaningful when the scoped account is itself an enterprise
+        /// account; scoping to a subaccount and calling this will not list that subaccount's peers.
+        /// </summary>
+        IEmmaEnterpriseProvider Enterprise { get; }
+
         /// <summary>Automation workflows for this account.</summary>
         IEmmaAutomationProvider Automation { get; }
 

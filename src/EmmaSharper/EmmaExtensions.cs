@@ -99,6 +99,9 @@ namespace EmmaSharper
             // factory registers as transient. A singleton here would be a captive dependency.
             services.AddTransient<IEmmaAccountScopeFactory, EmmaAccountScopeFactory>();
 
+            services.AddTransient<IEmmaAccountProvider, AccountProvider>();
+            services.AddTransient<IEmmaEnterpriseProvider, EnterpriseProvider>();
+
             services.AddTransient<IEmmaAutomationProvider, AutomationProvider>();
             services.AddTransient<IEmmaFieldsProvider, FieldsProvider>();
             services.AddTransient<IEmmaGroupProvider, GroupProvider>();
