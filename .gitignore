@@ -290,3 +290,11 @@ __pycache__/
 
 # Project-specific
 /Documentation
+
+# Generated XML documentation. GenerateDocumentationFile=true emits this on every
+# build, so a committed copy only ever goes stale - the one that was tracked here
+# still described the RestSharp-era surface, with no CancellationToken and no
+# enterprise providers. The package always ships the freshly built copy from obj/,
+# so this was misleading in the repository rather than wrong in the release.
+src/**/*.xml
+!src/**/*.config.xml
