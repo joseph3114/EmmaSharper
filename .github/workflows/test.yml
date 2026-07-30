@@ -37,17 +37,24 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.*.props', 'global.json') }}
           restore-keys: ${{ runner.os }}-nuget-
 
-      - name: Restore
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-
-      - name: Test
+      # Per-framework because the test project also targets net472, which cannot run here.
+      - name: Test net8.0
         run: >
-          dotnet test --configuration Release --no-build
-          --logger "trx;LogFileName=test-results.trx"
+          dotnet test tests/EmmaSharper.Unit/EmmaSharper.Unit.csproj -f net8.0
+          --configuration Release
+          --logger "trx;LogFileName=net8.trx"
           --collect:"XPlat Code Coverage"
+
+      - name: Test net10.0
+        run: >
+          dotnet test tests/EmmaSharper.Unit/EmmaSharper.Unit.csproj -f net10.0
+          --configuration Release
+          --logger "trx;LogFileName=net10.trx"
+          --collect:"XPlat Code Coverage"
+
+      # Compile-only here; net472 in the job below is what actually exercises this leg.
+      - name: Verify netstandard2.0 compiles
+        run: dotnet build src/EmmaSharper/EmmaSharper.csproj -f netstandard2.0 --configuration Release
 
       - name: Upload test results
         if: always()
@@ -56,3 +63,33 @@ jobs:
           name: test-results
           path: '**/TestResults/**'
           if-no-files-found: ignore
+
+  # Runs the netstandard2.0 build of the library on a real .NET Framework runtime.
+  # Without this, netstandard2.0 would only ever be compile-checked.
+  test-netfx:
+    name: Build & test (.NET Framework)
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.*.props', 'global.json') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Test net472
+        run: >
+          dotnet test tests/EmmaSharper.Unit/EmmaSharper.Unit.csproj -f net472
+          --configuration Release
+          --logger "trx;LogFileName=net472.trx"

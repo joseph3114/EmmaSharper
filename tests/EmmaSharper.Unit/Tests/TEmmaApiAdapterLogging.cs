@@ -72,8 +72,10 @@ namespace EmmaSharper.Unit.Tests
         {
             CapturingLogger<EmmaApiAdapter> logger = await CallMemberByEmailAsync();
 
+            // IndexOf rather than Contains(string, StringComparison): that overload does not
+            // exist on .NET Framework, which the net472 test leg runs on.
             logger.Messages.Should().NotBeEmpty();
-            logger.Messages.Should().OnlyContain(m => !m.Contains(MemberEmail, StringComparison.OrdinalIgnoreCase));
+            logger.Messages.Should().OnlyContain(m => m.IndexOf(MemberEmail, StringComparison.OrdinalIgnoreCase) < 0);
         }
 
         [Fact]
@@ -82,8 +84,8 @@ namespace EmmaSharper.Unit.Tests
             CapturingLogger<EmmaApiAdapter> logger = await CallMemberByEmailAsync();
 
             // Diagnostics are preserved: you can still tell which endpoint and which subaccount.
-            logger.Messages.Should().Contain(m => m.Contains("{memberEmail}", StringComparison.Ordinal));
-            logger.Messages.Should().Contain(m => m.Contains("account-id", StringComparison.Ordinal));
+            logger.Messages.Should().Contain(m => m.IndexOf("{memberEmail}", StringComparison.Ordinal) >= 0);
+            logger.Messages.Should().Contain(m => m.IndexOf("account-id", StringComparison.Ordinal) >= 0);
         }
     }
 }

@@ -1,6 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Overrides Directory.Build.props to add netstandard2.0, which brings
+         .NET Framework 4.6.2+ consumers along. Closes kylegregory/EmmaSharp#44. -->
+    <TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
+    <!-- netstandard2.0 defaults to C# 7.3, which cannot parse <Nullable>enable</Nullable>.
+         Pinned only for that TFM; the modern targets keep the SDK default. -->
+    <LangVersion Condition="'$(TargetFramework)' == 'netstandard2.0'">12</LangVersion>
     <AssemblyName>EmmaSharper</AssemblyName>
     <PackageId>EmmaSharper</PackageId>
     <Version>8.0.0</Version>
@@ -34,7 +40,16 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="[10.0.0,11.0.0)" />
   </ItemGroup>
 
-  <!-- System.Text.Json is in-box for net8.0+ - deliberately not referenced, so the
+  <!-- netstandard2.0 has none of this in-box, so the packages are explicit here only.
+       System.Text.Json's package backports JsonNamingPolicy.SnakeCaseLower,
+       Utf8JsonWriter.WriteRawValue and JsonConverterFactory, all of which this library uses. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Extensions.Http" Version="[8.0.0,9.0.0)" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="[8.0.0,9.0.0)" />
+    <PackageReference Include="System.Text.Json" Version="[8.0.5,9.0.0)" />
+  </ItemGroup>
+
+  <!-- System.Text.Json is in-box for net8.0+ - deliberately not referenced there, so the
        consumer's runtime version wins. RestSharp and Newtonsoft.Json are gone as of 8.0.0. -->
 
 </Project>
