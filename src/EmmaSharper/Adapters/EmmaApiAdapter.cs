@@ -41,7 +41,8 @@ namespace EmmaSharper.Adapters
             string? accountId = null,
             CancellationToken cancellationToken = default)
         {
-            string resource = ResolveResource(request, accountId);
+            string account = ResolveAccount(accountId);
+            string resource = ResolveResource(request, account);
             string uri = resource + BuildQuery(request, start, end);
 
             using HttpRequestMessage message = new(request.Method, uri);
@@ -52,7 +53,15 @@ namespace EmmaSharper.Adapters
                 message.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
-            logger.LogDebug("Emma request {Method} {Resource} starting", request.Method.Method, resource);
+            // Logs the UNRESOLVED template, never the substituted path. Resolved paths embed
+            // member email addresses (see GetMemberByEmail), so logging them would write PII into
+            // application logs. The account id is logged separately - it is a tenant identifier,
+            // not a secret, and it is what you need to follow a subaccount sweep.
+            logger.LogDebug(
+                "Emma request {Method} {Resource} starting for account {AccountId}",
+                request.Method.Method,
+                request.Resource,
+                account);
 
             using HttpResponseMessage response = await httpClient
                 .SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
@@ -61,9 +70,10 @@ namespace EmmaSharper.Adapters
             string body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
             logger.LogDebug(
-                "Emma request {Method} {Resource} completed with {StatusCode}",
+                "Emma request {Method} {Resource} for account {AccountId} completed with {StatusCode}",
                 request.Method.Method,
-                resource,
+                request.Resource,
+                account,
                 (int)response.StatusCode);
 
             if (!response.IsSuccessStatusCode)
@@ -79,14 +89,16 @@ namespace EmmaSharper.Adapters
             return JsonSerializer.Deserialize<T>(body, EmmaJson.Options);
         }
 
-        /// <summary>Substitutes <c>{accountId}</c> and any other placeholders into the path.</summary>
-        private string ResolveResource(EmmaRequest request, string? accountId)
-        {
-            string account = accountId ?? options.AccountId
+        /// <summary>Picks the per-call account override, falling back to the configured default.</summary>
+        private string ResolveAccount(string? accountId)
+            => accountId ?? options.AccountId
                 ?? throw new InvalidOperationException(
                     $"No account id supplied. Set {nameof(EmmaOptions)}.{nameof(EmmaOptions.AccountId)} " +
                     "or pass an explicit account id for this call.");
 
+        /// <summary>Substitutes <c>{accountId}</c> and any other placeholders into the path.</summary>
+        private static string ResolveResource(EmmaRequest request, string account)
+        {
             string resource = request.Resource.Replace("{accountId}", Uri.EscapeDataString(account));
 
             foreach (KeyValuePair<string, string> segment in request.Segments)
