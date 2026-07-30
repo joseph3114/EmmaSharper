@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Pack & publish to NuGet
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # Scopes NUGET_USER to this environment and allows an approval gate.
+    environment: release
+
+    permissions:
+      id-token: write   # REQUIRED for OIDC - NuGet/login returns 403 without it
+      contents: read    # setting `permissions` at all overrides the defaults
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      # Guards against publishing from a tag that was never merged.
+      # Was `origin/main`, which does not exist in this repo.
+      - name: Verify commit exists on origin/master
+        run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+          git branch --remote --contains | grep origin/master
+
+      - name: Set VERSION from tag
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+      - name: Build
+        run: dotnet build --configuration Release -p:Version=${VERSION}
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build -p:Version=${VERSION}
+
+      - name: Pack
+        run: >
+          dotnet pack ./src/EmmaSharper/EmmaSharper.csproj
+          --configuration Release --no-build
+          -p:Version=${VERSION} --output ./artifacts
+
+      # Trusted publishing: GitHub mints a short-lived OIDC token per run, so
+      # there is no long-lived API key stored anywhere.
+      #
+      # PREREQUISITE - create the policy once at
+      # https://www.nuget.org/account/trustedpublishing
+      #   Repository Owner: joseph3114
+      #   Repository:       EmmaSharper
+      #   Workflow File:    release.yml
+      #   Environment:      release
+      # This requires being an *owner* of the EmmaSharper package on nuget.org.
+      # Keep the old NUGET_TOKEN secret in place until the first OIDC publish
+      # succeeds - deleting it is a one-way door.
+      - name: NuGet login (OIDC)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}   # nuget.org profile name, NOT the email
+
+      - name: Push
+        run: >
+          dotnet nuget push ./artifacts/*.nupkg
+          --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: ./artifacts/*

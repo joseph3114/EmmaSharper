@@ -1,6 +1,6 @@
 ﻿using System;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -13,19 +13,19 @@ namespace EmmaSharper
         /// Timestamp of when the heads up mailing was sent.
         /// </summary>
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("sent_ts")]
+        [JsonPropertyName("sent_ts")]
         public DateTime? SentTimestamp { get; set; }
 
         /// <summary>
         /// Email address the heads up email was sent
         /// </summary>
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
 
         /// <summary>
         /// Mailing associated with these heads up mailings.
         /// </summary>
-        [JsonProperty("mailing_id")]
+        [JsonPropertyName("mailing_id")]
         public long MailingId { get; set; }
     }
 }

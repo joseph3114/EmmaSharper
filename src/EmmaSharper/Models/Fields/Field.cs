@@ -1,31 +1,31 @@
 ﻿using System;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class Field : BaseField
     {
-        [JsonProperty("shortcut_name")]
+        [JsonPropertyName("shortcut_name")]
         public string ShortcutName { get; set; }
 
-        [JsonProperty("account_id")]
+        [JsonPropertyName("account_id")]
         public long? AccountId { get; set; }
 
-        [JsonProperty("required")]
+        [JsonPropertyName("required")]
         public bool Required { get; set; }
 
-        [JsonProperty("field_id")]
+        [JsonPropertyName("field_id")]
         public long? FieldId { get; set; }
 
-        [JsonProperty("short_display_name")]
+        [JsonPropertyName("short_display_name")]
         public string ShortDisplayName { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("deleted_at")]
+        [JsonPropertyName("deleted_at")]
         public DateTime? DeletedAt { get; set; }
 
-        [JsonProperty("options")]
+        [JsonPropertyName("options")]
         public string[] Options { get; set; }
     }
 }

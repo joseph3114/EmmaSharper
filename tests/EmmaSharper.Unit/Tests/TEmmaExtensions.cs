@@ -1,17 +1,33 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace EmmaSharper.Unit.Tests
 {
     public class TEmmaExtensions
     {
+        private const string BaseUrl = "https://api.example.test";
+
+        private static ServiceProvider BuildProvider()
+        {
+            ServiceCollection services = new();
+            services.AddLogging();
+            services.AddEmmaApiProviders(options =>
+            {
+                options.BaseUrl = BaseUrl;
+                options.AccountId = "account-id";
+                options.PublicKey = "public-key";
+                options.SecretKey = "secret-key";
+            });
+
+            return services.BuildServiceProvider();
+        }
+
         [Theory]
-        [InlineData(typeof(EmmaOptions))]
-        [InlineData(typeof(IEmmaRestClientFactory))]
         [InlineData(typeof(IEmmaApiAdapter))]
         [InlineData(typeof(IEmmaAutomationProvider))]
         [InlineData(typeof(IEmmaFieldsProvider))]
@@ -23,56 +39,90 @@ namespace EmmaSharper.Unit.Tests
         [InlineData(typeof(IEmmaSignupFormProvider))]
         [InlineData(typeof(IEmmaSubscriptionProvider))]
         [InlineData(typeof(IEmmaWebhookProvider))]
-        public void AddEmmaApiProviders_WithAction_Should_Succeed(Type type)
+        public void AddEmmaApiProviders_WithAction_ResolvesEveryService(Type type)
         {
-            // Arrange
-            ServiceCollection services = new ServiceCollection();
+            using ServiceProvider provider = BuildProvider();
+
+            provider.GetRequiredService(type).Should().NotBeNull();
+        }
+
+        [Fact]
+        public void AddEmmaApiProviders_ReturnsHttpClientBuilder_SoResilienceCanBeAttached()
+        {
+            ServiceCollection services = new();
             services.AddLogging();
-            services.AddEmmaApiProviders(options =>
+
+            IHttpClientBuilder builder = services.AddEmmaApiProviders(options =>
             {
-                options.BaseUrl = "base-url";
-                options.AccountId = "account-id";
+                options.BaseUrl = BaseUrl;
                 options.PublicKey = "public-key";
                 options.SecretKey = "secret-key";
             });
 
-            ServiceProvider provider = services.BuildServiceProvider();
-
-            // Act
-            object result = provider.GetRequiredService(type);
-
-            // Assert
-            result.Should().NotBeNull();
+            builder.Should().NotBeNull();
+            builder.Name.Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
-        public void AddEmmaApiProviders_WithConfiguration_Should_Succeed()
+        public void AddEmmaApiProviders_WithConfiguration_BindsTheEmmaSectionByDefault()
         {
-            // Arrange
-            IReadOnlyDictionary<string, string> values = new Dictionary<string, string>()
-            {
-                { "BaseUrl", "base-url" },
-                { "AccountId", "account-id" },
-                { "PublicKey", "public-key" },
-                { "SecretKey", "secret-key" },
-            };
-
             IConfigurationRoot configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(values)
+                .AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    { "Emma:BaseUrl", BaseUrl },
+                    { "Emma:AccountId", "account-id" },
+                    { "Emma:PublicKey", "public-key" },
+                    { "Emma:SecretKey", "secret-key" },
+                })
                 .Build();
 
-            ServiceCollection services = new ServiceCollection();
+            ServiceCollection services = new();
+            services.AddLogging();
             services.AddEmmaApiProviders(configuration);
-            ServiceProvider provider = services.BuildServiceProvider();
 
-            // Act
-            EmmaOptions options = provider.GetRequiredService<EmmaOptions>();
+            using ServiceProvider provider = services.BuildServiceProvider();
+            EmmaOptions options = provider.GetRequiredService<IOptions<EmmaOptions>>().Value;
 
-            // Assert
-            options.BaseUrl.Should().Be("base-url");
+            options.BaseUrl.Should().Be(BaseUrl);
             options.AccountId.Should().Be("account-id");
             options.PublicKey.Should().Be("public-key");
             options.SecretKey.Should().Be("secret-key");
+        }
+
+        [Fact]
+        public void AddEmmaApiProviders_WithNullSection_BindsConfigurationRoot()
+        {
+            // 7.x behaviour: keys at the very top of appsettings.json.
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    { "BaseUrl", BaseUrl },
+                    { "PublicKey", "public-key" },
+                    { "SecretKey", "secret-key" },
+                })
+                .Build();
+
+            ServiceCollection services = new();
+            services.AddLogging();
+            services.AddEmmaApiProviders(configuration, sectionName: null);
+
+            using ServiceProvider provider = services.BuildServiceProvider();
+
+            provider.GetRequiredService<IOptions<EmmaOptions>>().Value.BaseUrl.Should().Be(BaseUrl);
+        }
+
+        [Fact]
+        public void AddEmmaApiProviders_MissingCredentials_FailsValidationOnResolve()
+        {
+            ServiceCollection services = new();
+            services.AddLogging();
+            services.AddEmmaApiProviders(options => options.BaseUrl = BaseUrl);
+
+            using ServiceProvider provider = services.BuildServiceProvider();
+
+            Action act = () => _ = provider.GetRequiredService<IOptions<EmmaOptions>>().Value;
+
+            act.Should().Throw<OptionsValidationException>();
         }
     }
 }

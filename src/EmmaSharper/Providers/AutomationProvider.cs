@@ -1,6 +1,7 @@
+using System.Threading;
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -16,37 +17,37 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Workflow>> GetWorkflows()
+        public async Task<IEnumerable<Workflow>> GetWorkflows(CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/automation/workflows"
             };
 
-            return await apiAdapter.MakeRequest<List<Workflow>>(request);
+            return await apiAdapter.MakeRequest<List<Workflow>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<Workflow> GetWorkflowById(string workflowId)
+        public async Task<Workflow> GetWorkflowById(string workflowId, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/automation/workflows/{workflowId}"
             };
             request.AddUrlSegment("workflowId", workflowId);
 
-            return await apiAdapter.MakeRequest<Workflow>(request);
+            return await apiAdapter.MakeRequest<Workflow>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<WorkflowCount> GetWorkflowCounts()
+        public async Task<WorkflowCount> GetWorkflowCounts(CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/automation/counts"
             };
 
-            return await apiAdapter.MakeRequest<WorkflowCount>(request);
+            return await apiAdapter.MakeRequest<WorkflowCount>(request, cancellationToken: cancellationToken);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -10,7 +10,7 @@ namespace EmmaSharper
         /// <summary>
         /// The public_key to use for authentication. Note: this can also be spelled “user_id” but this is deprecated.
         /// </summary>
-        [JsonProperty("public_key", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("public_key")]
         public string PublicKey { get; set; }
     }
 }

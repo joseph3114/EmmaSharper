@@ -1,17 +1,44 @@
-﻿using System;
-using Newtonsoft.Json;
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper.Internals
 {
-    internal class RawStringJsonConverter : JsonConverter
+    /// <summary>
+    /// Passes a string through as raw JSON rather than as a quoted string literal.
+    /// </summary>
+    /// <remarks>
+    /// Used for <c>CreateSearch.Criteria</c>, where Emma expects a JSON array expression that the
+    /// caller has already composed. Escaping it as a string would send the wrong body.
+    /// </remarks>
+    internal sealed class RawStringJsonConverter : JsonConverter<string>
     {
-        public override bool CanConvert(Type objectType)
-            => objectType == typeof(string);
+        public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType == JsonTokenType.Null)
+            {
+                return null;
+            }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-            => reader.Value;
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                return reader.GetString();
+            }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            => writer.WriteRawValue((string)value);
+            // Anything structural (the criteria expression itself) round-trips as raw JSON text.
+            using JsonDocument document = JsonDocument.ParseValue(ref reader);
+            return document.RootElement.GetRawText();
+        }
+
+        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                writer.WriteNullValue();
+                return;
+            }
+
+            writer.WriteRawValue(value);
+        }
     }
 }

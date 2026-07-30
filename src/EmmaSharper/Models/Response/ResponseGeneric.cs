@@ -1,69 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class ResponseGeneric
     {
-        [JsonProperty("fields")]
+        [JsonPropertyName("fields")]
         public Dictionary<string, object> Fields { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("timestamp")]
+        [JsonPropertyName("timestamp")]
         public DateTime? Timestamp { get; set; }
 
-        [JsonProperty("member_id")]
+        [JsonPropertyName("member_id")]
         public long? MemberId { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("member_since")]
+        [JsonPropertyName("member_since")]
         public DateTime? MemberSince { get; set; }
 
-        [JsonProperty("email_domain")]
+        [JsonPropertyName("email_domain")]
         public string EmailDomain { get; set; }
 
-        [JsonProperty("email_user")]
+        [JsonPropertyName("email_user")]
         public string EmailUser { get; set; }
 
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
 
-        [JsonProperty("member_status_id")]
+        [JsonPropertyName("member_status_id")]
         public MemberStatusShort MemberStatusId { get; set; }
     }
 
     public class ResponseClicks : ResponseGeneric
     {
-        [JsonProperty("link_id")]
-        public int? LinkId { get; set; }
+        // int64: Emma link ids exceed Int32.MaxValue. Closes binarypatrick/EmmaSharper#5.
+        [JsonPropertyName("link_id")]
+        public long? LinkId { get; set; }
     }
 
     public class ResponseDeliveries : ResponseGeneric
     {
-        [JsonProperty("delivery_type")]
+        [JsonPropertyName("delivery_type")]
         public DeliveryType DeliveryType { get; set; }
 
-        [JsonProperty("mailing_id")]
+        [JsonPropertyName("mailing_id")]
         public long? MailingId { get; set; }
 
-        [JsonProperty("mailing_name")]
+        [JsonPropertyName("mailing_name")]
         public string MailingName { get; set; }
     }
 
     public class ResponseForwards : ResponseGeneric
     {
-        [JsonProperty("forward_mailing_id")]
+        [JsonPropertyName("forward_mailing_id")]
         public long? ForwardMailingId { get; set; }
     }
 
     public class ResponseSignups : ResponseGeneric
     {
-        [JsonProperty("ref_member_id")]
-        public int? ReferingMemberId { get; set; }
+        // int64: a member id, so it has the same overflow exposure as MemberId
+        // above - missed by the 2019 int32->int64 sweep.
+        [JsonPropertyName("ref_member_id")]
+        public long? ReferingMemberId { get; set; }
 
-        [JsonProperty("mailing_mailing_id")]
+        [JsonPropertyName("mailing_mailing_id")]
         public long? MailingMailingId { get; set; }
     }
 }

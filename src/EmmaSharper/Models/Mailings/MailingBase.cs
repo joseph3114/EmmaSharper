@@ -1,55 +1,55 @@
 ﻿using System;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class MailingBase
     {
-        [JsonProperty("mailing_type")]
+        [JsonPropertyName("mailing_type")]
         public MailingType MailingType { get; set; }
 
-        [JsonProperty("mailing_id")]
+        [JsonPropertyName("mailing_id")]
         public long? MailingId { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("send_started")]
+        [JsonPropertyName("send_started")]
         public DateTime? SendStarted { get; set; }
 
-        [JsonProperty("signup_form_id")]
+        [JsonPropertyName("signup_form_id")]
         public long? SignupFormId { get; set; }
 
-        [JsonProperty("recipient_count")]
+        [JsonPropertyName("recipient_count")]
         public int? RecipientCount { get; set; }
 
-        [JsonProperty("parent_mailing_id")]
+        [JsonPropertyName("parent_mailing_id")]
         public long? ParentMailingId { get; set; }
 
-        [JsonProperty("account_id")]
+        [JsonPropertyName("account_id")]
         public long? AccountId { get; set; }
 
-        [JsonProperty("mailing_status")]
+        [JsonPropertyName("mailing_status")]
         public MailingStatus MailingStatus { get; set; }
 
-        [JsonProperty("sender")]
+        [JsonPropertyName("sender")]
         public string Sender { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("send_finished")]
+        [JsonPropertyName("send_finished")]
         public DateTime? SendFinished { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("send_at")]
+        [JsonPropertyName("send_at")]
         public DateTime? SendAt { get; set; }
 
-        [JsonProperty("subject")]
+        [JsonPropertyName("subject")]
         public string Subject { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("archived_ts")]
+        [JsonPropertyName("archived_ts")]
         public DateTime? ArchivedTimestamp { get; set; }
     }
 }

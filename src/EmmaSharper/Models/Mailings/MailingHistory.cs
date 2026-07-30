@@ -1,50 +1,50 @@
 ﻿using System;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class MailingHistory
     {
-        [JsonProperty("mailing_type")]
+        [JsonPropertyName("mailing_type")]
         public MailingType MailingType { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("clicked")]
+        [JsonPropertyName("clicked")]
         public DateTime? Clicked { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("opened")]
+        [JsonPropertyName("opened")]
         public DateTime? Opened { get; set; }
 
-        [JsonProperty("mailing_id")]
+        [JsonPropertyName("mailing_id")]
         public long? MailingId { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("delivery_ts")]
+        [JsonPropertyName("delivery_ts")]
         public DateTime? DelieveryTimestamp { get; set; }
 
-        [JsonProperty("delivery_type")]
+        [JsonPropertyName("delivery_type")]
         public DeliveryTypeShort DelieveryType { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("forwarded")]
+        [JsonPropertyName("forwarded")]
         public DateTime? Forwarded { get; set; }
 
-        [JsonProperty("parent_mailing_id")]
+        [JsonPropertyName("parent_mailing_id")]
         public long? ParentMailingId { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("shared")]
+        [JsonPropertyName("shared")]
         public DateTime? Shared { get; set; }
 
-        [JsonProperty("subject")]
+        [JsonPropertyName("subject")]
         public string Subject { get; set; }
 
-        [JsonProperty("account_id")]
+        [JsonPropertyName("account_id")]
         public long? AccountId { get; set; }
     }
 }

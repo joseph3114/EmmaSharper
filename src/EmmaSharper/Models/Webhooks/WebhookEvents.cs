@@ -1,16 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class WebhookEvents
     {
-        [JsonProperty("event_name")]
+        [JsonPropertyName("event_name")]
         public string EventName { get; set; }
 
-        [JsonProperty("webhook_event_id")]
-        public int? WebhookEventId { get; set; }
+        // int64 for consistency with every other Emma id - see #5.
+        [JsonPropertyName("webhook_event_id")]
+        public long? WebhookEventId { get; set; }
 
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string Description { get; set; }
     }
 }

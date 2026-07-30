@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -9,13 +9,13 @@ namespace EmmaSharper
         /// <summary>
         /// The array of member ids to change.
         /// </summary>
-        [JsonProperty("member_ids")]
+        [JsonPropertyName("member_ids")]
         public List<long> MemberIds { get; set; }
 
         /// <summary>
         /// The new status for the given members. Accepts one of ‘a’ (active), ‘e’ (error), ‘o’ (optout).
         /// </summary>
-        [JsonProperty("status_to")]
+        [JsonPropertyName("status_to")]
         public MemberStatusShort StatusTo { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -8,7 +8,7 @@ namespace EmmaSharper
         /// <summary>
         /// An array of member ids to delete.
         /// </summary>
-        [JsonProperty("member_ids")]
+        [JsonPropertyName("member_ids")]
         public List<long> MemberIds { get; set; }
     }
 }

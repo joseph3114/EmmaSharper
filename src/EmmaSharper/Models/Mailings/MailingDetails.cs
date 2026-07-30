@@ -1,54 +1,54 @@
 ﻿using System;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class MailingDetails : MailingBase
     {
 
-        [JsonProperty("cancel_by_user_id")]
+        [JsonPropertyName("cancel_by_user_id")]
         public long? CancelByUserId { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("cancel_ts")]
+        [JsonPropertyName("cancel_ts")]
         public DateTime? CancelTimestamp { get; set; }
 
-        [JsonProperty("month")]
+        [JsonPropertyName("month")]
         public int? Month { get; set; }
 
-        [JsonProperty("year")]
+        [JsonPropertyName("year")]
         public int? Year { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("failure_ts")]
+        [JsonPropertyName("failure_ts")]
         public DateTime? FailureTimestamp { get; set; }
 
-        [JsonProperty("reply_to")]
+        [JsonPropertyName("reply_to")]
         public string ReplyTo { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("start_or_finished")]
+        [JsonPropertyName("start_or_finished")]
         public DateTime? StartedOrFinished { get; set; }
 
-        [JsonProperty("disabled")]
+        [JsonPropertyName("disabled")]
         public bool Disabled { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("created_ts")]
+        [JsonPropertyName("created_ts")]
         public DateTime? CreatedTimestamp { get; set; }
 
-        [JsonProperty("plaintext_only")]
+        [JsonPropertyName("plaintext_only")]
         public bool PlaintextOnly { get; set; }
 
-        [JsonProperty("failure_message")]
+        [JsonPropertyName("failure_message")]
         public string FailureMessage { get; set; }
 
-        [JsonProperty("datacenter")]
+        [JsonPropertyName("datacenter")]
         public string Datacenter { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("purged_at")]
+        [JsonPropertyName("purged_at")]
         public DateTime? PurgedAt { get; set; }
     }
 }

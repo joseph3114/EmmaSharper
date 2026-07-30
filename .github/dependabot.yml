@@ -1,0 +1,34 @@
+version: 2
+
+# Dependabot is free on public repositories. Enabling this is what turns
+# "Newtonsoft.Json 9.0.1 has a known high severity vulnerability" from something
+# nobody noticed for years into a pull request the week it is disclosed.
+updates:
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
+    groups:
+      # Grouped so a framework bump arrives as one reviewable PR, not four.
+      microsoft-extensions:
+        patterns:
+          - "Microsoft.Extensions.*"
+      test-dependencies:
+        patterns:
+          - "xunit*"
+          - "Microsoft.NET.Test.Sdk"
+          - "coverlet.*"
+          - "FluentAssertions"
+          - "Moq"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: "ci"

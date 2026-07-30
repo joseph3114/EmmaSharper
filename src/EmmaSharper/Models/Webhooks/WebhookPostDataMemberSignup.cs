@@ -1,25 +1,25 @@
 ﻿using System;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class WebhookPostDataMemberSignup
     {
-        [JsonProperty("signup_form_id", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("signup_form_id")]
         public string SignupFormId { get; set; }
 
-        [JsonProperty("account_id")]
+        [JsonPropertyName("account_id")]
         public string AccountId { get; set; }
 
-        [JsonProperty("member_id")]
+        [JsonPropertyName("member_id")]
         public string MemberId { get; set; }
 
-        [JsonProperty("mailing_id", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("mailing_id")]
         public long MailingId { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("timestamp")]
+        [JsonPropertyName("timestamp")]
         public DateTime Timestamp { get; set; }
 
     }

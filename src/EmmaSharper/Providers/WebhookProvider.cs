@@ -1,6 +1,7 @@
+using System.Threading;
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -16,85 +17,85 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Webhook>> GetWebhooks()
+        public async Task<IEnumerable<Webhook>> GetWebhooks(CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/webhooks"
             };
 
-            return await apiAdapter.MakeRequest<List<Webhook>>(request);
+            return await apiAdapter.MakeRequest<List<Webhook>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<Webhook> GetWebhookById(string webhookId)
+        public async Task<Webhook> GetWebhookById(string webhookId, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/webhooks/{webhookId}"
             };
             request.AddUrlSegment("webhookId", webhookId);
 
-            return await apiAdapter.MakeRequest<Webhook>(request);
+            return await apiAdapter.MakeRequest<Webhook>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<WebhookEvents>> GetWebhookEvents()
+        public async Task<IEnumerable<WebhookEvents>> GetWebhookEvents(CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/webhooks/events"
             };
 
-            return await apiAdapter.MakeRequest<List<WebhookEvents>>(request);
+            return await apiAdapter.MakeRequest<List<WebhookEvents>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> CreateWebhook(CreateWebhook webhook)
+        public async Task<int> CreateWebhook(CreateWebhook webhook, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/webhooks",
             };
             request.AddJsonBody(webhook);
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> UpdateWebhook(string webhookId, UpdateWebhook webhook)
+        public async Task<int> UpdateWebhook(string webhookId, UpdateWebhook webhook, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/webhooks/{webhookId}"
             };
             request.AddUrlSegment("webhookId", webhookId);
             request.AddJsonBody(webhook);
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<bool> DeleteWebhookById(string webhookId)
+        public async Task<bool> DeleteWebhookById(string webhookId, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/webhooks/{webhookId}"
             };
             request.AddUrlSegment("webhookId", webhookId);
 
-            return await apiAdapter.MakeRequest<bool>(request);
+            return await apiAdapter.MakeRequest<bool>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<bool> DeleteAllWebhooks()
+        public async Task<bool> DeleteAllWebhooks(CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/webhooks"
             };
 
-            return await apiAdapter.MakeRequest<bool>(request);
+            return await apiAdapter.MakeRequest<bool>(request, cancellationToken: cancellationToken);
         }
     }
 }

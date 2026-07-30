@@ -1,16 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class MemberAdd
     {
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public MemberStatusShort Status { get; set; }
 
-        [JsonProperty("member_id")]
+        [JsonPropertyName("member_id")]
         public long? MemberId { get; set; }
 
-        [JsonProperty("added")]
+        [JsonPropertyName("added")]
         public bool Added { get; set; }
     }
 }

@@ -1,6 +1,7 @@
+using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -16,9 +17,9 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<int> ListFieldsCount(bool includeDeleted = false)
+        public async Task<int> ListFieldsCount(bool includeDeleted = false, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/fields"
             };
@@ -29,13 +30,13 @@ namespace EmmaSharper
                 request.AddParameter("deleted", includeDeleted);
             }
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Field>> ListFields(bool includeDeleted = false, uint? start = null, uint? end = null)
+        public async Task<IEnumerable<Field>> ListFields(bool includeDeleted = false, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/fields"
             };
@@ -45,13 +46,13 @@ namespace EmmaSharper
                 request.AddParameter("deleted", includeDeleted);
             }
 
-            return await apiAdapter.MakeRequest<List<Field>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<Field>>(request, start, end, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<Field> GetField(string fieldId, bool includeDeleted = false)
+        public async Task<Field> GetField(string fieldId, bool includeDeleted = false, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/fields/{fieldId}"
             };
@@ -62,56 +63,56 @@ namespace EmmaSharper
                 request.AddParameter("deleted", includeDeleted);
             }
 
-            return await apiAdapter.MakeRequest<Field>(request);
+            return await apiAdapter.MakeRequest<Field>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> CreateField(CreateField field)
+        public async Task<int> CreateField(CreateField field, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/fields",
             };
             request.AddJsonBody(field);
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<bool> DeleteField(string fieldId)
+        public async Task<bool> DeleteField(string fieldId, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/fields/{fieldId}"
             };
             request.AddUrlSegment("fieldId", fieldId);
 
-            return await apiAdapter.MakeRequest<bool>(request);
+            return await apiAdapter.MakeRequest<bool>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<bool> ClearField(string fieldId)
+        public async Task<bool> ClearField(string fieldId, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/fields/{fieldId}/clear"
             };
             request.AddUrlSegment("fieldId", fieldId);
 
-            return await apiAdapter.MakeRequest<bool>(request);
+            return await apiAdapter.MakeRequest<bool>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> UpdateField(string fieldId, UpdateField field)
+        public async Task<int> UpdateField(string fieldId, UpdateField field, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/fields/{fieldId}"
             };
             request.AddUrlSegment("fieldId", fieldId);
             request.AddJsonBody(field);
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
     }
 }

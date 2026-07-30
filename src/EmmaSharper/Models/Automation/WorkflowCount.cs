@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class WorkflowCount
     {
-        [JsonProperty("account_id")]
+        [JsonPropertyName("account_id")]
         public long? AccountId { get; set; }
 
-        [JsonProperty("draft")]
+        [JsonPropertyName("draft")]
         public int Draft { get; set; }
 
-        [JsonProperty("active")]
+        [JsonPropertyName("active")]
         public int Active { get; set; }
 
-        [JsonProperty("inactive")]
+        [JsonPropertyName("inactive")]
         public int Inactive { get; set; }
     }
 }

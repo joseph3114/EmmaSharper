@@ -1,19 +1,19 @@
 ﻿using System;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class MailingTrigger : MailingDetails
     {
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("deleted_at")]
+        [JsonPropertyName("deleted_at")]
         public DateTime? DeletedAt { get; set; }
 
-        [JsonProperty("plaintext")]
+        [JsonPropertyName("plaintext")]
         public string Plaintext { get; set; }
 
-        [JsonProperty("html_body")]
+        [JsonPropertyName("html_body")]
         public string HtmlBody { get; set; }
     }
 }

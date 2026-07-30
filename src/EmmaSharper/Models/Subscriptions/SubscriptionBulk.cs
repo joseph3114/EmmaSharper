@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class SubscriptionBulk
     {
-        [JsonProperty("member_ids")]
+        [JsonPropertyName("member_ids")]
         public List<long> MemberIds { get; set; }
 
     }

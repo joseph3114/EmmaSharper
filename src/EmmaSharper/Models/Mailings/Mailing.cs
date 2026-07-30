@@ -1,32 +1,32 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class Mailing : MailingBase
     {
-        [JsonProperty("recipient_groups")]
+        [JsonPropertyName("recipient_groups")]
         public List<MailingGroup> RecipientGroups { get; set; }
 
-        [JsonProperty("heads_up_emails")]
+        [JsonPropertyName("heads_up_emails")]
         public List<Email> HeadsUpEmails { get; set; }
 
-        [JsonProperty("links")]
+        [JsonPropertyName("links")]
         public List<Link> Links { get; set; }
 
-        [JsonProperty("public_webview_url")]
+        [JsonPropertyName("public_webview_url")]
         public string PublicWebviewUrl { get; set; }
 
-        [JsonProperty("recipient_searches")]
+        [JsonPropertyName("recipient_searches")]
         public List<Search> RecipientSearches { get; set; }
 
-        [JsonProperty("recipient_members")]
+        [JsonPropertyName("recipient_members")]
         public List<Member> RecipientMembers { get; set; }
 
-        [JsonProperty("plaintext")]
+        [JsonPropertyName("plaintext")]
         public string Plaintext { get; set; }
 
-        [JsonProperty("html_body")]
+        [JsonPropertyName("html_body")]
         public string HtmlBody { get; set; }
     }
 }

@@ -1,6 +1,7 @@
+using System.Threading;
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using RestSharp;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -15,9 +16,9 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<int> GetSearchesCount(bool includeDeleted = false)
+        public async Task<int> GetSearchesCount(bool includeDeleted = false, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/searches"
             };
@@ -28,13 +29,13 @@ namespace EmmaSharper
                 request.AddParameter("deleted", "true");
             }
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<List<Search>> GetSearches(bool includeDeleted = false, uint? start = null, uint? end = null)
+        public async Task<List<Search>> GetSearches(bool includeDeleted = false, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/searches"
             };
@@ -44,13 +45,13 @@ namespace EmmaSharper
                 request.AddParameter("deleted", "true");
             }
 
-            return await apiAdapter.MakeRequest<List<Search>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<Search>>(request, start, end, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<Search> GetSearchDetails(string searchId, bool includeDeleted = false)
+        public async Task<Search> GetSearchDetails(string searchId, bool includeDeleted = false, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/searches/{searchId}"
             };
@@ -61,69 +62,69 @@ namespace EmmaSharper
                 request.AddParameter("deleted", "true");
             }
 
-            return await apiAdapter.MakeRequest<Search>(request);
+            return await apiAdapter.MakeRequest<Search>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> CreateSavedSearch(CreateSearch search)
+        public async Task<int> CreateSavedSearch(CreateSearch search, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest(Method.POST)
+            EmmaRequest request = new EmmaRequest(Method.POST)
             {
                 Resource = "/{accountId}/searches",
             };
             request.AddJsonBody(search);
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<bool> UpdateSavedSearch(string searchId, CreateSearch search)
+        public async Task<bool> UpdateSavedSearch(string searchId, CreateSearch search, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest(Method.PUT)
+            EmmaRequest request = new EmmaRequest(Method.PUT)
             {
                 Resource = "/{accountId}/searches/{searchId}"
             };
             request.AddUrlSegment("searchId", searchId);
             request.AddJsonBody(search);
 
-            return await apiAdapter.MakeRequest<bool>(request);
+            return await apiAdapter.MakeRequest<bool>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<bool> DeleteSavedSearch(string searchId)
+        public async Task<bool> DeleteSavedSearch(string searchId, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest(Method.DELETE)
+            EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
                 Resource = "/{accountId}/searches/{searchId}"
             };
             request.AddUrlSegment("searchId", searchId);
 
-            return await apiAdapter.MakeRequest<bool>(request);
+            return await apiAdapter.MakeRequest<bool>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> GetMembersMatchingSearchCount(string searchId)
+        public async Task<int> GetMembersMatchingSearchCount(string searchId, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/searches/{searchId}/members"
             };
             request.AddUrlSegment("searchId", searchId);
             request.AddParameter("count", "true");
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Member>> GetMembersMatchingSearch(string searchId, uint? start = null, uint? end = null)
+        public async Task<IEnumerable<Member>> GetMembersMatchingSearch(string searchId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
-            RestRequest request = new RestRequest
+            EmmaRequest request = new EmmaRequest
             {
                 Resource = "/{accountId}/searches/{searchId}/members"
             };
             request.AddUrlSegment("searchId", searchId);
 
-            return await apiAdapter.MakeRequest<List<Member>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<Member>>(request, start, end, cancellationToken: cancellationToken);
         }
     }
 }
