@@ -41,10 +41,12 @@ jobs:
           languages: csharp
           queries: security-and-quality
 
-      # Explicit build rather than autobuild: this solution multi-targets, and
-      # autobuild picks an arbitrary TFM.
+      # Explicit build rather than autobuild: this solution multi-targets, and autobuild
+      # picks an arbitrary TFM. One framework is enough - the source files are shared, so
+      # building all three would just produce duplicate alerts. net472 cannot build here
+      # anyway. The only code not analysed is the single #if NETSTANDARD2_0 branch.
       - name: Build
-        run: dotnet build --configuration Release
+        run: dotnet build src/EmmaSharper/EmmaSharper.csproj -f net10.0 --configuration Release
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3

@@ -114,10 +114,11 @@ namespace EmmaSharper.Internals
             {
                 // Enum.IsDefined rather than scanning Enum.GetValues: no array allocation per
                 // call, and it drops the implicit-filter loop CodeQL flags as cs/linq/missed-where.
-                TEnum candidate = (TEnum)Enum.ToObject(typeof(TEnum), numeric);
-                if (Enum.IsDefined(candidate))
+                // Enum.IsDefined(Type, object) rather than the generic overload, which is .NET 5+.
+                object boxed = Enum.ToObject(typeof(TEnum), numeric);
+                if (Enum.IsDefined(typeof(TEnum), boxed))
                 {
-                    result = candidate;
+                    result = (TEnum)boxed;
                     return true;
                 }
             }
