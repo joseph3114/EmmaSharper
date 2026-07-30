@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EmmaSharper.Internals;
@@ -48,15 +49,12 @@ namespace EmmaSharper
         /// <summary>Renders the flags as Emma's comma-separated <c>status</c> parameter.</summary>
         private static string ToQueryValue(SubaccountStatusFilter status)
         {
-            List<string> selected = new();
-
-            foreach (SubaccountStatusFilter flag in IndividualStatuses)
-            {
-                if ((status & flag) == flag)
-                {
-                    selected.Add(flag.ToEnumString());
-                }
-            }
+            // Explicit Where rather than a filtering foreach - CodeQL flags the latter as
+            // cs/linq/missed-where, and here the LINQ form reads better anyway.
+            List<string> selected = IndividualStatuses
+                .Where(flag => (status & flag) == flag)
+                .AsEnumStrings()
+                .ToList();
 
             if (selected.Count == 0)
             {
