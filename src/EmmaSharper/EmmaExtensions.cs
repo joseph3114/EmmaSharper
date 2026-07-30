@@ -27,8 +27,8 @@ namespace EmmaSharper
         /// <param name="configuration">Configuration to bind from.</param>
         /// <param name="sectionName">
         /// Section to bind. Defaults to <see cref="DefaultSectionName"/>. Pass <c>null</c> to bind
-        /// the root, which is what 7.x did unconditionally - it required AccountId, PublicKey and
-        /// SecretKey to sit at the very top of appsettings.json.
+        /// the configuration root instead, which expects AccountId, PublicKey and SecretKey at the
+        /// top level of appsettings.json.
         /// </param>
         /// <returns>
         /// The <see cref="IHttpClientBuilder"/> for the Emma client, so callers can attach a
