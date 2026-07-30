@@ -11,6 +11,9 @@ A .NET client for the [Emma (Marigold) API](https://api.myemma.com/).
 > Several bugs still shown as open on those repositories are fixed here —
 > see **[Upstream issues fixed in this fork](docs/upstream-fixes.md)**.
 
+📖 **[Documentation wiki](https://github.com/joseph3114/EmmaSharper/wiki)** — getting started, enterprise multi-account use, paging, rate limiting, recipes, and notes on the
+Emma API's own quirks.
+
 **Targets:** `netstandard2.0`, `net8.0`, `net10.0` — so .NET Framework 4.6.2+ works too.
 **Dependencies:** two on the modern targets, both `Microsoft.Extensions.*`.
 
