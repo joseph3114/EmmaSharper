@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using System.Threading;
-﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using EmmaSharper.Internals;
 

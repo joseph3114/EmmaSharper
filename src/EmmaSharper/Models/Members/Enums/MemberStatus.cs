@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
-using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
