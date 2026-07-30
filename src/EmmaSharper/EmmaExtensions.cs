@@ -39,9 +39,12 @@ namespace EmmaSharper
             IConfiguration configuration,
             string? sectionName = DefaultSectionName)
         {
+            // `!` because IsNullOrWhiteSpace guarantees non-null in this branch. The compiler
+            // knows that on net8.0+ via [NotNullWhen(false)], but the netstandard2.0 reference
+            // assemblies carry no nullable annotations, so it needs telling there.
             IConfiguration section = string.IsNullOrWhiteSpace(sectionName)
                 ? configuration
-                : configuration.GetSection(sectionName);
+                : configuration.GetSection(sectionName!);
 
             return services.AddEmmaApiProviders(section.Bind);
         }
@@ -129,7 +132,7 @@ namespace EmmaSharper
         internal static IEnumerable<string> AsEnumStrings<T>(this IEnumerable<T> enums) where T : Enum
             => enums.Select(x => x.ToEnumString());
 
-        /// <summary>Syntactic sugar for <see cref="string.Join(char, string[])"/>.</summary>
+        /// <summary>Syntactic sugar for <see cref="string.Join(string, IEnumerable{string})"/>.</summary>
         internal static string JoinWith(this IEnumerable<string> items, char seperator)
             // string.Join(char, ...) is netstandard2.1+; the string overload exists everywhere.
             => string.Join(seperator.ToString(), items);

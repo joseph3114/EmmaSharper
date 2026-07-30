@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
 
@@ -28,7 +28,7 @@ namespace EmmaSharper
         public DeliveryTypeShort DelieveryType { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
         [JsonPropertyName("forwarded")]
@@ -42,7 +42,7 @@ namespace EmmaSharper
         public DateTime? Shared { get; set; }
 
         [JsonPropertyName("subject")]
-        public string Subject { get; set; }
+        public string? Subject { get; set; }
 
         [JsonPropertyName("account_id")]
         public long? AccountId { get; set; }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
 
@@ -7,7 +7,7 @@ namespace EmmaSharper
     public class Field : BaseField
     {
         [JsonPropertyName("shortcut_name")]
-        public string ShortcutName { get; set; }
+        public string? ShortcutName { get; set; }
 
         [JsonPropertyName("account_id")]
         public long? AccountId { get; set; }
@@ -19,13 +19,13 @@ namespace EmmaSharper
         public long? FieldId { get; set; }
 
         [JsonPropertyName("short_display_name")]
-        public string ShortDisplayName { get; set; }
+        public string? ShortDisplayName { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
         [JsonPropertyName("deleted_at")]
         public DateTime? DeletedAt { get; set; }
 
         [JsonPropertyName("options")]
-        public string[] Options { get; set; }
+        public string[]? Options { get; set; }
     }
 }

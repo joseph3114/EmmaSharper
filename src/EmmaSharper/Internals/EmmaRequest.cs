@@ -48,14 +48,14 @@ namespace EmmaSharper.Internals
         internal object? Body { get; private set; }
 
         /// <summary>Substitutes a <c>{name}</c> placeholder in <see cref="Resource"/>.</summary>
-        internal EmmaRequest AddUrlSegment(string name, object value)
+        internal EmmaRequest AddUrlSegment(string name, object? value)
         {
             Segments[name] = Format(value);
             return this;
         }
 
         /// <summary>Appends a query-string parameter.</summary>
-        internal EmmaRequest AddParameter(string name, object value)
+        internal EmmaRequest AddParameter(string name, object? value)
         {
             Query.Add(new KeyValuePair<string, string>(name, Format(value)));
             return this;
@@ -73,7 +73,7 @@ namespace EmmaSharper.Internals
         /// RestSharp emitted <c>True</c>/<c>False</c> via ToString(); Emma's documented query
         /// values are lower-case, so this is a deliberate correction rather than pure parity.
         /// </summary>
-        private static string Format(object value) => value switch
+        private static string Format(object? value) => value switch
         {
             null => string.Empty,
             bool b => b ? "true" : "false",

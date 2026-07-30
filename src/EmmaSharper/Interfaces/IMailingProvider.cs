@@ -20,7 +20,8 @@ namespace EmmaSharper
         /// <param name="includePlaintext">Boolean. Include the plaintext content.</param>
         /// <returns>An number of mailings.</returns>
         /// <remarks>Http400 if invalid mailing types or statuses are specified.</remarks>
-        Task<int> ListMailingsCount(IEnumerable<MailingType> mailingTypes = null, IEnumerable<MailingStatus> mailingStatuses = null, bool includeArchived = false, bool includeScheduled = false, bool includeHtmlBody = false, bool includePlaintext = false, CancellationToken cancellationToken = default);
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
+        Task<int> ListMailingsCount(IEnumerable<MailingType>? mailingTypes = null, IEnumerable<MailingStatus>? mailingStatuses = null, bool includeArchived = false, bool includeScheduled = false, bool includeHtmlBody = false, bool includePlaintext = false, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get information about current mailings. Be sure to get a count of mailings before accessing this method, so 
@@ -42,18 +43,21 @@ namespace EmmaSharper
         /// <param name="end">End paging record at.</param>
         /// <returns>An array of mailings.</returns>
         /// <remarks>Http400 if invalid mailing types or statuses are specified.</remarks>
-        Task<IEnumerable<MailingInfo>> ListMailings(IEnumerable<MailingType> mailingTypes = null, IEnumerable<MailingStatus> mailingStatuses = null, bool includeArchived = false, bool includeScheduled = false, bool includeHtmlBody = false, bool includePlaintext = false, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
+        Task<IEnumerable<MailingInfo>> ListMailings(IEnumerable<MailingType>? mailingTypes = null, IEnumerable<MailingStatus>? mailingStatuses = null, bool includeArchived = false, bool includeScheduled = false, bool includeHtmlBody = false, bool includePlaintext = false, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get detailed information for one mailing.</summary>
         /// <returns>The mailing.</returns>
         /// <param name="mailingId">Mailing identifier.</param>
         /// <remarks>Http404 if no mailing is found.</remarks>
-        Task<Mailing> GetMailing(string mailingId, CancellationToken cancellationToken = default);
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
+        Task<Mailing?> GetMailing(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the count of members to whom the given mailing was sent. This does not include groups or searches.</summary>
         /// <returns>An array of members including status and member fields.</returns>
         /// <param name="mailingId">Mailing identifier.</param>
         /// <remarks>Http404 if no mailing is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<int> GetMailingMembersCount(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of members to whom the given mailing was sent. This does not include groups or searches.</summary>
@@ -62,6 +66,7 @@ namespace EmmaSharper
         /// <param name="end">End paging record at.</param>
         /// <returns>An array of members including status and member fields.</returns>
         /// <remarks>Http404 if no mailing is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<Member>> GetMailingMembers(string mailingId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>Gets the personalized message content as sent to a specific member as part of the specified mailing.</summary>
@@ -70,12 +75,14 @@ namespace EmmaSharper
         /// <param name="memberId">Member identifier.</param>
         /// <param name="type">Accepts: ‘all’, ‘html’, ‘plaintext’, ‘subject’. Defaults to ‘all’, if not provided.</param>
         /// <remarks>Http404 if no mailing is found.</remarks>
-        Task<MailingPersonalization> GetMailingMembersPersonalization(string mailingId, string memberId, PersonalizationType? type = null, CancellationToken cancellationToken = default);
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
+        Task<MailingPersonalization?> GetMailingMembersPersonalization(string mailingId, string memberId, PersonalizationType? type = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get the count of groups to which a particular mailing was sent.</summary>
         /// <returns>An array of groups.</returns>
         /// <param name="mailingId">Mailing identifier.</param>
         /// <remarks>Http404 if no mailing is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<int> GetMailingGroupsCount(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the groups to which a particular mailing was sent.</summary>
@@ -84,28 +91,33 @@ namespace EmmaSharper
         /// <param name="end">End paging record at.</param>
         /// <returns>An array of groups.</returns>
         /// <remarks>Http404 if no mailing is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<Group>> GetMailingGroups(string mailingId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get all searches associated with a sent mailing.</summary>
         /// <returns>An array of searches.</returns>
         /// <param name="mailingId">Mailing identifier.</param>
         /// <remarks>Http404 if no mailing is found.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<Search>> GetMailingSearches(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Update status of a current mailing.</summary>
         /// <returns>Returns the mailing’s new status.</returns> 
         /// <param name="mailingId">Mailing identifier.</param>
         /// <param name="status">The status can be one of canceled, paused or ready. This method can be used to control the progress of a mailing by pausing, canceling or resuming it. Once a mailing is canceled it can’t be resumed, and will not show in the normal mailing_list output.</param>
-        Task<UpdateMailing> UpdateMailingStatus(string mailingId, UpdateMailingStatus status, CancellationToken cancellationToken = default);
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
+        Task<UpdateMailing?> UpdateMailingStatus(string mailingId, UpdateMailingStatus status, CancellationToken cancellationToken = default);
 
         /// <summary>Sets archived timestamp for a mailing so it is no longer included in mailing_list.</summary>
         /// <returns>True if the mailing is successfully archived.</returns>
         /// <param name="mailingId">Mailing identifier.</param>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> ArchiveMailing(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Cancels a mailing that has a current status of pending or paused. All other statuses will result in a 404.</summary>
         /// <returns>True if mailing marked as cancelled.</returns>
         /// <param name="mailingId">Mailing identifier.</param>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> CancelMailing(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -117,14 +129,16 @@ namespace EmmaSharper
         /// <param name="memberId">Member identifier.</param>
         /// <param name="mailing">Class representing the fields to forward and email to additional recipients.</param>
         /// <remarks>Http404 if no message is found.</remarks>
-        Task<MailingIdentifier> ForwardMailing(string mailingId, string memberId, ForwardMailing mailing, CancellationToken cancellationToken = default);
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
+        Task<MailingIdentifier?> ForwardMailing(string mailingId, string memberId, ForwardMailing mailing, CancellationToken cancellationToken = default);
 
         /// <summary>Send a prior mailing to additional recipients. A new mailing will be created that inherits its content from the original.</summary>
         /// <returns>The mailing id of the new mailing.</returns>
         /// <param name="mailingId">Mailing identifier.</param>
         /// <param name="mailing">Class representing the available fields when resending a mailing.</param>
         /// <remarks>Http404 if no message is found.</remarks>
-        Task<MailingIdentifier> ResendMailing(string mailingId, ResendMailing mailing, CancellationToken cancellationToken = default);
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
+        Task<MailingIdentifier?> ResendMailing(string mailingId, ResendMailing mailing, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Declare the winner of a split test manually. In the event that the test duration has not elapsed, 
@@ -137,17 +151,20 @@ namespace EmmaSharper
         /// <param name="mailingId">Mailing identifier.</param>
         /// <param name="winnerId">Winner identifier.</param>
         /// <remarks>Http403 if the winner cannot be manually declared.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> DeclareWinner(string mailingId, string winnerId, CancellationToken cancellationToken = default);
 
         /// <summary>Get heads up email address(es) related to a mailing.</summary>
         /// <returns>An array of heads up email addresses.</returns>
         /// <param name="mailingId">Mailing identifier.</param>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<IEnumerable<MailingHeadsUp>> GetHeadsUpEmailsForMailing(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Validate that a mailing has valid personalization-tag syntax. Checks tag syntax in three params:</summary>
         /// <returns><c>true</c>, if personalization syntax was validated, <c>false</c> otherwise.</returns>
         /// <param name="personalization">HTML body, plaintext body and subject line for personalization testing.</param>
         /// <remarks>Http400 if any tags are invalid. The response body will have information about the invalid tags.</remarks>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
         Task<bool> VaildatePersonalizationSyntax(MailingPersonalization personalization, CancellationToken cancellationToken = default);
     }
 }

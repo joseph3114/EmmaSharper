@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
@@ -14,7 +14,7 @@ namespace EmmaSharper
         public ImportStatus? Status { get; set; }
 
         [JsonPropertyName("style")]
-        public string Style { get; set; }
+        public string? Style { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
         [JsonPropertyName("import_started")]
@@ -24,16 +24,16 @@ namespace EmmaSharper
         public long? AccountId { get; set; }
 
         [JsonPropertyName("error_message")]
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
 
         [JsonPropertyName("num_members_updated")]
         public int? NumMembersUpdated { get; set; }
 
         [JsonPropertyName("source_filename")]
-        public string SourceFilename { get; set; }
+        public string? SourceFilename { get; set; }
 
         [JsonPropertyName("fields_updated")]
-        public List<Field> FieldsUpdated { get; set; }
+        public List<Field>? FieldsUpdated { get; set; }
 
         [JsonPropertyName("num_members_added")]
         public int? NumMembersAdded { get; set; }
@@ -43,7 +43,7 @@ namespace EmmaSharper
         public DateTime? ImportFinished { get; set; }
 
         [JsonPropertyName("groups_updated")]
-        public List<Group> GroupsUpdated { get; set; }
+        public List<Group>? GroupsUpdated { get; set; }
 
         [JsonPropertyName("num_skipped")]
         public int? NumSkipped { get; set; }

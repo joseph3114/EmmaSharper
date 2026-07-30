@@ -139,6 +139,7 @@ These were found while working on the issues above.
 | **Socket exhaustion** | A new HTTP client was constructed per request from a transient factory. Now pooled through `IHttpClientFactory`. |
 | **Process-wide TLS mutation** | A static constructor set `ServicePointManager.SecurityProtocol`, changing TLS settings for the entire host process from inside a library — and a no-op on .NET Core since 3.0. Removed. |
 | **403 treated as an auth failure** | Emma signals throttling with **403** as well as 429. Both now raise `EmmaRateLimitException` carrying `Retry-After`. |
+| **Dead self-assignments** | `CreateField` and `UpdateField` contained `ShortcutName = ShortcutName` and `DisplayName = DisplayName` inside parameterless constructors — no-ops, most likely the residue of constructor parameters that were never added. Caught by CodeQL as `cs/self-assignment`. |
 | **Known-vulnerable dependency** | Newtonsoft.Json 9.0.1 carries [GHSA-5crp-9r3c-p9vr](https://github.com/advisories/GHSA-5crp-9r3c-p9vr). The open-ended range `[9.0.1,]` did not help: NuGet resolves to the *lowest* version in range, so every consumer received the vulnerable floor. Newtonsoft has been removed entirely. |
 
 ---

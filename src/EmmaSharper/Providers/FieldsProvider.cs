@@ -46,11 +46,11 @@ namespace EmmaSharper
                 request.AddParameter("deleted", includeDeleted);
             }
 
-            return await apiAdapter.MakeRequest<List<Field>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Field>>(request, start, end, cancellationToken: cancellationToken) ?? new List<Field>();
         }
 
         /// <inheritdoc/>
-        public async Task<Field> GetField(string fieldId, bool includeDeleted = false, CancellationToken cancellationToken = default)
+        public async Task<Field?> GetField(string fieldId, bool includeDeleted = false, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {

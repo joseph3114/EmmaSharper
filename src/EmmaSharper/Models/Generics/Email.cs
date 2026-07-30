@@ -1,10 +1,10 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class Email
     {
         [JsonPropertyName("email")]
-        public string Value { get; set; }
+        public string? Value { get; set; }
     }
 }

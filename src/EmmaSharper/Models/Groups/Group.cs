@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
 
@@ -33,6 +33,6 @@ namespace EmmaSharper
         public long? AccountId { get; set; }
 
         [JsonPropertyName("group_name")]
-        public string GroupName { get; set; }
+        public string? GroupName { get; set; }
     }
 }

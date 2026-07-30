@@ -45,11 +45,11 @@ namespace EmmaSharper
                 request.AddParameter("deleted", "true");
             }
 
-            return await apiAdapter.MakeRequest<List<Search>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Search>>(request, start, end, cancellationToken: cancellationToken) ?? new List<Search>();
         }
 
         /// <inheritdoc/>
-        public async Task<Search> GetSearchDetails(string searchId, bool includeDeleted = false, CancellationToken cancellationToken = default)
+        public async Task<Search?> GetSearchDetails(string searchId, bool includeDeleted = false, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -124,7 +124,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("searchId", searchId);
 
-            return await apiAdapter.MakeRequest<List<Member>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Member>>(request, start, end, cancellationToken: cancellationToken) ?? new List<Member>();
         }
     }
 }

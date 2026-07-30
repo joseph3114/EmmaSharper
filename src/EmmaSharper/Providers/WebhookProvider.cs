@@ -24,11 +24,11 @@ namespace EmmaSharper
                 Resource = "/{accountId}/webhooks"
             };
 
-            return await apiAdapter.MakeRequest<List<Webhook>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Webhook>>(request, cancellationToken: cancellationToken) ?? new List<Webhook>();
         }
 
         /// <inheritdoc/>
-        public async Task<Webhook> GetWebhookById(string webhookId, CancellationToken cancellationToken = default)
+        public async Task<Webhook?> GetWebhookById(string webhookId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -47,7 +47,7 @@ namespace EmmaSharper
                 Resource = "/{accountId}/webhooks/events"
             };
 
-            return await apiAdapter.MakeRequest<List<WebhookEvents>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<WebhookEvents>>(request, cancellationToken: cancellationToken) ?? new List<WebhookEvents>();
         }
 
         /// <inheritdoc/>

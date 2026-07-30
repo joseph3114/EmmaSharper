@@ -80,6 +80,25 @@ this closes against `kylegregory/EmmaSharp` and `BinaryPatrick/EmmaSharper`.
   `StatusCode`, `ResponseBody`, `Method` and `Resource` properties.
 - **BREAKING** — `IEmmaApiAdapter` and `IEmmaRestClientFactory` are no longer public.
 
+### Nullable annotations
+
+The library is fully annotated for nullable reference types and builds with zero nullable
+warnings, enforced by `<WarningsAsErrors>nullable</WarningsAsErrors>`.
+
+For consumers who have nullable enabled, these annotations are part of the API contract, so the
+following are **source-breaking** even though they are binary-compatible:
+
+| Change | Why | What you may need to do |
+|---|---|---|
+| Model properties are `T?` | These types are deserialized from Emma, which omits fields freely. A non-nullable property would be a promise the wire format does not keep. | Handle null, or use `!` where you know the field is always present for your account. |
+| Single-object provider results are `Task<T?>` | `GetMember`, `GetImportInformation` and similar can legitimately return nothing. Hiding that behind a non-nullable signature moved the failure to runtime. | Null-check the result. |
+| Parameters with a `null` default are `T?` | They always accepted null; the signature now says so. | Nothing — existing calls keep working. |
+
+**Collection-returning methods now return an empty collection instead of null.** This is a small
+behaviour change, not just an annotation: previously an empty response body produced `null`, so
+callers had to null-check before enumerating. `ListMembers`, `GetMemberGroups` and the other
+collection methods are now safe to `foreach` unconditionally.
+
 ### Migrating from 7.x
 
 | 7.x | 8.0.0 |

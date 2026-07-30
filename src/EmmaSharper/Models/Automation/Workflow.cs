@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
 
@@ -7,10 +7,10 @@ namespace EmmaSharper
     public class Workflow
     {
         [JsonPropertyName("workflow_id")]
-        public string WorkflowId { get; set; }
+        public string? WorkflowId { get; set; }
 
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonPropertyName("status")]
         public WorkflowStatus Status { get; set; }

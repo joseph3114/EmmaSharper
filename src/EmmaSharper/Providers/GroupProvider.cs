@@ -17,7 +17,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<int> ListGroupCount(IEnumerable<GroupType> groupType = null, CancellationToken cancellationToken = default)
+        public async Task<int> ListGroupCount(IEnumerable<GroupType>? groupType = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -35,7 +35,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Group>> ListGroups(IEnumerable<GroupType> groupType = null, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Group>> ListGroups(IEnumerable<GroupType>? groupType = null, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -48,7 +48,7 @@ namespace EmmaSharper
                 request.AddParameter("group_types", values);
             }
 
-            return await apiAdapter.MakeRequest<List<Group>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Group>>(request, start, end, cancellationToken: cancellationToken) ?? new List<Group>();
         }
 
         /// <inheritdoc/>
@@ -60,11 +60,11 @@ namespace EmmaSharper
             };
             request.AddJsonBody(new { Groups = groups });
 
-            return await apiAdapter.MakeRequest<List<Group>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Group>>(request, cancellationToken: cancellationToken) ?? new List<Group>();
         }
 
         /// <inheritdoc/>
-        public async Task<Group> GetGroup(string memberGroupId, CancellationToken cancellationToken = default)
+        public async Task<Group?> GetGroup(string memberGroupId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -131,7 +131,7 @@ namespace EmmaSharper
                 request.AddParameter("deleted", includeDeleted);
             }
 
-            return await apiAdapter.MakeRequest<List<Member>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Member>>(request, start, end, cancellationToken: cancellationToken) ?? new List<Member>();
         }
 
         /// <inheritdoc/>
@@ -144,7 +144,7 @@ namespace EmmaSharper
             request.AddUrlSegment("memberGroupId", memberGroupId);
             request.AddJsonBody(memberIds);
 
-            return await apiAdapter.MakeRequest<List<long>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<long>>(request, cancellationToken: cancellationToken) ?? new List<long>();
         }
 
         /// <inheritdoc/>
@@ -157,7 +157,7 @@ namespace EmmaSharper
             request.AddUrlSegment("memberGroupId", memberGroupId);
             request.AddJsonBody(memberIds);
 
-            return await apiAdapter.MakeRequest<List<long>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<long>>(request, cancellationToken: cancellationToken) ?? new List<long>();
         }
 
         /// <inheritdoc/>

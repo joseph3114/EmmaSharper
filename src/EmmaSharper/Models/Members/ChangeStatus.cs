@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace EmmaSharper
@@ -10,7 +10,7 @@ namespace EmmaSharper
         /// The array of member ids to change.
         /// </summary>
         [JsonPropertyName("member_ids")]
-        public List<long> MemberIds { get; set; }
+        public List<long>? MemberIds { get; set; }
 
         /// <summary>
         /// The new status for the given members. Accepts one of ‘a’ (active), ‘e’ (error), ‘o’ (optout).

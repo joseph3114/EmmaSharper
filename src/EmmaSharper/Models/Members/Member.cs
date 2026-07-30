@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using EmmaSharper.Internals;
 using System.Text.Json.Serialization;
@@ -18,7 +18,7 @@ namespace EmmaSharper
         public long? AccountId { get; set; }
 
         [JsonPropertyName("fields")]
-        public Dictionary<string, object> Fields { get; set; }
+        public Dictionary<string, object>? Fields { get; set; }
 
         [JsonPropertyName("member_id")]
         public long? MemberId { get; set; }
@@ -35,7 +35,7 @@ namespace EmmaSharper
         public bool PlaintextPreferred { get; set; }
 
         [JsonPropertyName("email_error")]
-        public string EmailError { get; set; }
+        public string? EmailError { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
         [JsonPropertyName("member_since")]
@@ -49,6 +49,6 @@ namespace EmmaSharper
         public DateTime? DeletedAt { get; set; }
 
         [JsonPropertyName("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
     }
 }
