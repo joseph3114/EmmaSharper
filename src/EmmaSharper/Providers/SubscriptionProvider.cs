@@ -1,3 +1,4 @@
+using System.Threading;
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using EmmaSharper.Internals;
@@ -16,7 +17,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Subscription>> GetAccountSubscriptions(bool includeDeletedOnly = false, bool includeDeleted = false)
+        public async Task<IEnumerable<Subscription>> GetAccountSubscriptions(bool includeDeletedOnly = false, bool includeDeleted = false, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -33,11 +34,11 @@ namespace EmmaSharper
                 request.AddParameter("include_deleted", includeDeleted);
             }
 
-            return await apiAdapter.MakeRequest<List<Subscription>>(request);
+            return await apiAdapter.MakeRequest<List<Subscription>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<Subscription> GetAccountSubscription(string subscription_id)
+        public async Task<Subscription> GetAccountSubscription(string subscription_id, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -45,11 +46,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("subscriptionId", subscription_id);
 
-            return await apiAdapter.MakeRequest<Subscription>(request);
+            return await apiAdapter.MakeRequest<Subscription>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<SubscriptionMembers>> GetSubscriptionMembers(string subscription_id, uint start = 0, uint end = 500)
+        public async Task<IEnumerable<SubscriptionMembers>> GetSubscriptionMembers(string subscription_id, uint start = 0, uint end = 500, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -57,11 +58,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("subscriptionId", subscription_id);
 
-            return await apiAdapter.MakeRequest<List<SubscriptionMembers>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<SubscriptionMembers>>(request, start, end, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<SubscriptionMembers>> GetOptOutSubscriptionMembers(string subscription_id, uint start = 0, uint end = 500)
+        public async Task<IEnumerable<SubscriptionMembers>> GetOptOutSubscriptionMembers(string subscription_id, uint start = 0, uint end = 500, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -69,11 +70,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("subscriptionId", subscription_id);
 
-            return await apiAdapter.MakeRequest<List<SubscriptionMembers>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<SubscriptionMembers>>(request, start, end, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<Subscription> PostNewSubscription(SubscriptionNew subscription)
+        public async Task<Subscription> PostNewSubscription(SubscriptionNew subscription, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.POST)
             {
@@ -81,11 +82,11 @@ namespace EmmaSharper
             };
             request.AddJsonBody(subscription);
 
-            return await apiAdapter.MakeRequest<Subscription>(request);
+            return await apiAdapter.MakeRequest<Subscription>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<bool> PostBulkMemberSubscriptions(SubscriptionBulk memberIds, string subscription_id)
+        public async Task<bool> PostBulkMemberSubscriptions(SubscriptionBulk memberIds, string subscription_id, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.POST)
             {
@@ -95,11 +96,11 @@ namespace EmmaSharper
             request.AddUrlSegment("subscriptionId", subscription_id);
             request.AddJsonBody(memberIds);
 
-            return await apiAdapter.MakeRequest<bool>(request);
+            return await apiAdapter.MakeRequest<bool>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<bool> PostBulkImportSubscriptions(SubscriptionImportBulk importId, string subscription_id)
+        public async Task<bool> PostBulkImportSubscriptions(SubscriptionImportBulk importId, string subscription_id, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.POST)
             {
@@ -109,12 +110,12 @@ namespace EmmaSharper
             request.AddUrlSegment("subscriptionId", subscription_id);
             request.AddJsonBody(importId);
 
-            return await apiAdapter.MakeRequest<bool>(request);
+            return await apiAdapter.MakeRequest<bool>(request, cancellationToken: cancellationToken);
         }
 
 
         /// <inheritdoc/>
-        public async Task<Subscription> EditSubscription(SubscriptionNew subscription, string subscription_id)
+        public async Task<Subscription> EditSubscription(SubscriptionNew subscription, string subscription_id, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.PUT)
             {
@@ -124,11 +125,11 @@ namespace EmmaSharper
             request.AddUrlSegment("subscriptionId", subscription_id);
             request.AddJsonBody(subscription);
 
-            return await apiAdapter.MakeRequest<Subscription>(request);
+            return await apiAdapter.MakeRequest<Subscription>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<Subscription> DeleteSubscription(string subscription_id)
+        public async Task<Subscription> DeleteSubscription(string subscription_id, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
@@ -136,7 +137,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("subscriptionId", subscription_id);
 
-            return await apiAdapter.MakeRequest<Subscription>(request);
+            return await apiAdapter.MakeRequest<Subscription>(request, cancellationToken: cancellationToken);
         }
     }
 }

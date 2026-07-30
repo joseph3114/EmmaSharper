@@ -1,3 +1,4 @@
+using System.Threading;
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseSummary>> GetResponseSummary(DateRange? range = null, bool includeArchived = false)
+        public async Task<IEnumerable<ResponseSummary>> GetResponseSummary(DateRange? range = null, bool includeArchived = false, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -34,11 +35,11 @@ namespace EmmaSharper
                 request.AddParameter("range", range.Value.ToString());
             }
 
-            return await apiAdapter.MakeRequest<List<ResponseSummary>>(request);
+            return await apiAdapter.MakeRequest<List<ResponseSummary>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseSummary>> GetResponseSummary(DateTime? date, bool includeArchived = false)
+        public async Task<IEnumerable<ResponseSummary>> GetResponseSummary(DateTime? date, bool includeArchived = false, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -55,11 +56,11 @@ namespace EmmaSharper
                 request.AddParameter("range", date.Value.ToString("yyyy-MM-dd"));
             }
 
-            return await apiAdapter.MakeRequest<List<ResponseSummary>>(request);
+            return await apiAdapter.MakeRequest<List<ResponseSummary>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<Response> GetMailingResponse(string mailingId)
+        public async Task<Response> GetMailingResponse(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -67,11 +68,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<Response>(request);
+            return await apiAdapter.MakeRequest<Response>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> GetMailingSendsCount(string mailingId)
+        public async Task<int> GetMailingSendsCount(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -80,11 +81,11 @@ namespace EmmaSharper
             request.AddUrlSegment("mailingId", mailingId);
             request.AddParameter("count", "true");
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseGeneric>> GetMailingSends(string mailingId, uint? start = null, uint? end = null)
+        public async Task<IEnumerable<ResponseGeneric>> GetMailingSends(string mailingId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -92,11 +93,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> GetMailingInProgressCount(string mailingId)
+        public async Task<int> GetMailingInProgressCount(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -105,11 +106,11 @@ namespace EmmaSharper
             request.AddUrlSegment("mailingId", mailingId);
             request.AddParameter("count", "true");
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseGeneric>> GetMailingInProgress(string mailingId, uint? start = null, uint? end = null)
+        public async Task<IEnumerable<ResponseGeneric>> GetMailingInProgress(string mailingId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -117,11 +118,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> GetMailingDelieveriesCount(string mailingId, DeliveryType result = DeliveryType.All)
+        public async Task<int> GetMailingDelieveriesCount(string mailingId, DeliveryType result = DeliveryType.All, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -132,11 +133,11 @@ namespace EmmaSharper
 
             request.AddParameter("result", result.ToEnumString<DeliveryType>());
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseDeliveries>> GetMailingDelieveries(string mailingId, DeliveryType result = DeliveryType.All, uint? start = null, uint? end = null)
+        public async Task<IEnumerable<ResponseDeliveries>> GetMailingDelieveries(string mailingId, DeliveryType result = DeliveryType.All, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -146,11 +147,11 @@ namespace EmmaSharper
 
             request.AddParameter("result", result.ToEnumString<DeliveryType>());
 
-            return await apiAdapter.MakeRequest<List<ResponseDeliveries>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<ResponseDeliveries>>(request, start, end, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> GetMailingOpensCount(string mailingId)
+        public async Task<int> GetMailingOpensCount(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -159,11 +160,11 @@ namespace EmmaSharper
             request.AddUrlSegment("mailingId", mailingId);
             request.AddParameter("count", "true");
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseGeneric>> GetMailingOpens(string mailingId, uint? start = null, uint? end = null)
+        public async Task<IEnumerable<ResponseGeneric>> GetMailingOpens(string mailingId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -171,11 +172,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Link>> GetMailingLinks(string mailingId)
+        public async Task<IEnumerable<Link>> GetMailingLinks(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -183,11 +184,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<Link>>(request);
+            return await apiAdapter.MakeRequest<List<Link>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> GetMailingClicksCount(string mailingId)
+        public async Task<int> GetMailingClicksCount(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -196,11 +197,11 @@ namespace EmmaSharper
             request.AddUrlSegment("mailingId", mailingId);
             request.AddParameter("count", "true");
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseClicks>> GetMailingClicks(string mailingId, string memberId = null, string linkId = null, uint? start = null, uint? end = null)
+        public async Task<IEnumerable<ResponseClicks>> GetMailingClicks(string mailingId, string memberId = null, string linkId = null, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -218,11 +219,11 @@ namespace EmmaSharper
                 request.AddParameter("link_id", linkId);
             }
 
-            return await apiAdapter.MakeRequest<List<ResponseClicks>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<ResponseClicks>>(request, start, end, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseForwards>> GetMailingForwards(string mailingId)
+        public async Task<IEnumerable<ResponseForwards>> GetMailingForwards(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -230,11 +231,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseForwards>>(request);
+            return await apiAdapter.MakeRequest<List<ResponseForwards>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> GetMailingOptoutsCount(string mailingId)
+        public async Task<int> GetMailingOptoutsCount(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -243,11 +244,11 @@ namespace EmmaSharper
             request.AddUrlSegment("mailingId", mailingId);
             request.AddParameter("count", "true");
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseGeneric>> GetMailingOptouts(string mailingId, uint? start = null, uint? end = null)
+        public async Task<IEnumerable<ResponseGeneric>> GetMailingOptouts(string mailingId, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -255,11 +256,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseSignups>> GetMailingSignups(string mailingId)
+        public async Task<IEnumerable<ResponseSignups>> GetMailingSignups(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -267,11 +268,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseSignups>>(request);
+            return await apiAdapter.MakeRequest<List<ResponseSignups>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseShares>> GetMailingShares(string mailingId)
+        public async Task<IEnumerable<ResponseShares>> GetMailingShares(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -279,11 +280,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseShares>>(request);
+            return await apiAdapter.MakeRequest<List<ResponseShares>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseCustomerShare>> GetMailingCustomerShares(string mailingId)
+        public async Task<IEnumerable<ResponseCustomerShare>> GetMailingCustomerShares(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -291,11 +292,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseCustomerShare>>(request);
+            return await apiAdapter.MakeRequest<List<ResponseCustomerShare>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseCustomerShareClicks>> GetMailingCustomerShareClicks(string mailingId)
+        public async Task<IEnumerable<ResponseCustomerShareClicks>> GetMailingCustomerShareClicks(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -303,11 +304,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseCustomerShareClicks>>(request);
+            return await apiAdapter.MakeRequest<List<ResponseCustomerShareClicks>>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<ResponseCustomerShare> GetMailingCustomerShare(string shareId)
+        public async Task<ResponseCustomerShare> GetMailingCustomerShare(string shareId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -315,11 +316,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("shareId", shareId);
 
-            return await apiAdapter.MakeRequest<ResponseCustomerShare>(request);
+            return await apiAdapter.MakeRequest<ResponseCustomerShare>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ResponseSharesOverview>> GetMailingSharesOverview(string mailingId)
+        public async Task<IEnumerable<ResponseSharesOverview>> GetMailingSharesOverview(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -327,7 +328,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseSharesOverview>>(request);
+            return await apiAdapter.MakeRequest<List<ResponseSharesOverview>>(request, cancellationToken: cancellationToken);
         }
     }
 }

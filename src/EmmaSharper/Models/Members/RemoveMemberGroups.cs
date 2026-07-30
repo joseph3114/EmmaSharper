@@ -18,6 +18,6 @@ namespace EmmaSharper
         /// Group ids from which to remove the given members.
         /// </summary>
         [JsonPropertyName("group_ids")]
-        public List<int> GroupIds { get; set; }
+        public List<long> GroupIds { get; set; }
     }
 }

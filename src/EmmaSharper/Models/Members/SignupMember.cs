@@ -15,7 +15,7 @@ namespace EmmaSharper
         /// An array of group ids to associate sign-up with.
         /// </summary>
         [JsonPropertyName("group_ids")]
-        public List<int> GroupIds { get; set; }
+        public List<long> GroupIds { get; set; }
 
         /// <summary>
         /// Optional. Names and values of user-defined fields to update.

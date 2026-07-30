@@ -10,7 +10,7 @@ namespace EmmaSharper
         public AddMembers()
         {
             Members = new List<MemberBulk>();
-            GroupIds = new List<int>();
+            GroupIds = new List<long>();
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace EmmaSharper
         /// Optional. Add imported members to this list of groups.
         /// </summary>
         [JsonPropertyName("group_ids")]
-        public List<int> GroupIds { get; set; }
+        public List<long> GroupIds { get; set; }
 
         /// <summary>
         /// Optional. Fires related field change auto-responders when set to true.

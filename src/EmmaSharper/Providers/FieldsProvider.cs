@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EmmaSharper.Internals;
@@ -16,7 +17,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<int> ListFieldsCount(bool includeDeleted = false)
+        public async Task<int> ListFieldsCount(bool includeDeleted = false, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -29,11 +30,11 @@ namespace EmmaSharper
                 request.AddParameter("deleted", includeDeleted);
             }
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Field>> ListFields(bool includeDeleted = false, uint? start = null, uint? end = null)
+        public async Task<IEnumerable<Field>> ListFields(bool includeDeleted = false, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -45,11 +46,11 @@ namespace EmmaSharper
                 request.AddParameter("deleted", includeDeleted);
             }
 
-            return await apiAdapter.MakeRequest<List<Field>>(request, start, end);
+            return await apiAdapter.MakeRequest<List<Field>>(request, start, end, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<Field> GetField(string fieldId, bool includeDeleted = false)
+        public async Task<Field> GetField(string fieldId, bool includeDeleted = false, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -62,11 +63,11 @@ namespace EmmaSharper
                 request.AddParameter("deleted", includeDeleted);
             }
 
-            return await apiAdapter.MakeRequest<Field>(request);
+            return await apiAdapter.MakeRequest<Field>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> CreateField(CreateField field)
+        public async Task<int> CreateField(CreateField field, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.POST)
             {
@@ -74,11 +75,11 @@ namespace EmmaSharper
             };
             request.AddJsonBody(field);
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<bool> DeleteField(string fieldId)
+        public async Task<bool> DeleteField(string fieldId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.DELETE)
             {
@@ -86,11 +87,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("fieldId", fieldId);
 
-            return await apiAdapter.MakeRequest<bool>(request);
+            return await apiAdapter.MakeRequest<bool>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<bool> ClearField(string fieldId)
+        public async Task<bool> ClearField(string fieldId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.POST)
             {
@@ -98,11 +99,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("fieldId", fieldId);
 
-            return await apiAdapter.MakeRequest<bool>(request);
+            return await apiAdapter.MakeRequest<bool>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<int> UpdateField(string fieldId, UpdateField field)
+        public async Task<int> UpdateField(string fieldId, UpdateField field, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.PUT)
             {
@@ -111,7 +112,7 @@ namespace EmmaSharper
             request.AddUrlSegment("fieldId", fieldId);
             request.AddJsonBody(field);
 
-            return await apiAdapter.MakeRequest<int>(request);
+            return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
     }
 }
