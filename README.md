@@ -2,19 +2,20 @@
 
 [![CI](https://github.com/joseph3114/EmmaSharper/actions/workflows/test.yml/badge.svg)](https://github.com/joseph3114/EmmaSharper/actions/workflows/test.yml)
 [![NuGet](https://img.shields.io/nuget/v/EmmaSharper.svg)](https://www.nuget.org/packages/EmmaSharper/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
+[![Downloads](https://img.shields.io/nuget/dt/EmmaSharper.svg)](https://www.nuget.org/packages/EmmaSharper/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/joseph3114/EmmaSharper/blob/master/LICENSE.txt)
 
 A .NET client for the [Emma (Marigold) API](https://api.myemma.com/).
 
 > **This is the maintained continuation of [`kylegregory/EmmaSharp`](https://github.com/kylegregory/EmmaSharp)**,
 > which last shipped in 2019, by way of [`BinaryPatrick/EmmaSharper`](https://github.com/BinaryPatrick/EmmaSharper).
 > Several bugs still shown as open on those repositories are fixed here —
-> see **[Upstream issues fixed in this fork](docs/upstream-fixes.md)**.
+> see **[Upstream issues fixed in this fork](https://github.com/joseph3114/EmmaSharper/blob/master/docs/upstream-fixes.md)**.
 
 📖 **[Documentation wiki](https://github.com/joseph3114/EmmaSharper/wiki)** — getting started, enterprise multi-account use, paging, rate limiting, recipes, and notes on the
 Emma API's own quirks.
 
-🧪 **[Runnable samples](samples/)** — `dotnet run --project samples/EmmaSharper.Samples -- --help`.
+🧪 **[Runnable samples](https://github.com/joseph3114/EmmaSharper/tree/master/samples)** — `dotnet run --project samples/EmmaSharper.Samples -- --help`.
 Built by CI, so the documented patterns are guaranteed to compile.
 
 **Targets:** `netstandard2.0`, `net8.0`, `net10.0` — so .NET Framework 4.6.2+ works too.
@@ -156,14 +157,16 @@ Endpoints that page take `start` and `end`. Emma's range is **inclusive**, so a 
 
 ## Versioning
 
-`8.0.0` is a breaking release — see the [changelog](CHANGELOG.md). The short version: RestSharp and
+`8.0.0` is a breaking release — see the
+[changelog](https://github.com/joseph3114/EmmaSharper/blob/master/CHANGELOG.md). The short version: RestSharp and
 Newtonsoft.Json removed, `EmmaException` no longer exposes a RestSharp type, ids widened from `int`
 to `long`, and every method gained a `CancellationToken`.
 
 ## Contributing
 
-This project is not affiliated with [Emma](http://myemma.com/meet-us). Everyone working on it is a
-volunteer. [Fork the repo](https://help.github.com/articles/fork-a-repo), make your changes, and
-open a pull request — CI runs build, tests on both target frameworks, and CodeQL.
+This project is not affiliated with [Emma](https://myemma.com/). Everyone working on it is a
+volunteer. [Fork the repo](https://docs.github.com/get-started/quickstart/fork-a-repo), make your
+changes, and open a pull request — CI builds all three target frameworks, runs the tests on
+`net472`, `net8.0` and `net10.0`, and runs CodeQL.
 
 Emma's own API documentation is at <https://api.myemma.com/>.
