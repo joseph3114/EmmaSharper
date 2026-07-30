@@ -1,0 +1,38 @@
+# Codecov configuration.
+#
+# Coverage currently sits around 25% of lines, and that figure is misleading in both
+# directions: the code with real logic - the adapter, paging arithmetic, the JSON
+# converters, filter building, retry classification - is well covered, while the
+# uncovered majority is DTOs with no behaviour and ~14 providers of near-identical
+# passthrough methods. Testing an auto-property asserts that C# assigns fields.
+#
+# So the settings below are deliberately advisory rather than enforcing. A red X on
+# every pull request for missing a number nobody chose is noise, and noise gets muted.
+
+coverage:
+  status:
+    project:
+      default:
+        # Report the number, never fail the build on it.
+        informational: true
+        target: auto
+        threshold: 1%
+    patch:
+      default:
+        # Patch coverage is the figure worth watching: it asks whether the lines this
+        # PR *added* are tested, which is actionable in review in a way that a
+        # whole-repository percentage never is.
+        informational: true
+        target: 80%
+
+comment:
+  layout: "condensed_header, diff, flags, files"
+  behavior: default
+  # Don't comment on PRs that change no covered code - docs, workflows, packaging.
+  require_changes: true
+
+# Excluded from the coverage denominator: none of it is library code a consumer runs.
+ignore:
+  - "tests/**"
+  - "samples/**"
+  - "tools/**"
