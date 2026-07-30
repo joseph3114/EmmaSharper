@@ -17,7 +17,11 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<int> GetMemberCount(bool includeDeleted = false, CancellationToken cancellationToken = default)
+        public async Task<int> GetMemberCount(
+            bool includeDeleted = false,
+            MemberStatusShort? status = null,
+            string? rawFilter = null,
+            CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -30,11 +34,25 @@ namespace EmmaSharper
                 request.AddParameter("deleted", includeDeleted);
             }
 
+            string? filter = EmmaFilter.ResolveMemberFilter(status, rawFilter);
+            if (filter is not null)
+            {
+                request.AddParameter("filter", filter);
+            }
+
+            // Responds with a bare integer, not JSON - see the note in EnvelopedResponses.
             return await apiAdapter.MakeRequest<int>(request, cancellationToken: cancellationToken);
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Member>> ListMembers(bool includeDeleted = false, uint? start = null, uint? end = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Member>> ListMembers(
+            bool includeDeleted = false,
+            uint? start = null,
+            uint? end = null,
+            MemberStatusShort? status = null,
+            MemberFieldSelection fields = MemberFieldSelection.All,
+            string? rawFilter = null,
+            CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -44,6 +62,17 @@ namespace EmmaSharper
             if (includeDeleted)
             {
                 request.AddParameter("deleted", includeDeleted);
+            }
+
+            string? filter = EmmaFilter.ResolveMemberFilter(status, rawFilter);
+            if (filter is not null)
+            {
+                request.AddParameter("filter", filter);
+            }
+
+            if (fields == MemberFieldSelection.ExcludeCustomFields)
+            {
+                request.AddParameter("exclude_fields", 1);
             }
 
             return await apiAdapter.MakeRequest<List<Member>>(request, start, end, cancellationToken: cancellationToken);

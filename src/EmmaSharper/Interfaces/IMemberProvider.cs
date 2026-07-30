@@ -107,10 +107,24 @@ namespace EmmaSharper
         /// <remarks>Http404 if no member is found.</remarks>
         Task<Member> GetMemberByEmail(string memberEmail, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
-        /// <summary>Get a count of all members in an account.</summary>
-        /// <returns>A list of members in the given account.</returns>
+        /// <summary>Get a count of members in an account.</summary>
+        /// <returns>The number of members matching the filter.</returns>
         /// <param name="includeDeleted">Accepts True. Optional flag to include deleted members.</param>
-        Task<int> GetMemberCount(bool includeDeleted = false, CancellationToken cancellationToken = default);
+        /// <param name="status">
+        /// Optional. Count only members in this status. Note this is not the same as
+        /// <paramref name="includeDeleted"/> - Emma tracks active, opt-out, error and forwarded
+        /// separately from deletion, and a quota figure is normally defined on active only.
+        /// </param>
+        /// <param name="rawFilter">
+        /// Optional. A raw Emma filter expression, e.g. <c>["member_status_id","eq","a"]</c>, for
+        /// filters this wrapper does not model. Cannot be combined with <paramref name="status"/>.
+        /// </param>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
+        Task<int> GetMemberCount(
+            bool includeDeleted = false,
+            MemberStatusShort? status = null,
+            string? rawFilter = null,
+            CancellationToken cancellationToken = default);
 
         /// <summary>Get the groups to which a member belongs.</summary>
         /// <param name="memberId">Member identifier.</param>
@@ -152,12 +166,36 @@ namespace EmmaSharper
         /// <remarks></remarks>
         Task<int> GetMembersAffectedByImportCount(string importId, CancellationToken cancellationToken = default);
 
-        /// <summary>Get a basic listing of all members in an account.</summary>
-        /// <returns>A list of members in the given account.</returns>
+        /// <summary>Get a basic listing of members in an account.</summary>
+        /// <returns>The members matching the filter.</returns>
         /// <param name="includeDeleted">Accepts True. Optional flag to include deleted members.</param>
-        /// <param name="start">Pagination: start page. Defaults to first page (e.g. 0).</param>
-        /// <param name="end">Pagination: end page. Defaults to first page (e.g. 500).</param>
-        Task<IEnumerable<Member>> ListMembers(bool includeDeleted = false, uint? start = null, uint? end = null, CancellationToken cancellationToken = default);
+        /// <param name="start">
+        /// Pagination: inclusive start index. Defaults to 0. These are record indices, not page
+        /// numbers - Emma's range is inclusive, so a 500-record page is start 0 to end 499.
+        /// </param>
+        /// <param name="end">Pagination: inclusive end index. Defaults to <c>start + 499</c>.</param>
+        /// <param name="status">
+        /// Optional. Return only members in this status. Distinct from
+        /// <paramref name="includeDeleted"/>: Emma tracks active, opt-out, error and forwarded
+        /// separately from deletion.
+        /// </param>
+        /// <param name="fields">
+        /// Whether to include custom fields. Excluding them is the single biggest throughput win
+        /// available when only the email and id are needed.
+        /// </param>
+        /// <param name="rawFilter">
+        /// Optional. A raw Emma filter expression, e.g. <c>["member_status_id","eq","a"]</c>, for
+        /// filters this wrapper does not model. Cannot be combined with <paramref name="status"/>.
+        /// </param>
+        /// <param name="cancellationToken">Cancels the in-flight request.</param>
+        Task<IEnumerable<Member>> ListMembers(
+            bool includeDeleted = false,
+            uint? start = null,
+            uint? end = null,
+            MemberStatusShort? status = null,
+            MemberFieldSelection fields = MemberFieldSelection.All,
+            string? rawFilter = null,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Takes the necessary actions to signup a member and enlist them in the provided group ids. You can send the same member multiple times and pass in new group ids to signup. This process triggers the opt-out workflow, and will send a mailing to the member on new group enlistments. If no new group ids are provided for an existing member, the endpoint will respond back with their status and member_id, performing no additional actions.
