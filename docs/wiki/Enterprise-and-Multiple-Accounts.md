@@ -4,10 +4,6 @@ An Emma **enterprise** account owns subaccounts — one per department, campus, 
 organisation divides on. You authenticate once with the enterprise credentials and then address
 each subaccount by id.
 
-Before 8.0.0 this was impossible. The account id was fixed at DI registration and no provider
-method accepted one, so reaching a second account meant building a second service container. That
-was [BinaryPatrick/EmmaSharper#6](https://github.com/BinaryPatrick/EmmaSharper/issues/6).
-
 ## Discover the subaccounts
 
 ```csharp

@@ -31,21 +31,17 @@ It deliberately does **not** contain the substituted values. Resolved paths embe
 addresses, and this property is overwhelmingly used for logging — so putting real addresses in it
 would write PII into everyone's application logs by default.
 
-The library follows the same rule internally: its own debug logging emits the unresolved template
-plus the account id, never the resolved path. That was a regression introduced during the 8.0.0
-rewrite, caught by CodeQL, and there is a test asserting the address reaches Emma but never the
-logger.
+The library's own debug logging follows the same rule: it emits the unresolved template plus the
+account id, never the resolved path.
 
-## No more string matching
-
-7.x exposed RestSharp's `IRestResponse` as a public field and built the message by hand, so
-callers ended up writing:
+## Branch on the status, not the message
 
 ```csharp
-catch (EmmaException ex) when (ex.Message.Contains("403"))   // 7.x - don't
+catch (EmmaException ex) when (ex.StatusCode == HttpStatusCode.Forbidden)
 ```
 
-That is gone. Check `ex.StatusCode`, or catch `EmmaRateLimitException`.
+`Message` is for humans and its wording is not a contract. Use `StatusCode`, or catch
+`EmmaRateLimitException` when you mean throttling.
 
 ## Not found
 

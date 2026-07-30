@@ -142,16 +142,16 @@ against a sandbox subaccount before running it across a real list.
 
 ---
 
-## What this replaces
+## Endpoint reference
 
-The sync these recipes come from hand-rolled four Emma calls. Each now has a direct equivalent:
+If you are porting code that calls Emma directly, these are the equivalents:
 
-| Hand-rolled | Library |
+| Emma endpoint | Library |
 |---|---|
 | `GET /{acct}/enterprise/subaccounts?status=active,trial,pending_retirement,retired` | `enterprise.ListSubaccounts()` |
 | `GET /{sub}/members?count=true&filter=["member_status_id","eq","a"]` | `scope.Members.GetMemberCount(status: Active)` |
 | `GET /{sub}/members?filter=[…]&exclude_fields=1&start=&end=` | `scope.Members.ListMembers(status: Active, fields: ExcludeCustomFields, start, end)` |
 | `GET /{sub}/accounts/users` | `scope.Account.ListUsers()` |
+| `PUT /{sub}/members/{id}` | `scope.Members.UpdateSingleMemberInformation(id, member)` |
 
-Along with the Basic auth header, the retry loop, the `403`-means-throttled special case, the
-`JObject` parsing, and four private DTOs — roughly 600 lines of the 757-line service.
+Basic auth, the retry loop, response parsing and the DTOs come with the library.

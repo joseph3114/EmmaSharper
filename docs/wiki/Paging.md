@@ -58,13 +58,13 @@ This maps to Emma's `exclude_fields=1`. On an account with hundreds of thousands
 dozens of custom fields per member, it is the single biggest throughput lever available — it is
 the difference between a sync that takes minutes and one that takes an hour.
 
-## Two bugs this replaces
+## Getting the bounds wrong
 
-Both were live in 7.x and are fixed in 8.0.0:
+Two mistakes are easy to make when computing ranges yourself, and both are silent:
 
-- **Off by one.** Page bounds were computed as `start + 500`, so every request asked for **501**
+- Treating the window as a **count** rather than an inclusive end, so `start + 500` asks for 501
   records against an API whose maximum is 500.
-- **Unsigned underflow.** With an `end` below 500 and no `start`, the library computed
-  `end - 500` on a `uint`, which wrapped to roughly **4.29 billion**.
+- Computing `end - 500` on a `uint`, which **wraps** to roughly 4.29 billion when `end` is below
+  500.
 
-There are regression tests for both.
+Pass `start` and `end` and the library handles the arithmetic.

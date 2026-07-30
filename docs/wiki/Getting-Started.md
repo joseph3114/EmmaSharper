@@ -43,8 +43,8 @@ builder.Services.AddEmmaApiProviders(builder.Configuration);
 }
 ```
 
-> 7.x bound the configuration **root**, which forced these keys to the top level of
-> `appsettings.json`. Pass `sectionName: null` if you need that behaviour back.
+> To bind the configuration root instead of a section — keys at the top level of
+> `appsettings.json` — pass `sectionName: null`.
 
 Keep the secret key out of source control — user secrets in development, and your platform's
 secret store in production.

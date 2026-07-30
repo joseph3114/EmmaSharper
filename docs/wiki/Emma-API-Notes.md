@@ -58,10 +58,7 @@ Mailing ids, member ids and link ids have all grown past `Int32.MaxValue`. The c
 JSON integer 2169469051 is too large or small for an Int32
 ```
 
-Every id in this library is `long`. This caused
-[kylegregory/EmmaSharp#48](https://github.com/kylegregory/EmmaSharp/issues/48) and
-[BinaryPatrick/EmmaSharper#5](https://github.com/BinaryPatrick/EmmaSharper/issues/5), both fixed
-in 8.0.0.
+Every id in this library is `long`. If you parse Emma ids yourself, use a 64-bit type.
 
 ---
 
@@ -77,8 +74,8 @@ page is `0` to `499`. Maximum page size is 500. See [Paging](Paging).
 Emma adds new status and type values without notice. A client that throws on an unrecognised enum
 value breaks the day that happens.
 
-Every enum here has an `Unknown` member and deserialization falls back to it rather than throwing.
-This behaviour was added upstream in 2019 after exactly that failure, and is preserved.
+Every enum here has an `Unknown` member, and deserialization falls back to it rather than
+throwing. Check for `Unknown` if an unrecognised value matters to your logic.
 
 Because `Unknown` has no wire representation, it cannot be used as a filter — passing it throws.
 
