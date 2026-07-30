@@ -96,6 +96,37 @@ Emma's subscriptions endpoints are implemented — see `IEmmaSubscriptionProvide
 
 ---
 
+### `Target .Net Standard 2.0`
+**[kylegregory/EmmaSharp#44](https://github.com/kylegregory/EmmaSharp/issues/44)** · reported 2019-06-06 · fixed in **8.0.0**
+
+> It would be helpful to update the library to target .net standard 2.0 for improved compatibility.
+
+**Fix.** `netstandard2.0` is a target framework as of 8.0.0, bringing .NET Framework 4.6.2+
+consumers back. This was initially scoped out and then reversed once the cost was measured rather
+than assumed — compiling the source against netstandard2.0 produced only **four** API gaps, three
+of which need no conditional compilation at all:
+
+| Missing on netstandard2.0 | Resolution |
+|---|---|
+| `HttpStatusCode.TooManyRequests` | `(HttpStatusCode)429` |
+| `string.Join(char, …)` | `string.Join(separator.ToString(), …)` |
+| `Enum.IsDefined<T>(T)` | `Enum.IsDefined(typeof(T), boxed)` |
+| `HttpContent.ReadAsStringAsync(CancellationToken)` | the one `#if NETSTANDARD2_0` in the codebase |
+
+`JsonNamingPolicy.SnakeCaseLower`, `Utf8JsonWriter.WriteRawValue` and `JsonConverterFactory` all
+work, because the `System.Text.Json` package backports them — so serialization behaves identically
+on every target.
+
+The test suite also runs on `net472`, so this leg is verified against a real .NET Framework runtime
+rather than merely compiled.
+
+Two caveats worth knowing: netstandard2.0 defaults to C# 7.3 and cannot parse
+`<Nullable>enable</Nullable>`, so `LangVersion` is pinned to 12 for that framework only; and the
+"two dependencies" figure holds for net8.0/net10.0 — the netstandard2.0 leg additionally needs
+`System.Text.Json`, since none of it is in-box there.
+
+---
+
 ## Fixed but never reported
 
 These were found while working on the issues above.
@@ -109,41 +140,6 @@ These were found while working on the issues above.
 | **Process-wide TLS mutation** | A static constructor set `ServicePointManager.SecurityProtocol`, changing TLS settings for the entire host process from inside a library — and a no-op on .NET Core since 3.0. Removed. |
 | **403 treated as an auth failure** | Emma signals throttling with **403** as well as 429. Both now raise `EmmaRateLimitException` carrying `Retry-After`. |
 | **Known-vulnerable dependency** | Newtonsoft.Json 9.0.1 carries [GHSA-5crp-9r3c-p9vr](https://github.com/advisories/GHSA-5crp-9r3c-p9vr). The open-ended range `[9.0.1,]` did not help: NuGet resolves to the *lowest* version in range, so every consumer received the vulnerable floor. Newtonsoft has been removed entirely. |
-
----
-
-## Not planned
-
-### `Target .Net Standard 2.0`
-**[kylegregory/EmmaSharp#44](https://github.com/kylegregory/EmmaSharp/issues/44)** · reported 2019-06-06
-
-This one is **not** being implemented, and the reasoning is worth stating plainly rather than
-leaving the issue looking overlooked.
-
-The request was for broader compatibility, including .NET Framework 4.5+. Version 8.0.0 instead
-targets net8.0 and net10.0 — the two supported LTS releases.
-
-This was measured rather than assumed. Compiling the 8.0.0 source against netstandard2.0 produces
-**four** API gaps, all trivially shimmable:
-
-| Missing on netstandard2.0 | Workaround |
-|---|---|
-| `HttpStatusCode.TooManyRequests` | `(HttpStatusCode)429` |
-| `HttpContent.ReadAsStringAsync(CancellationToken)` | parameterless overload |
-| `string.Join(char, …)` | `string.Join(separator.ToString(), …)` |
-| `Enum.IsDefined<T>(T)` | `Enum.IsDefined(typeof(T), value)` |
-
-Notably, `JsonNamingPolicy.SnakeCaseLower`, `Utf8JsonWriter.WriteRawValue` and
-`JsonConverterFactory` all work, because the `System.Text.Json` NuGet package backports them.
-
-So the cost is real but modest: four `#if` branches, four extra packages on that leg (the
-two-dependency count then holds only for net8/net10 consumers), a pinned `LangVersion` — netstandard2.0
-defaults to C# 7.3 and cannot parse `<Nullable>enable</Nullable>` — and a Windows CI job if the leg
-is to be tested against .NET Framework rather than merely compiled.
-
-It is not being done **yet** simply because nobody has asked for it with a concrete use case, and
-adding a target framework in a later release is **not** a breaking change. Waiting costs nothing.
-If you need netstandard2.0, please open an issue — a real consumer changes the calculation.
 
 ---
 

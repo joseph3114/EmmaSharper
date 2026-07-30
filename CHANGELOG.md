@@ -40,8 +40,12 @@ this closes against `kylegregory/EmmaSharp` and `BinaryPatrick/EmmaSharper`.
 
 ### Changed
 
-- **Target frameworks are now `net8.0` and `net10.0`.** `netcoreapp3.1`, `net5.0`, `net6.0` and
-  `net7.0` are all out of support.
+- **Target frameworks are now `netstandard2.0`, `net8.0` and `net10.0`.** `netcoreapp3.1`, `net5.0`,
+  `net6.0` and `net7.0` are all out of support and have been dropped. `netstandard2.0` keeps .NET
+  Framework 4.6.2+ consumers working and closes
+  [kylegregory/EmmaSharp#44](https://github.com/kylegregory/EmmaSharp/issues/44); the test suite
+  runs on `net472` so that target is verified rather than merely compiled. Note the netstandard2.0
+  leg additionally needs the `System.Text.Json` package, since none of it is in-box there.
 - **Transport is `HttpClient` + `IHttpClientFactory`**, replacing RestSharp. The client is pooled
   rather than constructed per request.
 - **Serialization is System.Text.Json**, replacing Newtonsoft.Json.

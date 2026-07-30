@@ -11,7 +11,8 @@ A .NET client for the [Emma (Marigold) API](https://api.myemma.com/).
 > Several bugs still shown as open on those repositories are fixed here —
 > see **[Upstream issues fixed in this fork](docs/upstream-fixes.md)**.
 
-**Targets:** `net8.0`, `net10.0` · **Dependencies:** two, both `Microsoft.Extensions.*`
+**Targets:** `netstandard2.0`, `net8.0`, `net10.0` — so .NET Framework 4.6.2+ works too.
+**Dependencies:** two on the modern targets, both `Microsoft.Extensions.*`.
 
 ---
 
@@ -149,9 +150,9 @@ Endpoints that page take `start` and `end`. Emma's range is **inclusive**, so a 
 
 ## Versioning
 
-`8.0.0` is a breaking release — see the [changelog](CHANGELOG.md). The short version: net8.0/net10.0
-only, RestSharp and Newtonsoft.Json removed, `EmmaException` no longer exposes a RestSharp type, ids
-widened from `int` to `long`, and every method gained a `CancellationToken`.
+`8.0.0` is a breaking release — see the [changelog](CHANGELOG.md). The short version: RestSharp and
+Newtonsoft.Json removed, `EmmaException` no longer exposes a RestSharp type, ids widened from `int`
+to `long`, and every method gained a `CancellationToken`.
 
 ## Contributing
 
