@@ -45,7 +45,7 @@ namespace EmmaSharper
         /// <returns>A search.</returns>
         /// <remarks>Http404 if the search does not exist.</remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Search> GetSearchDetails(string searchId, bool includeDeleted = false, CancellationToken cancellationToken = default);
+        Task<Search?> GetSearchDetails(string searchId, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
         /// <summary>Retrieve a list of saved searches</summary>
         /// <param name="includeDeleted">Optional flag to include deleted searches.</param>

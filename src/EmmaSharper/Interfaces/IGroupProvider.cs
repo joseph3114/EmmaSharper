@@ -32,7 +32,7 @@ namespace EmmaSharper
         /// <returns>A group.</returns>
         /// <remarks>Http404 if the group does not exist.</remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Group> GetGroup(string memberGroupId, CancellationToken cancellationToken = default);
+        Task<Group?> GetGroup(string memberGroupId, CancellationToken cancellationToken = default);
 
         /// <summary>Create one or more new member groups</summary>
         /// <param name="groups">A Group to be created. Each object must contain a group_name parameter.</param>

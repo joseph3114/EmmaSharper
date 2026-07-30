@@ -75,11 +75,11 @@ namespace EmmaSharper
                 request.AddParameter("exclude_fields", 1);
             }
 
-            return await apiAdapter.MakeRequest<List<Member>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Member>>(request, start, end, cancellationToken: cancellationToken) ?? new List<Member>();
         }
 
         /// <inheritdoc/>
-        public async Task<Member> GetMember(string memberId, bool includeDeleted = false, CancellationToken cancellationToken = default)
+        public async Task<Member?> GetMember(string memberId, bool includeDeleted = false, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -96,7 +96,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<Member> GetMemberByEmail(string memberEmail, bool includeDeleted = false, CancellationToken cancellationToken = default)
+        public async Task<Member?> GetMemberByEmail(string memberEmail, bool includeDeleted = false, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -121,7 +121,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("memberId", memberId);
 
-            return await apiAdapter.MakeRequest<List<MemberOptout>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<MemberOptout>>(request, cancellationToken: cancellationToken) ?? new List<MemberOptout>();
         }
 
         /// <inheritdoc/>
@@ -137,7 +137,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<MembersAdd> AddNewMembers(AddMembers members, CancellationToken cancellationToken = default)
+        public async Task<MembersAdd?> AddNewMembers(AddMembers members, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.POST)
             {
@@ -149,7 +149,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<MemberAdd> AddOrUpdateSingleMember(AddMember member, CancellationToken cancellationToken = default)
+        public async Task<MemberAdd?> AddOrUpdateSingleMember(AddMember member, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.POST)
             {
@@ -161,7 +161,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<MemberSignup> MemberSignup(SignupMember member, CancellationToken cancellationToken = default)
+        public async Task<MemberSignup?> MemberSignup(SignupMember member, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.POST)
             {
@@ -230,7 +230,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("memberId", memberId);
 
-            return await apiAdapter.MakeRequest<List<Group>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Group>>(request, cancellationToken: cancellationToken) ?? new List<Group>();
         }
 
         /// <inheritdoc/>
@@ -243,7 +243,7 @@ namespace EmmaSharper
             request.AddUrlSegment("memberId", memberId);
             request.AddJsonBody(new { group_ids = groupIds });
 
-            return await apiAdapter.MakeRequest<List<long>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<long>>(request, cancellationToken: cancellationToken) ?? new List<long>();
         }
 
         /// <inheritdoc/>
@@ -256,7 +256,7 @@ namespace EmmaSharper
             request.AddUrlSegment("memberId", memberId);
             request.AddJsonBody(new { group_ids = groupIds });
 
-            return await apiAdapter.MakeRequest<List<long>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<long>>(request, cancellationToken: cancellationToken) ?? new List<long>();
         }
 
         /// <inheritdoc/>
@@ -318,7 +318,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("memberId", memberId);
 
-            return await apiAdapter.MakeRequest<List<MailingHistory>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<MailingHistory>>(request, start, end, cancellationToken: cancellationToken) ?? new List<MailingHistory>();
         }
 
         /// <inheritdoc/>
@@ -344,11 +344,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("importId", importId);
 
-            return await apiAdapter.MakeRequest<List<ImportMembers>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ImportMembers>>(request, start, end, cancellationToken: cancellationToken) ?? new List<ImportMembers>();
         }
 
         /// <inheritdoc/>
-        public async Task<Import> GetImportInformation(string importId, CancellationToken cancellationToken = default)
+        public async Task<Import?> GetImportInformation(string importId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -380,7 +380,7 @@ namespace EmmaSharper
                 Resource = "/{accountId}/members/imports"
             };
 
-            return await apiAdapter.MakeRequest<List<Import>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Import>>(request, start, end, cancellationToken: cancellationToken) ?? new List<Import>();
         }
 
         /// <inheritdoc/>

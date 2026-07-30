@@ -27,7 +27,7 @@ namespace EmmaSharper
         /// <param name="webhookId">The ID of the Webhook to return.</param>
         /// <returns>Details for a single webhook</returns>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Webhook> GetWebhookById(string webhookId, CancellationToken cancellationToken = default);
+        Task<Webhook?> GetWebhookById(string webhookId, CancellationToken cancellationToken = default);
 
         /// <summary>Get a listing of all event types that are available for webhooks</summary>
         /// <returns>A list of event types and descriptions</returns>

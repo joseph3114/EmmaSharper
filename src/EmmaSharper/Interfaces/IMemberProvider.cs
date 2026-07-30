@@ -30,7 +30,7 @@ namespace EmmaSharper
         /// <returns>An import id.</returns>
         /// <remarks></remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<MembersAdd> AddNewMembers(AddMembers members, CancellationToken cancellationToken = default);
+        Task<MembersAdd?> AddNewMembers(AddMembers members, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Adds or updates a single audience member. If you are performing actions on bulk members please use the <see cref="AddNewMembers" /> method.
@@ -39,7 +39,7 @@ namespace EmmaSharper
         /// <returns>The member_id of the new or updated member, whether the member was added or an existing member was updated, and the status of the member. The status will be reported as ‘a’ (active), ‘e’ (error), or ‘o’ (optout).</returns>
         /// <remarks></remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<MemberAdd> AddOrUpdateSingleMember(AddMember member, CancellationToken cancellationToken = default);
+        Task<MemberAdd?> AddOrUpdateSingleMember(AddMember member, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Change the status for an array of members. The members will have their member_status_id update
@@ -101,7 +101,7 @@ namespace EmmaSharper
         /// <returns>Import details for the given import_id.</returns>
         /// <remarks></remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Import> GetImportInformation(string importId, CancellationToken cancellationToken = default);
+        Task<Import?> GetImportInformation(string importId, CancellationToken cancellationToken = default);
 
         /// <summary>Get detailed information on a particular member, including all custom fields.</summary>
         /// <returns>A single member if one exists.</returns>
@@ -109,7 +109,7 @@ namespace EmmaSharper
         /// <param name="includeDeleted">Accepts True. Optional flag to include deleted members.</param>
         /// <remarks>Http404 if no member is found.</remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Member> GetMember(string memberId, bool includeDeleted = false, CancellationToken cancellationToken = default);
+        Task<Member?> GetMember(string memberId, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
         /// <summary>Get detailed information on a particular member, including all custom fields, by email address instead of ID.</summary>
         /// <returns>A single member if one exists.</returns>
@@ -117,7 +117,7 @@ namespace EmmaSharper
         /// <param name="includeDeleted">Accepts True. Optional flag to include deleted members.</param>
         /// <remarks>Http404 if no member is found.</remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Member> GetMemberByEmail(string memberEmail, bool includeDeleted = false, CancellationToken cancellationToken = default);
+        Task<Member?> GetMemberByEmail(string memberEmail, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
         /// <summary>Get a count of members in an account.</summary>
         /// <returns>The number of members matching the filter.</returns>
@@ -222,7 +222,7 @@ namespace EmmaSharper
         /// <returns>The member_id of the member, and their status. The status will be reported as ‘a’ (active), ‘e’ (error), or ‘o’ (optout).</returns>
         /// <remarks></remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<MemberSignup> MemberSignup(SignupMember member, CancellationToken cancellationToken = default);
+        Task<MemberSignup?> MemberSignup(SignupMember member, CancellationToken cancellationToken = default);
 
         /// <summary>Remove the specified member from all groups.</summary>
         /// <param name="memberId">Member identifier.</param>

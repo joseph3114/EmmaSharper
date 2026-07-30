@@ -34,7 +34,7 @@ namespace EmmaSharper
         /// <returns>A field.</returns>
         /// <remarks>Http404 if the field does not exist.</remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Field> GetField(string fieldId, bool includeDeleted = false, CancellationToken cancellationToken = default);
+        Task<Field?> GetField(string fieldId, bool includeDeleted = false, CancellationToken cancellationToken = default);
 
         /// <summary>Create a new field. There must not already be a field with this name</summary>
         /// <param name="field">The Field to be created.</param>

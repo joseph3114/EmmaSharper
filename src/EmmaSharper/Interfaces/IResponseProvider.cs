@@ -44,7 +44,7 @@ namespace EmmaSharper
         /// trigger mailings.
         /// </remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<ResponseCustomerShare> GetMailingCustomerShare(string shareId, CancellationToken cancellationToken = default);
+        Task<ResponseCustomerShare?> GetMailingCustomerShare(string shareId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of customer share clicks for this mailing.</summary>
         /// <param name="mailingId">Mailing Identifier</param>
@@ -194,7 +194,7 @@ namespace EmmaSharper
         /// for standard mailings, ‘t’ for test mailings and ‘r’ for trigger mailings.
         /// </remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Response> GetMailingResponse(string mailingId, CancellationToken cancellationToken = default);
+        Task<Response?> GetMailingResponse(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the list of messages that have been sent to an MTA (Message Transfer Agent) for delivery.</summary>
         /// <param name="mailingId">Mailing Identifier</param>

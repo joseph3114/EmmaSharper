@@ -11,20 +11,20 @@ namespace EmmaSharper
         /// <returns>Information about the subscription, including the date and time it was deleted.</returns>
         /// <param name="subscription_id ">the id to update</param>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Subscription> DeleteSubscription(string subscription_id, CancellationToken cancellationToken = default);
+        Task<Subscription?> DeleteSubscription(string subscription_id, CancellationToken cancellationToken = default);
 
         /// <summary>Edit a subscription's name or description</summary>
         /// <returns>Information about the updated subscription.Limited to name and description.</returns>
         /// <param name="subscription">Name and description of the subscription text to update. Visible in the Subscription Center.</param>
         /// <param name="subscription_id ">the id to update</param>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Subscription> EditSubscription(SubscriptionNew subscription, string subscription_id, CancellationToken cancellationToken = default);
+        Task<Subscription?> EditSubscription(SubscriptionNew subscription, string subscription_id, CancellationToken cancellationToken = default);
 
         /// <summary>Get detailed information for a specific subscription</summary>
         /// <returns>Information about a subscription.</returns>
         /// <param name="subscription_id">URL segment for the subscription ID to query details on</param>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Subscription> GetAccountSubscription(string subscription_id, CancellationToken cancellationToken = default);
+        Task<Subscription?> GetAccountSubscription(string subscription_id, CancellationToken cancellationToken = default);
 
         /// <summary>Get a list of all subscriptions in an account</summary>
         /// <returns>A list of subscriptions in an account along with related information, including member count and subscription ID.</returns>
@@ -67,6 +67,6 @@ namespace EmmaSharper
         /// <returns> Information about the created subscription, including the subscription ID.</returns>
         /// <param name="subscription">Name and description of the new subscription to create</param>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Subscription> PostNewSubscription(SubscriptionNew subscription, CancellationToken cancellationToken = default);
+        Task<Subscription?> PostNewSubscription(SubscriptionNew subscription, CancellationToken cancellationToken = default);
     }
 }

@@ -24,11 +24,11 @@ namespace EmmaSharper
                 Resource = "/{accountId}/automation/workflows"
             };
 
-            return await apiAdapter.MakeRequest<List<Workflow>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Workflow>>(request, cancellationToken: cancellationToken) ?? new List<Workflow>();
         }
 
         /// <inheritdoc/>
-        public async Task<Workflow> GetWorkflowById(string workflowId, CancellationToken cancellationToken = default)
+        public async Task<Workflow?> GetWorkflowById(string workflowId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -40,7 +40,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<WorkflowCount> GetWorkflowCounts(CancellationToken cancellationToken = default)
+        public async Task<WorkflowCount?> GetWorkflowCounts(CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {

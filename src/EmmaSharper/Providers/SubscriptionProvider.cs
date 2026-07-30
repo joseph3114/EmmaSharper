@@ -34,11 +34,11 @@ namespace EmmaSharper
                 request.AddParameter("include_deleted", includeDeleted);
             }
 
-            return await apiAdapter.MakeRequest<List<Subscription>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Subscription>>(request, cancellationToken: cancellationToken) ?? new List<Subscription>();
         }
 
         /// <inheritdoc/>
-        public async Task<Subscription> GetAccountSubscription(string subscription_id, CancellationToken cancellationToken = default)
+        public async Task<Subscription?> GetAccountSubscription(string subscription_id, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -58,7 +58,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("subscriptionId", subscription_id);
 
-            return await apiAdapter.MakeRequest<List<SubscriptionMembers>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<SubscriptionMembers>>(request, start, end, cancellationToken: cancellationToken) ?? new List<SubscriptionMembers>();
         }
 
         /// <inheritdoc/>
@@ -70,11 +70,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("subscriptionId", subscription_id);
 
-            return await apiAdapter.MakeRequest<List<SubscriptionMembers>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<SubscriptionMembers>>(request, start, end, cancellationToken: cancellationToken) ?? new List<SubscriptionMembers>();
         }
 
         /// <inheritdoc/>
-        public async Task<Subscription> PostNewSubscription(SubscriptionNew subscription, CancellationToken cancellationToken = default)
+        public async Task<Subscription?> PostNewSubscription(SubscriptionNew subscription, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.POST)
             {
@@ -115,7 +115,7 @@ namespace EmmaSharper
 
 
         /// <inheritdoc/>
-        public async Task<Subscription> EditSubscription(SubscriptionNew subscription, string subscription_id, CancellationToken cancellationToken = default)
+        public async Task<Subscription?> EditSubscription(SubscriptionNew subscription, string subscription_id, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.PUT)
             {
@@ -129,7 +129,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<Subscription> DeleteSubscription(string subscription_id, CancellationToken cancellationToken = default)
+        public async Task<Subscription?> DeleteSubscription(string subscription_id, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.DELETE)
             {

@@ -51,7 +51,7 @@ namespace EmmaSharper
         /// <param name="mailingId">Mailing identifier.</param>
         /// <remarks>Http404 if no mailing is found.</remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<Mailing> GetMailing(string mailingId, CancellationToken cancellationToken = default);
+        Task<Mailing?> GetMailing(string mailingId, CancellationToken cancellationToken = default);
 
         /// <summary>Get the count of members to whom the given mailing was sent. This does not include groups or searches.</summary>
         /// <returns>An array of members including status and member fields.</returns>
@@ -76,7 +76,7 @@ namespace EmmaSharper
         /// <param name="type">Accepts: ‘all’, ‘html’, ‘plaintext’, ‘subject’. Defaults to ‘all’, if not provided.</param>
         /// <remarks>Http404 if no mailing is found.</remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<MailingPersonalization> GetMailingMembersPersonalization(string mailingId, string memberId, PersonalizationType? type = null, CancellationToken cancellationToken = default);
+        Task<MailingPersonalization?> GetMailingMembersPersonalization(string mailingId, string memberId, PersonalizationType? type = null, CancellationToken cancellationToken = default);
 
         /// <summary>Get the count of groups to which a particular mailing was sent.</summary>
         /// <returns>An array of groups.</returns>
@@ -106,7 +106,7 @@ namespace EmmaSharper
         /// <param name="mailingId">Mailing identifier.</param>
         /// <param name="status">The status can be one of canceled, paused or ready. This method can be used to control the progress of a mailing by pausing, canceling or resuming it. Once a mailing is canceled it can’t be resumed, and will not show in the normal mailing_list output.</param>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<UpdateMailing> UpdateMailingStatus(string mailingId, UpdateMailingStatus status, CancellationToken cancellationToken = default);
+        Task<UpdateMailing?> UpdateMailingStatus(string mailingId, UpdateMailingStatus status, CancellationToken cancellationToken = default);
 
         /// <summary>Sets archived timestamp for a mailing so it is no longer included in mailing_list.</summary>
         /// <returns>True if the mailing is successfully archived.</returns>
@@ -130,7 +130,7 @@ namespace EmmaSharper
         /// <param name="mailing">Class representing the fields to forward and email to additional recipients.</param>
         /// <remarks>Http404 if no message is found.</remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<MailingIdentifier> ForwardMailing(string mailingId, string memberId, ForwardMailing mailing, CancellationToken cancellationToken = default);
+        Task<MailingIdentifier?> ForwardMailing(string mailingId, string memberId, ForwardMailing mailing, CancellationToken cancellationToken = default);
 
         /// <summary>Send a prior mailing to additional recipients. A new mailing will be created that inherits its content from the original.</summary>
         /// <returns>The mailing id of the new mailing.</returns>
@@ -138,7 +138,7 @@ namespace EmmaSharper
         /// <param name="mailing">Class representing the available fields when resending a mailing.</param>
         /// <remarks>Http404 if no message is found.</remarks>
         /// <param name="cancellationToken">Cancels the in-flight request.</param>
-        Task<MailingIdentifier> ResendMailing(string mailingId, ResendMailing mailing, CancellationToken cancellationToken = default);
+        Task<MailingIdentifier?> ResendMailing(string mailingId, ResendMailing mailing, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Declare the winner of a split test manually. In the event that the test duration has not elapsed, 

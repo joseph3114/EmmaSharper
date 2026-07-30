@@ -35,7 +35,7 @@ namespace EmmaSharper
                 request.AddParameter("range", range.Value.ToString());
             }
 
-            return await apiAdapter.MakeRequest<List<ResponseSummary>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseSummary>>(request, cancellationToken: cancellationToken) ?? new List<ResponseSummary>();
         }
 
         /// <inheritdoc/>
@@ -56,11 +56,11 @@ namespace EmmaSharper
                 request.AddParameter("range", date.Value.ToString("yyyy-MM-dd"));
             }
 
-            return await apiAdapter.MakeRequest<List<ResponseSummary>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseSummary>>(request, cancellationToken: cancellationToken) ?? new List<ResponseSummary>();
         }
 
         /// <inheritdoc/>
-        public async Task<Response> GetMailingResponse(string mailingId, CancellationToken cancellationToken = default)
+        public async Task<Response?> GetMailingResponse(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -93,7 +93,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken) ?? new List<ResponseGeneric>();
         }
 
         /// <inheritdoc/>
@@ -118,7 +118,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken) ?? new List<ResponseGeneric>();
         }
 
         /// <inheritdoc/>
@@ -147,7 +147,7 @@ namespace EmmaSharper
 
             request.AddParameter("result", result.ToEnumString<DeliveryType>());
 
-            return await apiAdapter.MakeRequest<List<ResponseDeliveries>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseDeliveries>>(request, start, end, cancellationToken: cancellationToken) ?? new List<ResponseDeliveries>();
         }
 
         /// <inheritdoc/>
@@ -172,7 +172,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken) ?? new List<ResponseGeneric>();
         }
 
         /// <inheritdoc/>
@@ -184,7 +184,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<Link>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Link>>(request, cancellationToken: cancellationToken) ?? new List<Link>();
         }
 
         /// <inheritdoc/>
@@ -219,7 +219,7 @@ namespace EmmaSharper
                 request.AddParameter("link_id", linkId);
             }
 
-            return await apiAdapter.MakeRequest<List<ResponseClicks>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseClicks>>(request, start, end, cancellationToken: cancellationToken) ?? new List<ResponseClicks>();
         }
 
         /// <inheritdoc/>
@@ -231,7 +231,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseForwards>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseForwards>>(request, cancellationToken: cancellationToken) ?? new List<ResponseForwards>();
         }
 
         /// <inheritdoc/>
@@ -256,7 +256,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseGeneric>>(request, start, end, cancellationToken: cancellationToken) ?? new List<ResponseGeneric>();
         }
 
         /// <inheritdoc/>
@@ -268,7 +268,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseSignups>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseSignups>>(request, cancellationToken: cancellationToken) ?? new List<ResponseSignups>();
         }
 
         /// <inheritdoc/>
@@ -280,7 +280,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseShares>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseShares>>(request, cancellationToken: cancellationToken) ?? new List<ResponseShares>();
         }
 
         /// <inheritdoc/>
@@ -292,7 +292,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseCustomerShare>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseCustomerShare>>(request, cancellationToken: cancellationToken) ?? new List<ResponseCustomerShare>();
         }
 
         /// <inheritdoc/>
@@ -304,11 +304,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseCustomerShareClicks>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseCustomerShareClicks>>(request, cancellationToken: cancellationToken) ?? new List<ResponseCustomerShareClicks>();
         }
 
         /// <inheritdoc/>
-        public async Task<ResponseCustomerShare> GetMailingCustomerShare(string shareId, CancellationToken cancellationToken = default)
+        public async Task<ResponseCustomerShare?> GetMailingCustomerShare(string shareId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -328,7 +328,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<ResponseSharesOverview>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<ResponseSharesOverview>>(request, cancellationToken: cancellationToken) ?? new List<ResponseSharesOverview>();
         }
     }
 }

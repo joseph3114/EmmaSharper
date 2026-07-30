@@ -25,7 +25,7 @@ namespace EmmaSharper
                 Resource = "/{accountId}/signup_forms"
             };
 
-            return await apiAdapter.MakeRequest<List<SignupForm>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<SignupForm>>(request, cancellationToken: cancellationToken) ?? new List<SignupForm>();
         }
     }
 }

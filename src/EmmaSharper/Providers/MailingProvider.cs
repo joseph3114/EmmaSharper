@@ -100,11 +100,11 @@ namespace EmmaSharper
                 request.AddParameter("with_plaintext", includePlaintext);
             }
 
-            return await apiAdapter.MakeRequest<List<MailingInfo>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<MailingInfo>>(request, start, end, cancellationToken: cancellationToken) ?? new List<MailingInfo>();
         }
 
         /// <inheritdoc/>
-        public async Task<Mailing> GetMailing(string mailingId, CancellationToken cancellationToken = default)
+        public async Task<Mailing?> GetMailing(string mailingId, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -137,11 +137,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<Member>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Member>>(request, start, end, cancellationToken: cancellationToken) ?? new List<Member>();
         }
 
         /// <inheritdoc/>
-        public async Task<MailingPersonalization> GetMailingMembersPersonalization(string mailingId, string memberId, PersonalizationType? type = null, CancellationToken cancellationToken = default)
+        public async Task<MailingPersonalization?> GetMailingMembersPersonalization(string mailingId, string memberId, PersonalizationType? type = null, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest
             {
@@ -180,7 +180,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<Group>>(request, start, end, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Group>>(request, start, end, cancellationToken: cancellationToken) ?? new List<Group>();
         }
 
         /// <inheritdoc/>
@@ -192,11 +192,11 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<Search>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<Search>>(request, cancellationToken: cancellationToken) ?? new List<Search>();
         }
 
         /// <inheritdoc/>
-        public async Task<UpdateMailing> UpdateMailingStatus(string mailingId, UpdateMailingStatus status, CancellationToken cancellationToken = default)
+        public async Task<UpdateMailing?> UpdateMailingStatus(string mailingId, UpdateMailingStatus status, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.PUT)
             {
@@ -233,7 +233,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<MailingIdentifier> ForwardMailing(string mailingId, string memberId, ForwardMailing mailing, CancellationToken cancellationToken = default)
+        public async Task<MailingIdentifier?> ForwardMailing(string mailingId, string memberId, ForwardMailing mailing, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.POST)
             {
@@ -247,7 +247,7 @@ namespace EmmaSharper
         }
 
         /// <inheritdoc/>
-        public async Task<MailingIdentifier> ResendMailing(string mailingId, ResendMailing mailing, CancellationToken cancellationToken = default)
+        public async Task<MailingIdentifier?> ResendMailing(string mailingId, ResendMailing mailing, CancellationToken cancellationToken = default)
         {
             EmmaRequest request = new EmmaRequest(Method.POST)
             {
@@ -268,7 +268,7 @@ namespace EmmaSharper
             };
             request.AddUrlSegment("mailingId", mailingId);
 
-            return await apiAdapter.MakeRequest<List<MailingHeadsUp>>(request, cancellationToken: cancellationToken);
+            return await apiAdapter.MakeRequest<List<MailingHeadsUp>>(request, cancellationToken: cancellationToken) ?? new List<MailingHeadsUp>();
         }
 
         /// <inheritdoc/>

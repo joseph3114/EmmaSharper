@@ -6,6 +6,10 @@
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- The whole solution is at zero nullable warnings. Promoting them to errors keeps it
+         there: for a library, annotations are part of the public contract, and letting them
+         drift is a source-breaking change for consumers who have nullable enabled. -->
+    <WarningsAsErrors>nullable</WarningsAsErrors>
     <!-- LangVersion is deliberately unset: the SDK's default for each TFM is the
          reproducible choice. Pin the SDK in global.json instead. -->
   </PropertyGroup>
