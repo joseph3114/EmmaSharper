@@ -1,102 +1,172 @@
-﻿using System.Net;
-using System.Threading;
+using System;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using EmmaSharper.Adapters;
+using EmmaSharper.Internals;
 using EmmaSharper.Unit.Fakes;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Moq;
-using Newtonsoft.Json;
-using RestSharp;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace EmmaSharper.Unit.Tests
 {
     public class TEmmaApiAdapter
     {
-        private readonly RestClientFactoryFake clientFactoryFake;
-        private readonly ILogger<EmmaApiAdapter> logger;
-        private readonly EmmaOptions options;
+        private const string BaseUrl = "https://api.example.test";
+        private const string AccountId = "account-id";
 
-        public TEmmaApiAdapter()
+        private static EmmaApiAdapter CreateAdapter(StubHttpMessageHandler handler, string? accountId = AccountId)
         {
-            ServiceProvider services = TestingExtensions.GetBaseServices().BuildServiceProvider();
-            logger = services.GetRequiredService<ILogger<EmmaApiAdapter>>();
-            clientFactoryFake = new RestClientFactoryFake();
-            options = new EmmaOptions()
+            HttpClient client = new(handler) { BaseAddress = new Uri(BaseUrl) };
+
+            EmmaOptions options = new()
             {
-                AccountId = "account-id",
+                BaseUrl = BaseUrl,
+                AccountId = accountId,
                 PublicKey = "public-key",
                 SecretKey = "secret-key",
             };
+
+            return new EmmaApiAdapter(client, Options.Create(options), NullLogger<EmmaApiAdapter>.Instance);
+        }
+
+        private static EmmaRequest Request(string resource = "/{accountId}/self")
+            => new(Method.GET) { Resource = resource };
+
+        [Fact]
+        public async Task MakeRequest_DeserializesResponseBody()
+        {
+            StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(HttpStatusCode.OK, "\"Hello World\"");
+
+            string? result = await CreateAdapter(handler).MakeRequest<string>(Request());
+
+            result.Should().Be("Hello World");
         }
 
         [Fact]
-        public async Task MakeRequest_ShouldSucceed()
+        public async Task MakeRequest_SubstitutesAccountIdIntoPath()
         {
-            // Arrange
-            string helloWorld = "Hello World";
-            IRestResponse fakeResponse = new RestResponse
-            {
-                Content = JsonConvert.SerializeObject(helloWorld),
-                StatusCode = HttpStatusCode.OK
-            };
+            StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(HttpStatusCode.OK, "\"ok\"");
 
-            IRestRequest executedRequest = null;
-            clientFactoryFake.MockRestClient
-                .Setup(x => x.ExecuteAsync(It.IsAny<IRestRequest>(), It.IsAny<CancellationToken>()))
-                .Returns<IRestRequest, CancellationToken>((request, token) =>
-                {
-                    executedRequest = request;
-                    return Task.FromResult(fakeResponse);
-                });
+            await CreateAdapter(handler).MakeRequest<string>(Request());
 
-            EmmaApiAdapter adapter = new EmmaApiAdapter(logger, clientFactoryFake, options);
-            RestRequest request = new RestRequest("/{accountId}/self", Method.GET);
+            handler.LastUri.Should().Be($"{BaseUrl}/{AccountId}/self");
+        }
 
-            // Act
-            string response = await adapter.MakeRequest<string>(request);
+        [Fact]
+        public async Task MakeRequest_ExplicitAccountId_OverridesConfiguredAccount()
+        {
+            // The enterprise case: one credential pair, many subaccounts.
+            StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(HttpStatusCode.OK, "\"ok\"");
 
-            // Assert
-            response.Should().Be(helloWorld);
-            executedRequest.Parameters.Should().HaveCount(1);
+            await CreateAdapter(handler).MakeRequest<string>(Request(), accountId: "subaccount-42");
+
+            handler.LastUri.Should().Be($"{BaseUrl}/subaccount-42/self");
+        }
+
+        [Fact]
+        public async Task MakeRequest_Paging_UsesInclusiveRange()
+        {
+            // Emma's range is inclusive, so a 500-record page ends at 499, not 500.
+            // 7.x emitted end=500 here and asked for 501 records.
+            StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(HttpStatusCode.OK, "[]");
+
+            await CreateAdapter(handler).MakeRequest<string[]>(Request(), start: 0);
+
+            handler.LastUri.Should().Contain("start=0").And.Contain("end=499");
+        }
+
+        [Fact]
+        public async Task MakeRequest_Paging_EndBelowPageSize_DoesNotUnderflow()
+        {
+            // 7.x computed `end - 500` on a uint, wrapping to ~4.29 billion.
+            StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(HttpStatusCode.OK, "[]");
+
+            await CreateAdapter(handler).MakeRequest<string[]>(Request(), end: 100);
+
+            handler.LastUri.Should().Contain("start=0").And.Contain("end=100");
         }
 
         [Theory]
         [InlineData(HttpStatusCode.BadRequest)]
         [InlineData(HttpStatusCode.Unauthorized)]
-        [InlineData(HttpStatusCode.Forbidden)]
         [InlineData(HttpStatusCode.NotFound)]
         [InlineData(HttpStatusCode.ServiceUnavailable)]
-        public async Task MakeRequest_ShouldThrowException(HttpStatusCode status)
+        public async Task MakeRequest_NonSuccess_ThrowsEmmaExceptionCarryingStatus(HttpStatusCode status)
         {
-            // Arrange
-            IRestResponse fakeResponse = new RestResponse
-            {
-                StatusCode = status,
-            };
+            StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(status, "boom");
+            EmmaApiAdapter adapter = CreateAdapter(handler);
 
-            clientFactoryFake.MockRestClient
-                .Setup(x => x.ExecuteAsync(It.IsAny<IRestRequest>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.FromResult(fakeResponse));
+            Func<Task> act = () => adapter.MakeRequest<string>(Request());
 
-            EmmaApiAdapter adapter = new EmmaApiAdapter(logger, clientFactoryFake, options);
-            RestRequest request = new RestRequest("https://google.com", Method.GET);
-            EmmaException exception = null;
+            EmmaException thrown = (await act.Should().ThrowAsync<EmmaException>()).Which;
+            thrown.StatusCode.Should().Be(status);
+            thrown.ResponseBody.Should().Be("boom");
+            thrown.Should().NotBeOfType<EmmaRateLimitException>();
+        }
 
-            // Act
-            try
-            {
-                string response = await adapter.MakeRequest<string>(request);
-            }
-            catch (EmmaException ex)
-            {
-                exception = ex;
-            }
+        [Theory]
+        [InlineData(HttpStatusCode.TooManyRequests)]
+        [InlineData(HttpStatusCode.Forbidden)]
+        public async Task MakeRequest_Throttled_ThrowsRateLimitException(HttpStatusCode status)
+        {
+            // Emma signals throttling with 403 as well as 429 - the behaviour every consumer
+            // otherwise mistakes for an auth failure.
+            StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(status);
+            EmmaApiAdapter adapter = CreateAdapter(handler);
 
-            // Assert
-            exception.Should().NotBeNull();
+            Func<Task> act = () => adapter.MakeRequest<string>(Request());
+
+            await act.Should().ThrowAsync<EmmaRateLimitException>();
+        }
+
+        [Fact]
+        public async Task MakeRequest_Throttled_SurfacesRetryAfter()
+        {
+            StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(
+                HttpStatusCode.TooManyRequests,
+                retryAfter: TimeSpan.FromSeconds(30));
+
+            EmmaApiAdapter adapter = CreateAdapter(handler);
+
+            Func<Task> act = () => adapter.MakeRequest<string>(Request());
+
+            EmmaRateLimitException thrown = (await act.Should().ThrowAsync<EmmaRateLimitException>()).Which;
+            thrown.RetryAfter.Should().Be(TimeSpan.FromSeconds(30));
+        }
+
+        [Fact]
+        public async Task MakeRequest_BareInteger_Deserializes()
+        {
+            // `members?count=true` returns a bare integer, not a JSON object.
+            StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(HttpStatusCode.OK, "2431");
+
+            int result = await CreateAdapter(handler).MakeRequest<int>(Request("/{accountId}/members"));
+
+            result.Should().Be(2431);
+        }
+
+        [Fact]
+        public async Task MakeRequest_EmptyBody_ReturnsDefault()
+        {
+            StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(HttpStatusCode.NoContent);
+
+            string? result = await CreateAdapter(handler).MakeRequest<string>(Request());
+
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task MakeRequest_WithNoAccountIdAnywhere_Throws()
+        {
+            StubHttpMessageHandler handler = StubHttpMessageHandler.Returning(HttpStatusCode.OK, "\"ok\"");
+            EmmaApiAdapter adapter = CreateAdapter(handler, accountId: null);
+
+            Func<Task> act = () => adapter.MakeRequest<string>(Request());
+
+            await act.Should().ThrowAsync<InvalidOperationException>();
         }
     }
 }
