@@ -7,6 +7,29 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [8.0.1] - 2026-07-30
+
+Packaging and documentation only. **No library code changed**, so there is nothing to migrate and no
+reason to upgrade except the nuget.org listing itself.
+
+### Fixed
+
+- **Four links in the README 404'd on nuget.org.** `docs/upstream-fixes.md`, `samples/`,
+  `CHANGELOG.md` and the MIT badge's target were all relative, and a relative href on the package
+  page resolves against `nuget.org` rather than the repository. All four are absolute now. A README
+  cannot be corrected in place once published — it ships inside the package — which is the whole
+  reason this release exists.
+- The Contributing section claimed CI tests "both target frameworks". There are three, and the tests
+  run on `net472`, `net8.0` and `net10.0`.
+- `http://myemma.com/meet-us` and a long-redirected `help.github.com` link replaced with current
+  HTTPS URLs.
+
+### Added
+
+- A package icon, so the nuget.org listing no longer shows the generic placeholder. It is a plain
+  lettermark standing in for a real one.
+- A downloads badge in the README.
+
 ## [8.0.0] - 2026-07-30
 
 First release since 2023. Removes both third-party dependencies and drops every out-of-support
@@ -135,6 +158,7 @@ First release of this fork, targeting .NET Core 3.1 / .NET 5.
 Released as [`EmmaSharp`](https://www.nuget.org/packages/EmmaSharp/) by
 [kylegregory](https://github.com/kylegregory), through 1.3.0 (2019-06-05).
 
+[8.0.1]: https://github.com/joseph3114/EmmaSharper/releases/tag/v8.0.1
 [8.0.0]: https://github.com/joseph3114/EmmaSharper/releases/tag/v8.0.0
 [7.0.1]: https://www.nuget.org/packages/EmmaSharper/7.0.1
 [1.6.0]: https://www.nuget.org/packages/EmmaSharper/1.6.0

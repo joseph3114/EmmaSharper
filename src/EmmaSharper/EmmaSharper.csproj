@@ -9,10 +9,11 @@
     <LangVersion Condition="'$(TargetFramework)' == 'netstandard2.0'">12</LangVersion>
     <AssemblyName>EmmaSharper</AssemblyName>
     <PackageId>EmmaSharper</PackageId>
-    <Version>8.0.0</Version>
+    <Version>8.0.1</Version>
     <Description>A .NET wrapper for the Emma (Marigold) API - https://api.myemma.com/</Description>
     <PackageTags>emma;marigold;email;marketing;api;client</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -24,6 +25,8 @@
 
   <ItemGroup>
     <None Include="../../README.md" Pack="true" PackagePath="" />
+    <!-- Placeholder mark, not branding. nuget.org wants PNG or JPEG at 128x128. -->
+    <None Include="../../icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <!-- Per-TFM so a net10 consumer never has Extensions 8.x dragged in transitively.
