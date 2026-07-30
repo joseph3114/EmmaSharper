@@ -5,8 +5,9 @@ namespace EmmaSharper
 {
     /// <summary>Which subaccount lifecycle states to include when listing.</summary>
     /// <remarks>
-    /// A quota or billing tool generally wants <see cref="All"/>: retired and pending-retirement
-    /// subaccounts can still hold billable contacts, so excluding them undercounts.
+    /// Defaults to <see cref="All"/>. Narrowing the filter changes which subaccounts you
+    /// enumerate and therefore any total computed across them, so choose deliberately rather than
+    /// assuming <see cref="Active"/> is what you want.
     /// </remarks>
     [Flags]
     public enum SubaccountStatusFilter
@@ -23,7 +24,7 @@ namespace EmmaSharper
         [EnumMember(Value = "pending_retirement")]
         PendingRetirement = 4,
 
-        /// <summary>Retired subaccounts. These may still hold billable contacts.</summary>
+        /// <summary>Retired subaccounts. These may still contain member records.</summary>
         [EnumMember(Value = "retired")]
         Retired = 8,
 

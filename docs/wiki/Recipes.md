@@ -36,8 +36,7 @@ public sealed class QuotaSweep(
 }
 ```
 
-Every subaccount status is included on purpose — retired subaccounts can still hold billable
-contacts.
+`ListSubaccounts` sends all four statuses here. Pass a `SubaccountStatusFilter` to narrow it.
 
 ---
 
@@ -105,40 +104,23 @@ is what a hand-rolled client tends to produce — makes a "sort by last login" g
 
 ---
 
-## Rename a member without losing their history
-
-Emma has **no merge endpoint**. But `PUT /members/{id}` can change an email address in place, and
-because the `member_id` survives, the member's mailing history stays attached. This is the basis
-for collapsing duplicate aliases, where the same person is enrolled under several addresses and
-billed for each.
+## Compare mailing engagement between two members
 
 ```csharp
-Member? alias = await scope.Members.GetMemberByEmail("j.smith@example.edu", cancellationToken: ct);
-Member? canonical = await scope.Members.GetMemberByEmail("john.smith@example.edu", cancellationToken: ct);
+Member? first = await scope.Members.GetMemberByEmail("j.smith@example.edu", cancellationToken: ct);
+Member? second = await scope.Members.GetMemberByEmail("john.smith@example.edu", cancellationToken: ct);
 
-if (alias is not null && canonical is null)
+if (first is not null && second is not null)
 {
-    // Nothing to collide with - rename in place and keep the history.
-    await scope.Members.UpdateSingleMemberInformation(
-        alias.MemberId!.Value.ToString(),
-        new UpdateMember { MemberEmail = "john.smith@example.edu" },
-        cancellationToken: ct);
-}
-else if (alias is not null && canonical is not null)
-{
-    // Both exist. Keep whichever is more engaged, archive the other.
-    int aliasHistory = await scope.Members.GetMemberMailingHistoryCount(
-        alias.MemberId!.Value.ToString(), ct);
-    int canonicalHistory = await scope.Members.GetMemberMailingHistoryCount(
-        canonical.MemberId!.Value.ToString(), ct);
-
-    Member loser = aliasHistory > canonicalHistory ? canonical : alias;
-    await scope.Members.DeleteMember(loser.MemberId!.Value.ToString(), ct);
+    int firstCount = await scope.Members.GetMemberMailingHistoryCount(
+        first.MemberId!.Value.ToString(), ct);
+    int secondCount = await scope.Members.GetMemberMailingHistoryCount(
+        second.MemberId!.Value.ToString(), ct);
 }
 ```
 
-`DeleteMember` archives rather than hard-deleting, so this is recoverable. Verify the behaviour
-against a sandbox subaccount before running it across a real list.
+`GetMemberByEmail` raises an `EmmaException` with `NotFound` when no member matches — see
+[Error Handling](Error-Handling) for turning that into a null.
 
 ---
 

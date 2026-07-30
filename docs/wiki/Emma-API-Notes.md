@@ -1,21 +1,25 @@
 # Emma API Notes
 
-Behaviour of the Emma API itself, learned by hitting it. Emma's
+Behaviour of the Emma API **observed while building and running against it**. Emma's
 [documentation](https://api.myemma.com/) is a page of links with one page per endpoint and does
-not mention most of this. Recorded here so the next person doesn't have to rediscover it.
+not mention most of this.
+
+Everything here is something we have actually seen. Where Emma's intent or contractual behaviour
+is unknown, it is left out rather than guessed at — so treat this as field notes, not a
+specification.
 
 ---
 
-## 403 means rate-limited
+## 403 has been observed as a throttle response
 
-Not "forbidden". Emma throttles with `403` as well as the conventional `429`.
+Under sustained load, Emma has been seen returning `403 Forbidden` where `429` would be expected,
+with the request succeeding on retry after a backoff. A client that treats every 403 as an
+authentication failure will stop when it should have waited.
 
-A client written against normal expectations treats the 403 as an auth failure and stops. The
-correct response is to back off and retry. See
-[Rate Limiting and Resilience](Rate-Limiting-and-Resilience).
-
-A genuine credentials failure *also* returns 403, and the two are not distinguishable without
-inspecting the response body.
+A genuine credentials failure also returns 403, and the two are not distinguishable without
+inspecting the response body — so this is a heuristic, not a contract. See
+[Rate Limiting and Resilience](Rate-Limiting-and-Resilience) for how the library classifies it and
+how to opt out.
 
 ---
 
@@ -69,46 +73,53 @@ page is `0` to `499`. Maximum page size is 500. See [Paging](Paging).
 
 ---
 
-## Enum values appear without warning
+## Unrecognised enum values deserialize to `Unknown`
 
-Emma adds new status and type values without notice. A client that throws on an unrecognised enum
-value breaks the day that happens.
+Every enum in this library has an `Unknown` member. A value the library does not model
+deserializes to it rather than throwing, so an unfamiliar status does not fail the whole response.
 
-Every enum here has an `Unknown` member, and deserialization falls back to it rather than
-throwing. Check for `Unknown` if an unrecognised value matters to your logic.
-
-Because `Unknown` has no wire representation, it cannot be used as a filter — passing it throws.
+Check for `Unknown` if that distinction matters to your logic. Because it has no wire
+representation, it cannot be used as a filter — passing it throws.
 
 ---
 
-## Retired subaccounts still hold contacts
+## Counting by status
 
-For anything counting billable contacts, `status=active` undercounts. Retired and
-pending-retirement subaccounts can still contain members. `ListSubaccounts` includes every status
-by default for this reason.
+`enterprise/subaccounts` takes a multi-valued `status` parameter. The accepted values are
+`active`, `trial`, `pending_retirement` and `retired`. `ListSubaccounts` sends all four unless you
+narrow it:
+
+```csharp
+await enterprise.ListSubaccounts(SubaccountStatusFilter.Active, ct);
+await enterprise.ListSubaccounts(
+    SubaccountStatusFilter.Active | SubaccountStatusFilter.Trial, ct);
+```
+
+Member status is a separate axis, filtered on the member call. `count=true` returns the total
+without fetching the records:
+
+```csharp
+int active = await scope.Members.GetMemberCount(status: MemberStatusShort.Active, cancellationToken: ct);
+int optout = await scope.Members.GetMemberCount(status: MemberStatusShort.Optout, cancellationToken: ct);
+int error  = await scope.Members.GetMemberCount(status: MemberStatusShort.Error, cancellationToken: ct);
+int all    = await scope.Members.GetMemberCount(cancellationToken: ct);
+```
+
+Deleted members are a third, independent flag — `includeDeleted: true` — not a member status.
 
 ---
 
-## Subaccount payloads vary
+## Unmodelled fields are preserved
 
-`enterprise/subaccounts` returns different fields depending on plan, and Emma publishes no schema
-for it. `Subaccount.AdditionalData` captures whatever is not modelled — plan and quota fields have
-been seen there and are exactly what a billing tool wants.
+`Subaccount` and `AccountUser` carry a `[JsonExtensionData]` dictionary, so any property Emma
+returns that this library does not model is available rather than discarded:
 
----
+```csharp
+if (sub.AdditionalData?.TryGetValue("contact_limit", out JsonElement limit) == true)
+{
+    int contactLimit = limit.GetInt32();
+}
+```
 
-## There is no merge endpoint
-
-Duplicate members cannot be merged. But `PUT /{accountId}/members/{memberId}` **can change an
-email address in place**, and the `member_id` survives, so mailing history stays attached. That is
-the only route to collapsing duplicate aliases. `POST` cannot do this, because it identifies
-members *by* email. See [Recipes](Recipes).
-
----
-
-## Some documented endpoints are broken
-
-Emma's own issue tracker has long-standing reports that creating and updating **saved searches**
-returns `{"error": "'unicode' object has no attribute 'pop'"}` — a server-side fault, not a client
-one. If a documented endpoint returns something structurally bizarre, suspect Emma before
-suspecting your payload.
+If you find a field consistently present on your account, please
+[open an issue](https://github.com/joseph3114/EmmaSharper/issues) so it can be typed.

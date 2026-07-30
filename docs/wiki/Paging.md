@@ -5,7 +5,8 @@ Endpoints that return lists take `start` and `end`.
 > **They are inclusive record indices, not page numbers.** A 500-record page is
 > `start: 0, end: 499` — not `end: 500`.
 
-Emma caps a page at **500** records. Asking for more does not get you more.
+500 is the page size in use here, and the library's paging helper assumes it: omit `end` and it
+fills in `start + 499`.
 
 ```csharp
 const int PageSize = 500;

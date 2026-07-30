@@ -30,9 +30,8 @@ public sealed class QuotaSweep(
 }
 ```
 
-> `ListSubaccounts` defaults to **every** status, not just active. Retired and pending-retirement
-> subaccounts can still hold billable contacts, so filtering them out undercounts. Narrow it
-> deliberately if that is what you want:
+> `ListSubaccounts` sends all four statuses — `active`, `trial`, `pending_retirement`, `retired` —
+> unless you narrow it:
 >
 > ```csharp
 > await enterprise.ListSubaccounts(SubaccountStatusFilter.Active | SubaccountStatusFilter.Trial, ct);
@@ -93,9 +92,8 @@ foreach (AccountUser user in users)
 
 ## Fields Emma returns that aren't modelled
 
-`Subaccount` and `AccountUser` both carry `AdditionalData`. Emma publishes no complete schema for
-these endpoints and the payload varies by plan, so anything unmapped is captured rather than
-dropped:
+`Subaccount` and `AccountUser` both carry `AdditionalData`, so any property Emma returns that this
+library does not model is available rather than discarded:
 
 ```csharp
 if (sub.AdditionalData?.TryGetValue("contact_limit", out JsonElement limit) == true)

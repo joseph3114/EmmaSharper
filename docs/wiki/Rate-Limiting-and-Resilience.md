@@ -1,16 +1,12 @@
 # Rate Limiting and Resilience
 
-## Emma throttles with 403
+## 403 as a throttle response
 
-This is the single most surprising thing about the Emma API:
+> Under sustained load, Emma has been observed returning **`403 Forbidden`** where `429` would be
+> expected, with the request succeeding on retry after a backoff.
 
-> **Emma returns `403 Forbidden` for rate limiting**, as well as the conventional `429`.
-
-A client written against normal expectations reads that 403 as an authentication failure, decides
-the credentials are wrong, and gives up — when the correct response was to wait and retry. It is
-the mistake every Emma consumer makes exactly once.
-
-The library classifies both as throttling:
+A client that treats every 403 as an authentication failure stops when it should have waited. The
+library therefore classifies both as throttling:
 
 ```csharp
 try
