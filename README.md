@@ -153,9 +153,6 @@ Endpoints that page take `start` and `end`. Emma's range is **inclusive**, so a 
 
 ## Versioning
 
-Versions follow [SemVer](https://semver.org/) and **do not track .NET versions** — `8.0.0` is the
-next major after `7.0.1`, not "the .NET 8 one". It targets netstandard2.0, net8.0 and net10.0.
-
 `8.0.0` is a breaking release — see the [changelog](CHANGELOG.md). The short version: RestSharp and
 Newtonsoft.Json removed, `EmmaException` no longer exposes a RestSharp type, ids widened from `int`
 to `long`, and every method gained a `CancellationToken`.
