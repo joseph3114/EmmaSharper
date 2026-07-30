@@ -5,6 +5,17 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
 
+  # Dry run. Proves the trusted-publishing chain works - the OIDC token, the
+  # nuget.org policy match, and NUGET_USER - without uploading anything.
+  # Worth running once before the first real tag, because otherwise a typo in
+  # the policy only shows up as an opaque "no matching policy" mid-release.
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Authenticate and pack, but do not push to NuGet"
+        type: boolean
+        default: true
+
 permissions:
   contents: read
 
@@ -35,24 +46,48 @@ jobs:
       # Guards against publishing from a tag that was never merged.
       # Was `origin/main`, which does not exist in this repo.
       - name: Verify commit exists on origin/master
+        if: github.event_name == 'push'
         run: |
           git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
           git branch --remote --contains | grep origin/master
 
       - name: Set VERSION from tag
+        if: github.event_name == 'push'
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
 
-      - name: Build
-        run: dotnet build --configuration Release -p:Version=${VERSION}
+      # A dry run has no tag to take a version from.
+      - name: Set placeholder VERSION for dry run
+        if: github.event_name == 'workflow_dispatch'
+        run: echo "VERSION=0.0.0-dryrun" >> "$GITHUB_ENV"
 
-      - name: Test
-        run: dotnet test --configuration Release --no-build -p:Version=${VERSION}
+      # Per-framework, because the test project also targets net472 and this runner
+      # is Linux. A plain `dotnet build` over the solution would fail here.
+      # The net472 leg is covered by the Windows job in CI on every pull request.
+      - name: Test net8.0
+        run: >
+          dotnet test tests/EmmaSharper.Unit/EmmaSharper.Unit.csproj -f net8.0
+          --configuration Release -p:Version=${VERSION}
 
+      - name: Test net10.0
+        run: >
+          dotnet test tests/EmmaSharper.Unit/EmmaSharper.Unit.csproj -f net10.0
+          --configuration Release -p:Version=${VERSION}
+
+      # Packs all three target frameworks - netstandard2.0 compiles fine on Linux,
+      # it is only running net472 that cannot.
       - name: Pack
         run: >
           dotnet pack ./src/EmmaSharper/EmmaSharper.csproj
-          --configuration Release --no-build
+          --configuration Release
           -p:Version=${VERSION} --output ./artifacts
+
+      - name: Show package contents
+        run: |
+          ls -la ./artifacts
+          for f in ./artifacts/*.nupkg; do
+            echo "--- $f"
+            unzip -l "$f" | grep -E "lib/|\.nuspec" || true
+          done
 
       # Trusted publishing: GitHub mints a short-lived OIDC token per run, so
       # there is no long-lived API key stored anywhere.
@@ -72,7 +107,19 @@ jobs:
         with:
           user: ${{ secrets.NUGET_USER }}   # nuget.org profile name, NOT the email
 
+      - name: Confirm authentication (dry run - nothing is uploaded)
+        if: inputs.dry_run
+        run: |
+          if [ -n "${{ steps.login.outputs.NUGET_API_KEY }}" ]; then
+            echo "::notice::Trusted publishing OK - nuget.org issued a short-lived key."
+            echo "The policy, the OIDC token and NUGET_USER all match. Nothing was pushed."
+          else
+            echo "::error::NuGet/login returned no key."
+            exit 1
+          fi
+
       - name: Push
+        if: ${{ !inputs.dry_run }}
         run: >
           dotnet nuget push ./artifacts/*.nupkg
           --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
