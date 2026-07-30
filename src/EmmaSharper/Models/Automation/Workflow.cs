@@ -1,26 +1,26 @@
 ﻿using System;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class Workflow
     {
-        [JsonProperty("workflow_id")]
+        [JsonPropertyName("workflow_id")]
         public string WorkflowId { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public WorkflowStatus Status { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
         public DateTime UpdatedAt { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("created_at")]
+        [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; set; }
     }
 }

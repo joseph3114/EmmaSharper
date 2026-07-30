@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -10,7 +10,7 @@ namespace EmmaSharper
         /// <summary>
         /// Mailing Identifier.
         /// </summary>
-        [JsonProperty("mailing_id")]
+        [JsonPropertyName("mailing_id")]
         public long MailingId { get; set; }
     }
 }

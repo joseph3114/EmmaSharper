@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -11,25 +11,25 @@ namespace EmmaSharper
         /// <summary>
         /// A new email address for the member.
         /// </summary>
-        [JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("email")]
         public string MemberEmail { get; set; }
 
         /// <summary>
         /// A new status for the member. Accepts one of ‘a’ (active), ‘e’ (error), ‘o’ (opt-out).
         /// </summary>
-        [JsonProperty("status_to", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("status_to")]
         public MemberStatusShort StatusTo { get; set; }
 
         /// <summary>
         /// An array of fields with associated values for this member
         /// </summary>
-        [JsonProperty("fields", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("fields")]
         public Dictionary<string, object> Fields { get; set; }
 
         /// <summary>
         /// Optional. Fires related field change autoresponders when set to true.
         /// </summary>
-        [JsonProperty("field_triggers", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("field_triggers")]
         public bool FieldTriggers { get; set; }
     }
 }

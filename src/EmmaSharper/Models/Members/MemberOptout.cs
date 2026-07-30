@@ -1,16 +1,16 @@
 ﻿using System;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class MemberOptout
     {
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("timestamp")]
+        [JsonPropertyName("timestamp")]
         public DateTime Timestamp { get; set; }
 
-        [JsonProperty("mailing_id")]
+        [JsonPropertyName("mailing_id")]
         public long? MailingId { get; set; }
     }
 }

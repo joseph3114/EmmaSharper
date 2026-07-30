@@ -1,69 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class Trigger
     {
-        [JsonProperty("parent_mailing")]
+        [JsonPropertyName("parent_mailing")]
         public MailingTrigger ParentMailing { get; set; }
 
-        [JsonProperty("surveys")]
+        [JsonPropertyName("surveys")]
         public string Surveys { get; set; }
 
-        [JsonProperty("event_type")]
+        [JsonPropertyName("event_type")]
         public string EventType { get; set; }
 
         // Need more info from Emma
-        [JsonProperty("links")]
+        [JsonPropertyName("links")]
         public string Links { get; set; }
 
-        [JsonProperty("field_id")]
+        [JsonPropertyName("field_id")]
         public long? FieldId { get; set; }
 
         // Need more info from Emma
-        [JsonProperty("signup_integrations")]
+        [JsonPropertyName("signup_integrations")]
         public string SignupIntegrations { get; set; }
 
         // Need more info from Emma
-        [JsonProperty("push_offest_units")]
+        [JsonPropertyName("push_offest_units")]
         public string PushOffsetUnits { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("start_timestamp")]
+        [JsonPropertyName("start_timestamp")]
         public DateTime? StartTimestamp { get; set; }
 
-        [JsonProperty("trigger_id")]
+        [JsonPropertyName("trigger_id")]
         public long? TriggerId { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
         // Need more info from Emma
-        [JsonProperty("signups")]
+        [JsonPropertyName("signups")]
         public int?[] Signups { get; set; }
 
         // Need more info from Emma
-        [JsonProperty("push_offset")]
+        [JsonPropertyName("push_offset")]
         public string PushOffset { get; set; }
 
         // Need more info from Emma
-        [JsonProperty("groups")]
+        [JsonPropertyName("groups")]
         public List<Group> Groups { get; set; }
 
-        [JsonProperty("parent_mailing_id")]
+        [JsonPropertyName("parent_mailing_id")]
         public long? ParentMailingId { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("deleted_at")]
+        [JsonPropertyName("deleted_at")]
         public DateTime? DeletedAt { get; set; }
 
-        [JsonProperty("is_disabled")]
+        [JsonPropertyName("is_disabled")]
         public bool IsDisabled { get; set; }
 
-        [JsonProperty("account_id")]
+        [JsonPropertyName("account_id")]
         public long? AccountId { get; set; }
     }
 }

@@ -1,19 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class ImportMembers
     {
-        [JsonProperty("member_id")]
+        [JsonPropertyName("member_id")]
         public long? MemberId { get; set; }
 
-        [JsonProperty("change_type")]
+        [JsonPropertyName("change_type")]
         public ImportChangeType ChangeType { get; set; }
 
-        [JsonProperty("member_status_id")]
+        [JsonPropertyName("member_status_id")]
         public MemberStatusShort MemberStatusId { get; set; }
 
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string Email { get; set; }
     }
 }

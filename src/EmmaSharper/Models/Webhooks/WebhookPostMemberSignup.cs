@@ -1,16 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class WebhookPostMemberSignup
     {
-        [JsonProperty("event_name")]
+        [JsonPropertyName("event_name")]
         public string EventName { get; set; }
 
-        [JsonProperty("resource_url", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("resource_url")]
         public string ResourceUrl { get; set; }
 
-        [JsonProperty("data")]
+        [JsonPropertyName("data")]
         public WebhookPostDataMemberSignup Data { get; set; }
     }
 }

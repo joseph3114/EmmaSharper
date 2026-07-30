@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -10,19 +10,19 @@ namespace EmmaSharper
         /// <summary>
         /// The html contents of the mailing.
         /// </summary>
-        [JsonProperty("html_body")]
+        [JsonPropertyName("html_body")]
         public string HtmlBody { get; set; }
 
         /// <summary>
         /// The plaintext contents of the mailing. Unlike in create_mailing, this param is not required.
         /// </summary>
-        [JsonProperty("plaintext", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("plaintext")]
         public string Plaintext { get; set; }
 
         /// <summary>
         /// The subject of the mailing.
         /// </summary>
-        [JsonProperty("subject")]
+        [JsonPropertyName("subject")]
         public string Subject { get; set; }
     }
 }

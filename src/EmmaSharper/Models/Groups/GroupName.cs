@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class GroupName
     {
-        [JsonProperty("group_name")]
+        [JsonPropertyName("group_name")]
         public string Name { get; set; }
     }
 }

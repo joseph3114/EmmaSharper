@@ -1,14 +1,14 @@
 ﻿using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class CreateSearch
     {
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [JsonProperty("criteria")]
+        [JsonPropertyName("criteria")]
         [JsonConverter(typeof(RawStringJsonConverter))]
         public string Criteria { get; set; }
     }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -15,25 +15,25 @@ namespace EmmaSharper
         /// <summary>
         /// Email address of member to add or update
         /// </summary>
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string MemberEmail { get; set; }
 
         /// <summary>
         /// Names and values of user-defined fields to update
         /// </summary>
-        [JsonProperty("fields")]
+        [JsonPropertyName("fields")]
         public Dictionary<string, object> Fields { get; set; }
 
         /// <summary>
         /// Optional. Add imported members to this list of groups.
         /// </summary>
-        [JsonProperty("group_ids", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("group_ids")]
         public List<int> GroupIds { get; set; }
 
         /// <summary>
         /// Optional. Fires related field change auto-responders when set to true.
         /// </summary>
-        [JsonProperty("field_triggers", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("field_triggers")]
         public bool? FieldTriggers { get; set; }
     }
 }

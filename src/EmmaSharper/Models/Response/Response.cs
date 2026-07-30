@@ -1,85 +1,85 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class ResponseBase
     {
-        [JsonProperty("sent")]
+        [JsonPropertyName("sent")]
         public int? Sent { get; set; }
 
-        [JsonProperty("delivered")]
+        [JsonPropertyName("delivered")]
         public int? Delivered { get; set; }
 
-        [JsonProperty("bounced")]
+        [JsonPropertyName("bounced")]
         public int? Bounced { get; set; }
 
-        [JsonProperty("opened")]
+        [JsonPropertyName("opened")]
         public int? Opened { get; set; }
 
-        [JsonProperty("clicked")]
+        [JsonPropertyName("clicked")]
         public int? Clicked { get; set; }
 
-        [JsonProperty("clicked_unique")]
+        [JsonPropertyName("clicked_unique")]
         public int? ClickedUnique { get; set; }
 
-        [JsonProperty("forwarded")]
+        [JsonPropertyName("forwarded")]
         public int? Forwarded { get; set; }
 
-        [JsonProperty("shared")]
+        [JsonPropertyName("shared")]
         public int? Shared { get; set; }
 
-        [JsonProperty("share_clicked")]
+        [JsonPropertyName("share_clicked")]
         public int? ShareClicked { get; set; }
 
-        [JsonProperty("webview_shared")]
+        [JsonPropertyName("webview_shared")]
         public int? WebviewShared { get; set; }
 
-        [JsonProperty("webview_share_clicked")]
+        [JsonPropertyName("webview_share_clicked")]
         public int? WebviewShareClicked { get; set; }
 
-        [JsonProperty("signed_up")]
+        [JsonPropertyName("signed_up")]
         public int? SignedUp { get; set; }
 
-        [JsonProperty("opted_out")]
+        [JsonPropertyName("opted_out")]
         public int? OptedOut { get; set; }
 
-        [JsonProperty("count_purchased")]
+        [JsonPropertyName("count_purchased")]
         public int? CountPurchased { get; set; }
 
-        [JsonProperty("sum_purchased")]
+        [JsonPropertyName("sum_purchased")]
         public decimal? SumPurchased { get; set; }
     }
 
     public class Response : ResponseBase
     {
-        [JsonProperty("subject")]
+        [JsonPropertyName("subject")]
         public string Subject { get; set; }
 
-        [JsonProperty("in_progress")]
+        [JsonPropertyName("in_progress")]
         public int? InProgress { get; set; }
 
-        [JsonProperty("recipient_count")]
+        [JsonPropertyName("recipient_count")]
         public int? RecipientCount { get; set; }
 
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        //[JsonProperty("purchase_metrics")]
+        //[JsonPropertyName("purchase_metrics")]
         //public List<T> PurchaseMetrics { get; set; }
     }
 
     public class ResponseSummary : ResponseBase
     {
-        [JsonProperty("account_id")]
+        [JsonPropertyName("account_id")]
         public long? AccountId { get; set; }
 
-        [JsonProperty("month")]
+        [JsonPropertyName("month")]
         public int? Month { get; set; }
 
-        [JsonProperty("year")]
+        [JsonPropertyName("year")]
         public int? Year { get; set; }
 
-        [JsonProperty("mailings")]
+        [JsonPropertyName("mailings")]
         public int? Mailings { get; set; }
 
     }

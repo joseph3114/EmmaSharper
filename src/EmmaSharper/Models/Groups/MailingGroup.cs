@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class MailingGroup : Group
     {
         //Ugh. API names GroupName differently in Mailings than elsewhere.
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public new string GroupName { get; set; }
     }
 }

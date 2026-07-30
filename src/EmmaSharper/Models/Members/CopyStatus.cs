@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -7,7 +7,7 @@ namespace EmmaSharper
     public class CopyStatus
     {
         /// <summary>‘a’ (active), ‘o’ (optout), and/or ‘e’ (error)</summary>
-        [JsonProperty("member_status_id")]
+        [JsonPropertyName("member_status_id")]
         public List<MemberStatusShort> MemberStatusId { get; set; }
     }
 }

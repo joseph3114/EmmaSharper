@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class MembersAdd
     {
-        [JsonProperty("import_id")]
+        [JsonPropertyName("import_id")]
         public long ImportId { get; set; }
     }
 }

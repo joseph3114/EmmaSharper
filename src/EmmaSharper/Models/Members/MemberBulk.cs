@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -11,13 +11,13 @@ namespace EmmaSharper
         /// <summary>
         /// Email address of member to add or update
         /// </summary>
-        [JsonProperty("email")]
+        [JsonPropertyName("email")]
         public string MemberEmail { get; set; }
 
         /// <summary>
         /// Names and values of user-defined fields to update
         /// </summary>
-        [JsonProperty("fields")]
+        [JsonPropertyName("fields")]
         public Dictionary<string, object> Fields { get; set; }
     }
 }

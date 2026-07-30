@@ -1,54 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using EmmaSharper.Internals;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class Import
     {
-        [JsonProperty("import_id")]
+        [JsonPropertyName("import_id")]
         public long? ImportId { get; set; }
 
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public ImportStatus? Status { get; set; }
 
-        [JsonProperty("style")]
+        [JsonPropertyName("style")]
         public string Style { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("import_started")]
+        [JsonPropertyName("import_started")]
         public DateTime? ImportStarted { get; set; }
 
-        [JsonProperty("account_id")]
+        [JsonPropertyName("account_id")]
         public long? AccountId { get; set; }
 
-        [JsonProperty("error_message")]
+        [JsonPropertyName("error_message")]
         public string ErrorMessage { get; set; }
 
-        [JsonProperty("num_members_updated")]
+        [JsonPropertyName("num_members_updated")]
         public int? NumMembersUpdated { get; set; }
 
-        [JsonProperty("source_filename")]
+        [JsonPropertyName("source_filename")]
         public string SourceFilename { get; set; }
 
-        [JsonProperty("fields_updated")]
+        [JsonPropertyName("fields_updated")]
         public List<Field> FieldsUpdated { get; set; }
 
-        [JsonProperty("num_members_added")]
+        [JsonPropertyName("num_members_added")]
         public int? NumMembersAdded { get; set; }
 
         [JsonConverter(typeof(EmmaDateJsonConverter))]
-        [JsonProperty("import_finished")]
+        [JsonPropertyName("import_finished")]
         public DateTime? ImportFinished { get; set; }
 
-        [JsonProperty("groups_updated")]
+        [JsonPropertyName("groups_updated")]
         public List<Group> GroupsUpdated { get; set; }
 
-        [JsonProperty("num_skipped")]
+        [JsonPropertyName("num_skipped")]
         public int? NumSkipped { get; set; }
 
-        [JsonProperty("num_duplicates")]
+        [JsonPropertyName("num_duplicates")]
         public int? NumDuplicates { get; set; }
     }
 }

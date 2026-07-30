@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -10,13 +10,13 @@ namespace EmmaSharper
         /// <summary>
         /// The Id of the webhook
         /// </summary>
-        [JsonProperty("webhook_id")]
+        [JsonPropertyName("webhook_id")]
         public long? WebhookId { get; set; }
 
         /// <summary>
         /// The ID associated with the webhook account
         /// </summary>
-        [JsonProperty("account_id")]
+        [JsonPropertyName("account_id")]
         public long? AccountId { get; set; }
     }
 }

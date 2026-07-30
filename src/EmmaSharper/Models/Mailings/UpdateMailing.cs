@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
     public class UpdateMailing : MailingInfo
     {
-        [JsonProperty("plaintext")]
+        [JsonPropertyName("plaintext")]
         public string Plaintext { get; set; }
 
-        [JsonProperty("html_body")]
+        [JsonPropertyName("html_body")]
         public string HtmlBody { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EmmaSharper
 {
@@ -10,13 +10,13 @@ namespace EmmaSharper
         /// <summary>
         /// The status of the member. The short status code will be returned as Active, Error, or Optout.
         /// </summary>
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
         public MemberStatusShort Status { get; set; }
 
         /// <summary>
         /// The member id of the member.
         /// </summary>
-        [JsonProperty("member_id")]
+        [JsonPropertyName("member_id")]
         public long? MemberId { get; set; }
     }
 }
