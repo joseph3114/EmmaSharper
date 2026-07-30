@@ -11,6 +11,7 @@
 - [Recipes](Recipes)
 
 **Reference**
+- [**API Reference**](API-Reference)
 - [Emma API Notes](Emma-API-Notes)
 - [Changelog](https://github.com/joseph3114/EmmaSharper/blob/master/CHANGELOG.md)
 - [Upstream fixes](https://github.com/joseph3114/EmmaSharper/blob/master/docs/upstream-fixes.md)

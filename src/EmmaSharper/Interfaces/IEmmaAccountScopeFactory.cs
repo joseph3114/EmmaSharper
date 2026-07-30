@@ -5,15 +5,15 @@ namespace EmmaSharper
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Emma enterprise accounts authenticate once and then address many subaccounts. Before 8.0.0
-    /// the account id was fixed at DI registration and no provider method accepted one, so a
-    /// consumer could not iterate subaccounts without registering a container per account.
+    /// Emma enterprise accounts authenticate once and then address many subaccounts. A scope
+    /// reuses the configured credentials and the same pooled HttpClient, changing only the
+    /// account segment of the request path, so creating one per subaccount is cheap.
     /// </para>
     /// <example>
     /// <code>
-    /// foreach (Subaccount sub in await enterprise.ListSubaccountsAsync(ct))
+    /// foreach (Subaccount sub in await enterprise.ListSubaccounts(cancellationToken: ct))
     /// {
-    ///     IEmmaAccountScope scope = scopeFactory.ForAccount(sub.AccountId);
+    ///     IEmmaAccountScope scope = scopeFactory.ForAccount(sub.AccountId!);
     ///     int active = await scope.Members.GetMemberCount(cancellationToken: ct);
     /// }
     /// </code>

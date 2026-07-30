@@ -25,6 +25,7 @@ dotnet add package EmmaSharper
 | **[Rate Limiting and Resilience](Rate-Limiting-and-Resilience)** | Emma throttles with **403**, not just 429 |
 | **[Error Handling](Error-Handling)** | Typed exceptions instead of string-matching |
 | **[Recipes](Recipes)** | Whole tasks, taken from a production sync |
+| **[API Reference](API-Reference)** | Every public type and member, generated from the assembly |
 | **[Emma API Notes](Emma-API-Notes)** | Behaviour of the API itself that the docs don't mention |
 
 Upgrading from 7.x? See the migration table in the

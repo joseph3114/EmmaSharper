@@ -6,9 +6,9 @@ namespace EmmaSharper
 {
     /// <summary>Thrown when the Emma API returns a non-success status code.</summary>
     /// <remarks>
-    /// The 7.x version exposed RestSharp's IRestResponse as a public field, which put a third-party
-    /// type in this library's public surface and forced callers to string-match on
-    /// <see cref="Exception.Message"/> to discover the status code. The details are now typed.
+    /// Carries the status code, response body, verb and resource as typed properties, so callers
+    /// can branch on them directly. <see cref="Exception.Message"/> is for humans and its wording
+    /// is not a contract - do not match on it.
     /// </remarks>
     public class EmmaException : Exception
     {
