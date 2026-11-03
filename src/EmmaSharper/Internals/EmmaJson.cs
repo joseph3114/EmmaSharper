@@ -21,7 +21,9 @@ namespace EmmaSharper.Internals
                 // Newtonsoft models carried.
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 
-                // Emma is inconsistent about quoting numerics on some endpoints.
+                // Emma is inconsistent about quoting numerics on some endpoints. This only covers a
+                // quoted number into a numeric property; the reverse (a bare number into a string
+                // id) is EmmaIdStringJsonConverter, applied per property.
                 NumberHandling = JsonNumberHandling.AllowReadingFromString,
             };
 
@@ -29,8 +31,10 @@ namespace EmmaSharper.Internals
             // converter to its converter collection - this covers enums that lack the attribute.
             //
             // EmmaDateJsonConverter is deliberately NOT registered globally: it is opt-in per
-            // property via [JsonConverter], because only Emma's "@D:"-prefixed fields use that
-            // format and applying it to every DateTime would corrupt the others.
+            // property via [JsonConverter], because only Emma's "@D:"-prefixed and display-date
+            // fields need it and applying it to every DateTime would corrupt the others.
+            // EmmaIdStringJsonConverter is opt-in for the same reason: a global string converter
+            // would also turn numbers into text in fields that are meant to reject them.
             options.Converters.Add(new StringEnumJsonConverter());
 
             return options;

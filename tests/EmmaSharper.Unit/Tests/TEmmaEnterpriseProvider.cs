@@ -20,11 +20,13 @@ namespace EmmaSharper.Unit.Tests
         /// <summary>
         /// A recorded-shape response. Note the object envelope - the members endpoints return
         /// bare arrays instead, and assuming either shape universally breaks the other.
+        /// Emma sends <c>account_id</c> as a bare JSON number, which 8.0.x could not read into
+        /// its string property; the second entry is quoted to prove both forms bind.
         /// </summary>
         private const string SubaccountsJson = """
         {
           "subaccounts": [
-            { "account_id": "1001", "account_name": "College of Computing", "status": "active",
+            { "account_id": 1001, "account_name": "College of Computing", "status": "active",
               "plan_name": "Pro", "contact_limit": 25000 },
             { "account_id": "1002", "account_name": "Alumni Relations", "status": "retired" }
           ]
@@ -57,6 +59,7 @@ namespace EmmaSharper.Unit.Tests
 
             result.Should().HaveCount(2);
             result[0].AccountId.Should().Be("1001");
+            result[1].AccountId.Should().Be("1002");
             result[0].AccountName.Should().Be("College of Computing");
             result[1].Status.Should().Be("retired");
         }

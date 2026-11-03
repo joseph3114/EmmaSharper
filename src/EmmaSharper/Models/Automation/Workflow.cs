@@ -6,6 +6,7 @@ namespace EmmaSharper
 {
     public class Workflow
     {
+        [JsonConverter(typeof(EmmaIdStringJsonConverter))]
         [JsonPropertyName("workflow_id")]
         public string? WorkflowId { get; set; }
 

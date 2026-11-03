@@ -109,6 +109,21 @@ Deleted members are a third, independent flag — `includeDeleted: true` — not
 
 ---
 
+## Ids and dates are not written consistently
+
+Emma does not quote ids the same way on every endpoint. `enterprise/subaccounts` sends
+`account_id` as a bare number, and `accounts/users` sends a `user_id` that is a login name, not a
+number at all. The string id properties (`Subaccount.AccountId`, `AccountUser.UserId`,
+`Workflow.WorkflowId` and the webhook signup ids) accept either form, and a number is kept exactly
+as written.
+
+Dates come in three forms: Emma's prefixed `@D:2014-11-26T11:40:55`, plain ISO 8601, and the display
+form `Sep 25, 2024` that `accounts/users` uses for `create_ts` and `last_login_attempt`. All three
+read into `DateTime`, parsed with the invariant culture. A value in none of them reads as null
+rather than failing the whole list.
+
+---
+
 ## Unmodelled fields are preserved
 
 `Subaccount` and `AccountUser` carry a `[JsonExtensionData]` dictionary, so any property Emma
