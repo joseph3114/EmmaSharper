@@ -159,6 +159,11 @@ Endpoints that page take `start` and `end`. Emma's range is **inclusive**, so a 
 
 ## Versioning
 
+`9.0.0` changes one type: `AccountUser.UserId` is now a `string`, because Emma sends a login name
+there. The same release fixes `ListSubaccounts` and `ListUsers`, which both threw on real
+responses in 8.x. See the
+[changelog](https://github.com/joseph3114/EmmaSharper/blob/master/CHANGELOG.md).
+
 `8.0.0` is a breaking release — see the
 [changelog](https://github.com/joseph3114/EmmaSharper/blob/master/CHANGELOG.md). The short version: RestSharp and
 Newtonsoft.Json removed, `EmmaException` no longer exposes a RestSharp type, ids widened from `int`

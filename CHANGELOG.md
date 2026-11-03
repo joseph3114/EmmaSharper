@@ -7,6 +7,54 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [9.0.0] - Unreleased
+
+Fixes two endpoints that threw on every real Emma response. Found by running against a live
+enterprise account; the 8.x test fixtures had been written from the documented shape, which is not
+what Emma sends.
+
+### Fixed
+
+- **`IEmmaEnterpriseProvider.ListSubaccounts` threw `JsonException`** at
+  `$.subaccounts[0].account_id`. Emma sends `account_id` as a bare JSON number, and
+  `Subaccount.AccountId` is a `string`. `JsonNumberHandling.AllowReadingFromString` only covers the
+  opposite direction, a quoted number into a numeric property. `AccountId` stays a `string`, since
+  that is what `IEmmaAccountScopeFactory.ForAccount` takes, and now accepts either token.
+- **`IEmmaAccountProvider.ListUsers` threw `JsonException`** at `$.users[0].user_id`. Emma's
+  `user_id` is a login name, not a number. See *Changed*.
+- The same number-or-string tolerance is applied to the other string ids at the same risk:
+  `Workflow.WorkflowId` and `WebhookPostDataMemberSignup.SignupFormId`, `AccountId` and `MemberId`.
+  A numeric id is kept exactly as written (`1001` becomes `"1001"`) and is never rounded.
+
+### Changed
+
+- **BREAKING** — `AccountUser.UserId` is `string?`, was `long?`. The old type could never have
+  held a real value. A numeric `user_id`, if Emma ever sends one, is still accepted and kept as its
+  digits.
+- `AccountUser.CreatedAt` and `LastLoginAttempt` arrive as display dates (`"Sep 25, 2024"`). 8.0.1
+  already read these, through a general `DateTime.TryParse`, so this is not a fix. The date
+  converter now matches `MMM d, yyyy` and `MMMM d, yyyy` exactly before it falls back to the
+  general parse, so the result no longer depends on how lenient that parse is. Display dates have
+  no time part, so the time is midnight.
+- The date converter now skips an object or array where a date was expected and reads it as null.
+  Before, it left the reader inside the structure, and the whole response failed.
+
+### Not modelled
+
+`accounts/users` also returns `accounts` and `user_group_list` arrays. Their element shape is not
+documented and has not been confirmed against a live response, so they stay in
+`AccountUser.AdditionalData` rather than getting a guessed type.
+
+### Migrating from 8.x
+
+| 8.x | 9.0.0 |
+|---|---|
+| `long? id = user.UserId;` | `string? id = user.UserId;` |
+| `user.UserId == 42` | `user.UserId == "42"` (Emma sends a login name, so this comparison was never true in practice) |
+
+Nothing else changes signature. If you worked around either exception by reading the endpoint with
+your own `HttpClient`, you can remove that workaround.
+
 ## [8.0.1] - 2026-07-30
 
 Packaging and documentation only. **No library code changed**, so there is nothing to migrate and no
@@ -158,6 +206,7 @@ First release of this fork, targeting .NET Core 3.1 / .NET 5.
 Released as [`EmmaSharp`](https://www.nuget.org/packages/EmmaSharp/) by
 [kylegregory](https://github.com/kylegregory), through 1.3.0 (2019-06-05).
 
+[9.0.0]: https://github.com/joseph3114/EmmaSharper/compare/v8.0.1...HEAD
 [8.0.1]: https://github.com/joseph3114/EmmaSharper/releases/tag/v8.0.1
 [8.0.0]: https://github.com/joseph3114/EmmaSharper/releases/tag/v8.0.0
 [7.0.1]: https://www.nuget.org/packages/EmmaSharper/7.0.1

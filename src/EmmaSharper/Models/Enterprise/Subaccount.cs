@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using EmmaSharper.Internals;
 
 namespace EmmaSharper
 {
@@ -8,7 +9,10 @@ namespace EmmaSharper
     public class Subaccount
     {
         /// <summary>The subaccount's Emma account id. Use this to scope calls to it.</summary>
+        /// <remarks>Emma sends this as a JSON number; it is kept as a string because that is what
+        /// <see cref="IEmmaAccountScopeFactory.ForAccount(string)"/> takes.</remarks>
         /// <seealso cref="IEmmaAccountScopeFactory.ForAccount(string)"/>
+        [JsonConverter(typeof(EmmaIdStringJsonConverter))]
         [JsonPropertyName("account_id")]
         public string? AccountId { get; set; }
 

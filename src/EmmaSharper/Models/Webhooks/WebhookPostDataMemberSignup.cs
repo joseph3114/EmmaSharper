@@ -6,12 +6,15 @@ namespace EmmaSharper
 {
     public class WebhookPostDataMemberSignup
     {
+        [JsonConverter(typeof(EmmaIdStringJsonConverter))]
         [JsonPropertyName("signup_form_id")]
         public string? SignupFormId { get; set; }
 
+        [JsonConverter(typeof(EmmaIdStringJsonConverter))]
         [JsonPropertyName("account_id")]
         public string? AccountId { get; set; }
 
+        [JsonConverter(typeof(EmmaIdStringJsonConverter))]
         [JsonPropertyName("member_id")]
         public string? MemberId { get; set; }
 

@@ -3,7 +3,7 @@
 Every public type and member, generated from the compiled assembly and its XML
 documentation. Regenerated at release, so it cannot drift from the code.
 
-`EmmaSharper` 8.0.0
+`EmmaSharper` 9.0.0
 
 ## Contents
 
@@ -1997,7 +1997,7 @@ A user with access to an Emma account.
 | `LastLoginAttempt` | `DateTime?` | The user's most recent sign-in attempt. |
 | `LastName` | `string` | Family name. |
 | `Role` | `string` | The user's role on this account. |
-| `UserId` | `long?` | The user's Emma id. |
+| `UserId` | `string` | The user's Emma id - a login name, not a number. |
 
 ### AddMember
 
