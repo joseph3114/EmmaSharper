@@ -7,7 +7,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [9.0.0] - Unreleased
+## [9.0.0] - 2026-11-03
 
 Fixes two endpoints that threw on every real Emma response. Found by running against a live
 enterprise account; the 8.x test fixtures had been written from the documented shape, which is not
@@ -206,7 +206,7 @@ First release of this fork, targeting .NET Core 3.1 / .NET 5.
 Released as [`EmmaSharp`](https://www.nuget.org/packages/EmmaSharp/) by
 [kylegregory](https://github.com/kylegregory), through 1.3.0 (2019-06-05).
 
-[9.0.0]: https://github.com/joseph3114/EmmaSharper/compare/v8.0.1...HEAD
+[9.0.0]: https://github.com/joseph3114/EmmaSharper/releases/tag/v9.0.0
 [8.0.1]: https://github.com/joseph3114/EmmaSharper/releases/tag/v8.0.1
 [8.0.0]: https://github.com/joseph3114/EmmaSharper/releases/tag/v8.0.0
 [7.0.1]: https://www.nuget.org/packages/EmmaSharper/7.0.1
